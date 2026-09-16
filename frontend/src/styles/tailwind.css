@@ -4,7 +4,9 @@
 
 @layer base {
   body {
-    @apply bg-background text-slate-800 font-sans antialiased selection:bg-sky-500 selection:text-white;
+    font-family: 'Plus Jakarta Sans', 'Be Vietnam Pro', 'Inter', system-ui, -apple-system, sans-serif;
+    letter-spacing: -0.012em;
+    @apply bg-background text-slate-800 antialiased selection:bg-sky-500 selection:text-white;
   }
 }
 
