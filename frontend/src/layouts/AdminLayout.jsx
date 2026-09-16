@@ -62,12 +62,12 @@ export const AdminLayout = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex flex-col font-sans relative overflow-x-hidden">
-      {/* Hiệu ứng hào quang nền đa tầng để tạo chiều sâu xuyên thấu qua Nav & Sidebar */}
-      <div className="fixed -top-20 -left-20 w-96 h-96 bg-sky-300/20 rounded-full blur-3xl pointer-events-none -z-10 animate-pulse" style={{ animationDuration: '6s' }} />
-      <div className="fixed top-28 left-60 w-80 h-80 bg-blue-200/15 rounded-full blur-3xl pointer-events-none -z-10" />
-      <div className="fixed top-10 right-10 w-96 h-96 bg-sky-200/20 rounded-full blur-3xl pointer-events-none -z-10" />
-      <div className="fixed bottom-10 right-1/3 w-80 h-80 bg-indigo-200/15 rounded-full blur-3xl pointer-events-none -z-10" />
+    <div className="min-h-screen bg-gradient-to-br from-[#F0FDF4] via-[#F4FAF6] to-[#EDF8F2] flex flex-col font-sans relative overflow-x-hidden">
+      {/* Hiệu ứng hào quang nền xanh lá & bạc hà dịu nhẹ tạo chiều sâu xuyên thấu */}
+      <div className="fixed -top-20 -left-20 w-96 h-96 bg-emerald-300/25 rounded-full blur-3xl pointer-events-none -z-10 animate-pulse" style={{ animationDuration: '7s' }} />
+      <div className="fixed top-28 left-60 w-80 h-80 bg-teal-200/25 rounded-full blur-3xl pointer-events-none -z-10" />
+      <div className="fixed top-10 right-10 w-96 h-96 bg-green-200/20 rounded-full blur-3xl pointer-events-none -z-10" />
+      <div className="fixed bottom-10 right-1/3 w-80 h-80 bg-emerald-200/20 rounded-full blur-3xl pointer-events-none -z-10" />
 
       {/* 1. HEADER TRONG SUỐT NHÌN XUYÊN THẤU (GLASSMORPHIC NAVBAR) */}
       <header className="h-16 nav-glass fixed top-0 left-0 right-0 z-30 flex items-center justify-between px-4 sm:px-6">

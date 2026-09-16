@@ -345,7 +345,7 @@ export const ProductListPage = () => {
             placeholder="Tìm theo tên SP, SKU hoặc quét barcode..."
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
-            className="w-full bg-slate-100 border border-transparent focus:border-blue-500 rounded-xl pl-10 pr-4 py-2 text-xs text-slate-800 focus:outline-none transition"
+            className="w-full bg-emerald-50/40 border border-emerald-200/60 focus:border-emerald-500 focus:bg-white rounded-xl pl-10 pr-4 py-2 text-xs text-slate-800 focus:outline-none transition shadow-inner"
           />
         </div>
 
@@ -353,7 +353,7 @@ export const ProductListPage = () => {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="bg-slate-100 border border-transparent focus:border-blue-500 rounded-xl px-3 py-2 text-xs text-slate-700 font-semibold focus:outline-none transition"
+            className="bg-emerald-50/40 border border-emerald-200/60 focus:border-emerald-500 focus:bg-white rounded-xl px-3.5 py-2 text-xs text-slate-700 font-semibold focus:outline-none transition shadow-inner"
           >
             <option value="ALL">Tất cả ngành hàng</option>
             {categories.map((c) => (
@@ -369,7 +369,7 @@ export const ProductListPage = () => {
       <div className="soft-card p-0 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
+            <thead className="bg-emerald-50/50 text-slate-600 font-extrabold uppercase tracking-wider border-b border-emerald-100">
               <tr>
                 <th className="p-4 w-16 text-center">Hình Ảnh</th>
                 <th className="p-4">Mã SKU / Barcode</th>
@@ -383,9 +383,9 @@ export const ProductListPage = () => {
                 <th className="p-4 text-right">Thao Tác</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody className="divide-y divide-emerald-50">
               {filteredProducts.map((p) => (
-                <tr key={p.id} className="hover:bg-slate-50/80 transition">
+                <tr key={p.id} className="hover:bg-emerald-50/40 transition">
                   {/* Cột Hình Ảnh Sản Phẩm */}
                   <td className="p-3 text-center">
                     {p.image ? (

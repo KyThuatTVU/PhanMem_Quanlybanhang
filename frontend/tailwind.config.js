@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        background: '#F8FAFC',
+        background: '#F0F9F4', // Xanh lá nhẹ sáng chuyên nghiệp (Soft Sage Mint)
         card: '#FFFFFF',
         sidebar: '#FFFFFF',
         heading: '#0F172A',
