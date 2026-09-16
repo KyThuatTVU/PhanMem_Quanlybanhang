@@ -1,21 +1,20 @@
 import React, { useState } from 'react';
 import { Button } from '../../components/ui/Button';
+import { ImageUpload } from '../../components/ui/ImageUpload';
 import {
   Package,
   Plus,
   Search,
   Filter,
-  Layers,
   FileSpreadsheet,
   Download,
   Upload,
   Edit,
   Trash2,
   Eye,
-  CheckCircle2,
-  XCircle,
   Barcode,
-  ArrowRightLeft
+  ArrowRightLeft,
+  Image as ImageIcon
 } from 'lucide-react';
 
 export const ProductListPage = () => {
@@ -32,15 +31,16 @@ export const ProductListPage = () => {
     { id: 2, name: 'Mì & Thực phẩm ăn liền' },
     { id: 3, name: 'Sữa & Bơ sữa' },
     { id: 4, name: 'Bánh kẹo & Snack' },
-    { id: 5, name: 'Gia vị & Đồ khô' },
+    { id: 5, name: 'Gia vị & Dầu ăn' },
   ];
 
-  // Danh sách sản phẩm với đa đơn vị tính (Multi-unit conversions)
+  // Danh sách sản phẩm với hình ảnh và đa đơn vị tính
   const [products, setProducts] = useState([
     {
       id: 1,
       sku: 'COCA-330',
       name: 'Nước ngọt Coca-Cola 330ml',
+      image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&auto=format&fit=crop&q=80',
       category: 'Nước giải khát',
       brand: 'Coca-Cola',
       baseUnit: 'Lon',
@@ -60,6 +60,7 @@ export const ProductListPage = () => {
       id: 2,
       sku: 'HAO-HAO-75',
       name: 'Mì Hảo Hảo Tôm Chua Cay 75g',
+      image: 'https://images.unsplash.com/photo-1612927601601-6638404737ce?w=400&auto=format&fit=crop&q=80',
       category: 'Mì & Thực phẩm ăn liền',
       brand: 'Acecook',
       baseUnit: 'Gói',
@@ -78,6 +79,7 @@ export const ProductListPage = () => {
       id: 3,
       sku: 'VINAMILK-180',
       name: 'Sữa tươi Vinamilk 100% 180ml',
+      image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400&auto=format&fit=crop&q=80',
       category: 'Sữa & Bơ sữa',
       brand: 'Vinamilk',
       baseUnit: 'Hộp',
@@ -93,12 +95,51 @@ export const ProductListPage = () => {
         { unit: 'Thùng (48 Hộp)', factor: 48, barcode: '8934673123470', retailPrice: 410000, wholesalePrice: 390000 },
       ],
     },
+    {
+      id: 4,
+      sku: 'OSTAR-65',
+      name: 'Bánh snack khoai tây Ostar 65g',
+      image: 'https://images.unsplash.com/photo-1566478989037-eec170784d0b?w=400&auto=format&fit=crop&q=80',
+      category: 'Bánh kẹo & Snack',
+      brand: 'Orion',
+      baseUnit: 'Gói',
+      baseBarcode: '8936036010012',
+      costPrice: 11000,
+      retailPrice: 14000,
+      wholesalePrice: 13000,
+      stock: 35,
+      minStock: 20,
+      status: 'ACTIVE',
+      conversions: [
+        { unit: 'Dây (10 Gói)', factor: 10, barcode: '8936036010029', retailPrice: 135000, wholesalePrice: 125000 },
+      ],
+    },
+    {
+      id: 5,
+      sku: 'SIMPLY-1L',
+      name: 'Dầu đậu nành nguyên chất Simply 1L',
+      image: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400&auto=format&fit=crop&q=80',
+      category: 'Gia vị & Dầu ăn',
+      brand: 'Simply',
+      baseUnit: 'Chai',
+      baseBarcode: '8935031201001',
+      costPrice: 52000,
+      retailPrice: 65000,
+      wholesalePrice: 61000,
+      stock: 40,
+      minStock: 12,
+      status: 'ACTIVE',
+      conversions: [
+        { unit: 'Thùng (12 Chai)', factor: 12, barcode: '8935031201018', retailPrice: 760000, wholesalePrice: 720000 },
+      ],
+    },
   ]);
 
   // State Form Thêm / Sửa Sản Phẩm
   const [formData, setFormData] = useState({
     sku: '',
     name: '',
+    image: '',
     category: 'Nước giải khát',
     brand: 'Khác',
     baseUnit: 'Lon',
@@ -135,6 +176,9 @@ export const ProductListPage = () => {
       id: Date.now(),
       sku: formData.sku || 'SKU-' + Math.floor(1000 + Math.random() * 9000),
       name: formData.name,
+      image:
+        formData.image ||
+        'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&auto=format&fit=crop&q=80',
       category: formData.category,
       brand: formData.brand,
       baseUnit: formData.baseUnit,
@@ -150,6 +194,23 @@ export const ProductListPage = () => {
 
     setProducts([newProd, ...products]);
     setIsCreateModalOpen(false);
+    setFormData({
+      sku: '',
+      name: '',
+      image: '',
+      category: 'Nước giải khát',
+      brand: 'Khác',
+      baseUnit: 'Lon',
+      baseBarcode: '',
+      costPrice: '',
+      retailPrice: '',
+      wholesalePrice: '',
+      stock: 0,
+      minStock: 10,
+      conversions: [
+        { unit: 'Thùng', factor: 24, barcode: '', retailPrice: '', wholesalePrice: '' },
+      ],
+    });
   };
 
   const filteredProducts = products.filter((p) => {
@@ -168,10 +229,10 @@ export const ProductListPage = () => {
         <div>
           <h1 className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
             <Package className="w-6 h-6 text-blue-600" />
-            Danh Mục Hàng Hóa & Quy Đổi Đơn Vị
+            Danh Mục Hàng Hóa & Hình Ảnh Sản Phẩm
           </h1>
           <p className="text-xs text-slate-500 font-medium">
-            Quản lý mã vạch, giá vốn, giá bán lẻ/sỉ và quy đổi đa đơn vị tính (Thùng/Lốc/Lon)
+            Quản lý hình ảnh thực tế, mã vạch, giá vốn, giá bán lẻ/sỉ và quy đổi đơn vị tính
           </p>
         </div>
 
@@ -229,12 +290,13 @@ export const ProductListPage = () => {
         </div>
       </div>
 
-      {/* 3. Bảng Sản Phẩm */}
+      {/* 3. Bảng Sản Phẩm Kèm Hình Ảnh Thực Tế */}
       <div className="soft-card p-0 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
               <tr>
+                <th className="p-4 w-16 text-center">Hình Ảnh</th>
                 <th className="p-4">Mã SKU / Barcode</th>
                 <th className="p-4">Tên Hàng Hóa</th>
                 <th className="p-4">Ngành Hàng</th>
@@ -249,6 +311,27 @@ export const ProductListPage = () => {
             <tbody className="divide-y divide-slate-100">
               {filteredProducts.map((p) => (
                 <tr key={p.id} className="hover:bg-slate-50/80 transition">
+                  {/* Cột Hình Ảnh Sản Phẩm */}
+                  <td className="p-3 text-center">
+                    {p.image ? (
+                      <div className="w-12 h-12 rounded-xl border border-slate-200 overflow-hidden bg-white shadow-sm mx-auto flex items-center justify-center p-0.5">
+                        <img
+                          src={p.image}
+                          alt={p.name}
+                          className="w-full h-full object-cover rounded-lg hover:scale-110 transition duration-200 cursor-pointer"
+                          onClick={() => {
+                            setSelectedProduct(p);
+                            setIsDetailModalOpen(true);
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-12 h-12 rounded-xl bg-slate-100 border border-slate-200 mx-auto flex items-center justify-center text-slate-400">
+                        <ImageIcon className="w-5 h-5" />
+                      </div>
+                    )}
+                  </td>
+
                   <td className="p-4">
                     <span className="font-mono font-bold text-slate-800">{p.sku}</span>
                     <p className="font-mono text-[10px] text-blue-600 flex items-center gap-1">
@@ -302,7 +385,7 @@ export const ProductListPage = () => {
                           setIsDetailModalOpen(true);
                         }}
                         className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
-                        title="Xem chi tiết & quy đổi"
+                        title="Xem ảnh & chi tiết"
                       >
                         <Eye className="w-4 h-4" />
                       </button>
@@ -322,19 +405,28 @@ export const ProductListPage = () => {
         </div>
       </div>
 
-      {/* Modal Thêm Mới Sản Phẩm Đa Đơn Vị */}
+      {/* Modal Thêm Mới Sản Phẩm Đa Đơn Vị & Hình Ảnh */}
       {isCreateModalOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto">
             <h2 className="text-base font-extrabold text-slate-900 mb-1 flex items-center gap-2">
               <Package className="w-5 h-5 text-blue-600" />
-              Thêm Mặt Hàng & Cấu Hình Quy Đổi Đơn Vị
+              Thêm Mặt Hàng, Hình Ảnh & Cấu Hình Quy Đổi Đơn Vị
             </h2>
             <p className="text-xs text-slate-500 mb-4">
-              Nhập thông tin sản phẩm cơ sở và các cấp đơn vị quy đổi (VD: 1 Thùng = 24 Lon)
+              Tải ảnh sản phẩm và cấu hình các cấp đơn vị quy đổi (VD: 1 Thùng = 24 Lon)
             </p>
 
             <form onSubmit={handleCreateProduct} className="space-y-4">
+              {/* Component Upload Hình Ảnh Sản Phẩm */}
+              <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+                <ImageUpload
+                  label="Ảnh Đại Diện Mặt Hàng (Hiển thị POS & Danh mục)"
+                  value={formData.image}
+                  onChange={(img) => setFormData({ ...formData, image: img })}
+                />
+              </div>
+
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">Mã SKU</label>
@@ -405,7 +497,7 @@ export const ProductListPage = () => {
 
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Tồn Tối Thiểu Cảnh Báo
+                    Tồn Tối Thiểu
                   </label>
                   <input
                     type="number"
@@ -540,7 +632,7 @@ export const ProductListPage = () => {
                   Hủy Bỏ
                 </Button>
                 <Button type="submit" variant="3d-solid">
-                  Lưu Sản Phẩm
+                  Lưu Sản Phẩm & Ảnh
                 </Button>
               </div>
             </form>
@@ -548,16 +640,34 @@ export const ProductListPage = () => {
         </div>
       )}
 
-      {/* Modal Chi Tiết Sản Phẩm */}
+      {/* Modal Chi Tiết Sản Phẩm Kèm Ảnh Lớn */}
       {isDetailModalOpen && selectedProduct && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
-            <h2 className="text-base font-extrabold text-slate-900 mb-1">
-              {selectedProduct.name}
-            </h2>
-            <p className="text-xs text-slate-500 mb-4">
-              Mã SKU: {selectedProduct.sku} | Barcode cơ sở: {selectedProduct.baseBarcode}
-            </p>
+            <div className="flex gap-4 items-start mb-4">
+              {selectedProduct.image ? (
+                <img
+                  src={selectedProduct.image}
+                  alt={selectedProduct.name}
+                  className="w-24 h-24 object-cover rounded-2xl border border-slate-200 shadow-sm shrink-0"
+                />
+              ) : (
+                <div className="w-24 h-24 rounded-2xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400 shrink-0">
+                  <ImageIcon className="w-8 h-8" />
+                </div>
+              )}
+              <div className="flex-1">
+                <h2 className="text-base font-extrabold text-slate-900 leading-snug">
+                  {selectedProduct.name}
+                </h2>
+                <p className="text-xs text-slate-500 mt-1">
+                  Mã SKU: <span className="font-mono font-bold text-slate-800">{selectedProduct.sku}</span>
+                </p>
+                <p className="text-xs text-blue-600 font-mono mt-0.5">
+                  Barcode: {selectedProduct.baseBarcode}
+                </p>
+              </div>
+            </div>
 
             <div className="space-y-3 text-xs bg-slate-50 p-4 rounded-xl mb-4">
               <div className="flex justify-between">

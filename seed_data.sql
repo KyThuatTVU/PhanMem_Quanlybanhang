@@ -201,4 +201,18 @@ SET `cash_sales_amount` = `cash_sales_amount` + 200000.00,
     `expected_cash_end` = `expected_cash_end` + 200000.00
 WHERE `id` = 1;
 
+-- 13. Hình ảnh sản phẩm (media_files & product_images)
+INSERT INTO `media_files` (`id`, `original_name`, `stored_name`, `file_path`, `file_url`, `mime_type`, `file_size`, `storage_driver`, `created_by`) VALUES
+(1, 'coca-cola-330.jpg', 'coca-cola-330-uuid.jpg', '/uploads/coca-cola-330.jpg', 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&auto=format&fit=crop&q=80', 'image/jpeg', 102400, 'LOCAL', 1),
+(2, 'vinamilk-180.jpg', 'vinamilk-180-uuid.jpg', '/uploads/vinamilk-180.jpg', 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400&auto=format&fit=crop&q=80', 'image/jpeg', 98500, 'LOCAL', 1),
+(3, 'cholimex-tuongot.jpg', 'cholimex-tuongot-uuid.jpg', '/uploads/cholimex-tuongot.jpg', 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=400&auto=format&fit=crop&q=80', 'image/jpeg', 115000, 'LOCAL', 1),
+(4, 'gao-st25.jpg', 'gao-st25-uuid.jpg', '/uploads/gao-st25.jpg', 'https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400&auto=format&fit=crop&q=80', 'image/jpeg', 142000, 'LOCAL', 1);
+
+INSERT INTO `product_images` (`product_id`, `media_id`, `is_primary`, `display_order`) VALUES
+(1, 1, 1, 1),
+(2, 2, 1, 1),
+(3, 3, 1, 1),
+(4, 4, 1, 1);
+
 SET FOREIGN_KEY_CHECKS = 1;
+
