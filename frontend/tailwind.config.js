@@ -4,8 +4,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Nunito"', '"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
-        rounded: ['"Nunito"', 'sans-serif'],
+        sans: ['"Comfortaa"', '"Baloo 2"', '"Nunito"', 'system-ui', 'sans-serif'],
+        rounded: ['"Comfortaa"', '"Baloo 2"', 'sans-serif'],
       },
       colors: {
         background: '#F0F9F4', // Xanh lá nhẹ sáng chuyên nghiệp (Soft Sage Mint)

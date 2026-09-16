@@ -4,13 +4,13 @@
 
 @layer base {
   body {
-    font-family: 'Nunito', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-family: 'Comfortaa', 'Baloo 2', 'Nunito', system-ui, sans-serif;
     letter-spacing: -0.01em;
     @apply bg-background text-slate-800 antialiased selection:bg-sky-500 selection:text-white;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Comfortaa', 'Baloo 2', sans-serif;
     letter-spacing: -0.015em;
   }
 }
