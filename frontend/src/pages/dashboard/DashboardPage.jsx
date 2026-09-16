@@ -20,6 +20,7 @@ import {
   ArrowRight
 } from 'lucide-react';
 import brandLogo from '../../assets/images/logo.png';
+import storeBanner from '../../assets/images/banner.png';
 import {
   AreaChart,
   Area,
@@ -103,37 +104,31 @@ export const DashboardPage = () => {
 
   return (
     <div className="space-y-6">
-      {/* 1. BANNER CHÀO MỪNG XANH TRẮNG HIỆN ĐẠI */}
-      <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-sky-600 via-sky-500 to-blue-600 p-6 sm:p-8 text-white shadow-lg shadow-sky-500/15">
-        <div className="absolute -right-10 -bottom-10 w-64 h-64 bg-white/10 rounded-full blur-2xl pointer-events-none" />
-        <div className="absolute right-32 -top-10 w-48 h-48 bg-sky-300/20 rounded-full blur-xl pointer-events-none" />
-
-        <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-white/95 p-1.5 shadow-lg border border-white/40 flex items-center justify-center shrink-0">
-              <img src={brandLogo} alt="Logo" className="w-full h-full object-contain" />
-            </div>
-            <div className="space-y-1">
-              <div className="inline-flex items-center gap-2 px-3 py-0.5 bg-white/20 backdrop-blur-md rounded-full text-[11px] font-bold text-white border border-white/30">
-                <Sparkles className="w-3 h-3 text-amber-300" />
-                Tổng Quan Hoạt Động Cửa Hàng
-              </div>
-              <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-                Tạp Hóa & Siêu Thị Mini An Khang
-              </h1>
-              <p className="text-xs sm:text-sm text-sky-100 font-medium max-w-xl">
-                Doanh số hôm nay đang tăng trưởng ổn định. Ca bán hàng buổi chiều đang mở với 42 giao dịch hoàn tất.
-              </p>
-            </div>
+      {/* 1. BANNER HÌNH ẢNH CỬA HÀNG TẠP HÓA AN KHANG (FULL GÓC ẢNH) */}
+      <div className="space-y-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h1 className="text-2xl sm:text-3xl font-black text-black tracking-tight" style={{ WebkitTextStroke: '0.55px #000000' }}>
+              Tổng Quan Cửa Hàng
+            </h1>
+            <p className="text-xs font-bold text-slate-500">
+              Chào mừng trở lại! Theo dõi doanh số và hoạt động kinh doanh hôm nay.
+            </p>
           </div>
+          <Link to="/pos" className="self-start sm:self-auto">
+            <Button variant="3d-solid" icon={ShoppingCart} size="md">
+              Vào Bán Hàng POS (F9)
+            </Button>
+          </Link>
+        </div>
 
-          <div className="flex items-center gap-3">
-            <Link to="/pos">
-              <Button variant="3d-primary" icon={ShoppingCart} size="md">
-                Vào Bán Hàng POS (F9)
-              </Button>
-            </Link>
-          </div>
+        {/* Khung chứa Banner hiển thị 100% đầy đủ góc cạnh, không bị cắt xén */}
+        <div className="w-full rounded-3xl overflow-hidden border border-slate-200/90 shadow-lg bg-white">
+          <img
+            src={storeBanner}
+            alt="Banner Cửa Hàng Tạp Hóa An Khang"
+            className="w-full h-auto object-contain block rounded-3xl"
+          />
         </div>
       </div>
 
