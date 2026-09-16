@@ -3,34 +3,45 @@
 @tailwind utilities;
 
 @layer base {
-  *, ::before, ::after {
-    font-family: 'Comfortaa', 'Baloo 2', sans-serif !important;
-  }
-
   html, body {
-    font-family: 'Comfortaa', 'Baloo 2', sans-serif !important;
+    font-family: 'Comfortaa', 'Baloo 2', sans-serif;
     letter-spacing: -0.01em;
     @apply bg-background text-slate-800 antialiased selection:bg-sky-500 selection:text-white;
   }
 
-  /* TÔ ĐẬM RÕ NÉT CÁC TIÊU ĐỀ LỚN */
+  input, button, select, textarea, table, th, td {
+    font-family: inherit;
+  }
+
+  /* TÔ ĐẬM ĐEN RÕ NÉT TOÀN BỘ TIÊU ĐỀ CHÍNH */
   h1, .page-title, .title-lg {
-    font-family: 'Comfortaa', 'Baloo 2', sans-serif !important;
+    font-family: 'Baloo 2', 'Comfortaa', sans-serif !important;
+    font-weight: 800 !important;
+    color: #000000;
+    -webkit-text-stroke: 0.35px #000000;
+    letter-spacing: -0.01em;
+  }
+
+  h1[class*="text-white"],
+  .text-white h1 {
+    color: #ffffff !important;
+    -webkit-text-stroke: 0.35px #ffffff !important;
+  }
+
+  h2, h3 {
+    font-family: 'Baloo 2', 'Comfortaa', sans-serif !important;
+    font-weight: 800 !important;
+    color: #000000;
+    -webkit-text-stroke: 0.25px #000000;
+    letter-spacing: -0.01em;
+  }
+
+  h4, h5, h6 {
+    font-family: 'Baloo 2', 'Comfortaa', sans-serif !important;
     font-weight: 700 !important;
-    letter-spacing: -0.015em;
+    color: #090d16;
   }
 
-  h2, h3, h4, h5, h6 {
-    font-family: 'Comfortaa', 'Baloo 2', sans-serif !important;
-    font-weight: 700 !important;
-  }
-
-  /* ĐẢM BẢO TOÀN BỘ BẢNG DỮ LIỆU, Ô NHẬP LIỆU, NÚT BẤM ĐỒNG NHẤT 1 THỂ */
-  table, thead, tbody, tr, th, td, input, select, textarea, button, p, span, div, a, label {
-    font-family: 'Comfortaa', 'Baloo 2', sans-serif !important;
-  }
-
-  /* Tô đậm rõ nét cột tiêu đề bảng */
   th {
     font-weight: 700 !important;
   }
