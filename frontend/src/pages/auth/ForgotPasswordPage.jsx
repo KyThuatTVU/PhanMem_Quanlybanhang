@@ -25,13 +25,10 @@ export const ForgotPasswordPage = () => {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600 text-white shadow-glass-3d mb-4 transform hover:scale-105 transition-transform duration-300">
             <Store className="w-8 h-8" />
           </div>
-          <h1
-            className="text-3xl font-black text-black tracking-tight"
-            style={{ WebkitTextStroke: '0.65px #000000', letterSpacing: '-0.02em' }}
-          >
+          <h1 className="text-2xl font-black text-slate-900 tracking-tight">
             Khôi Phục Mật Khẩu
           </h1>
-          <p className="text-xs text-slate-600 mt-1 font-bold">
+          <p className="text-xs text-slate-500 mt-1 font-medium">
             Hệ thống Quản lý Bán hàng Cửa hàng Tạp hóa
           </p>
         </div>

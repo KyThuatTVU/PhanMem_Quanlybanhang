@@ -4,9 +4,9 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Comfortaa"', '"Baloo 2"', 'sans-serif'],
-        mono: ['"Comfortaa"', '"Baloo 2"', 'sans-serif'],
-        rounded: ['"Comfortaa"', '"Baloo 2"', 'sans-serif'],
+        sans: ['"Inter"', 'system-ui', '-apple-system', 'BlinkMacSystemFont', '"Segoe UI"', 'Roboto', 'sans-serif'],
+        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace'],
+        rounded: ['"Inter"', 'system-ui', 'sans-serif'],
       },
       colors: {
         background: '#F0F9F4', // Xanh lá nhẹ sáng chuyên nghiệp (Soft Sage Mint)
