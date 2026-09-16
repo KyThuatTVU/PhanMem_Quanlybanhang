@@ -14,16 +14,20 @@ import {
   Eye,
   Barcode,
   ArrowRightLeft,
-  Image as ImageIcon
+  Image as ImageIcon,
+  CheckCircle2,
+  AlertTriangle
 } from 'lucide-react';
 
 export const ProductListPage = () => {
   const [keyword, setKeyword] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('ALL');
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState(null); // null = tạo mới, object = đang sửa
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [toastMessage, setToastMessage] = useState('');
 
   // Danh mục mẫu
   const categories = [
@@ -136,7 +140,7 @@ export const ProductListPage = () => {
   ]);
 
   // State Form Thêm / Sửa Sản Phẩm
-  const [formData, setFormData] = useState({
+  const initialFormState = {
     sku: '',
     name: '',
     image: '',
@@ -152,7 +156,53 @@ export const ProductListPage = () => {
     conversions: [
       { unit: 'Thùng', factor: 24, barcode: '', retailPrice: '', wholesalePrice: '' },
     ],
-  });
+  };
+
+  const [formData, setFormData] = useState(initialFormState);
+
+  // Mở modal thêm mới
+  const handleOpenCreate = () => {
+    setEditingProduct(null);
+    setFormData(initialFormState);
+    setIsFormModalOpen(true);
+  };
+
+  // Mở modal chỉnh sửa sản phẩm
+  const handleOpenEdit = (product) => {
+    setEditingProduct(product);
+    setFormData({
+      sku: product.sku || '',
+      name: product.name || '',
+      image: product.image || '',
+      category: product.category || 'Nước giải khát',
+      brand: product.brand || 'Khác',
+      baseUnit: product.baseUnit || 'Lon',
+      baseBarcode: product.baseBarcode || '',
+      costPrice: product.costPrice || '',
+      retailPrice: product.retailPrice || '',
+      wholesalePrice: product.wholesalePrice || '',
+      stock: product.stock || 0,
+      minStock: product.minStock || 10,
+      conversions:
+        product.conversions && product.conversions.length > 0
+          ? JSON.parse(JSON.stringify(product.conversions))
+          : [{ unit: 'Thùng', factor: 24, barcode: '', retailPrice: '', wholesalePrice: '' }],
+    });
+    setIsFormModalOpen(true);
+  };
+
+  // Xóa sản phẩm
+  const handleDeleteProduct = (productId, productName) => {
+    if (window.confirm(`Bạn có chắc chắn muốn xóa mặt hàng "${productName}" khỏi danh sách?`)) {
+      setProducts(products.filter((p) => p.id !== productId));
+      showToast(`Đã xóa thành công sản phẩm "${productName}"!`);
+    }
+  };
+
+  const showToast = (msg) => {
+    setToastMessage(msg);
+    setTimeout(() => setToastMessage(''), 3000);
+  };
 
   const handleAddConversion = () => {
     setFormData({
@@ -170,47 +220,64 @@ export const ProductListPage = () => {
     setFormData({ ...formData, conversions: updated });
   };
 
-  const handleCreateProduct = (e) => {
+  // Xử lý lưu (Thêm mới hoặc Cập nhật)
+  const handleSaveProduct = (e) => {
     e.preventDefault();
-    const newProd = {
-      id: Date.now(),
-      sku: formData.sku || 'SKU-' + Math.floor(1000 + Math.random() * 9000),
-      name: formData.name,
-      image:
-        formData.image ||
-        'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&auto=format&fit=crop&q=80',
-      category: formData.category,
-      brand: formData.brand,
-      baseUnit: formData.baseUnit,
-      baseBarcode: formData.baseBarcode || '893' + Math.floor(100000000 + Math.random() * 900000000),
-      costPrice: Number(formData.costPrice) || 0,
-      retailPrice: Number(formData.retailPrice) || 0,
-      wholesalePrice: Number(formData.wholesalePrice) || 0,
-      stock: Number(formData.stock) || 0,
-      minStock: Number(formData.minStock) || 5,
-      status: 'ACTIVE',
-      conversions: formData.conversions.filter((c) => c.unit && c.factor > 1),
-    };
 
-    setProducts([newProd, ...products]);
-    setIsCreateModalOpen(false);
-    setFormData({
-      sku: '',
-      name: '',
-      image: '',
-      category: 'Nước giải khát',
-      brand: 'Khác',
-      baseUnit: 'Lon',
-      baseBarcode: '',
-      costPrice: '',
-      retailPrice: '',
-      wholesalePrice: '',
-      stock: 0,
-      minStock: 10,
-      conversions: [
-        { unit: 'Thùng', factor: 24, barcode: '', retailPrice: '', wholesalePrice: '' },
-      ],
-    });
+    if (editingProduct) {
+      // Cập nhật sản phẩm đang sửa
+      const updatedList = products.map((p) => {
+        if (p.id === editingProduct.id) {
+          return {
+            ...p,
+            sku: formData.sku || p.sku,
+            name: formData.name,
+            image: formData.image || p.image,
+            category: formData.category,
+            brand: formData.brand,
+            baseUnit: formData.baseUnit,
+            baseBarcode: formData.baseBarcode || p.baseBarcode,
+            costPrice: Number(formData.costPrice) || 0,
+            retailPrice: Number(formData.retailPrice) || 0,
+            wholesalePrice: Number(formData.wholesalePrice) || 0,
+            stock: Number(formData.stock) || 0,
+            minStock: Number(formData.minStock) || 5,
+            conversions: formData.conversions.filter((c) => c.unit && c.factor > 1),
+          };
+        }
+        return p;
+      });
+
+      setProducts(updatedList);
+      showToast(`Đã cập nhật thông tin "${formData.name}" thành công!`);
+    } else {
+      // Thêm sản phẩm mới
+      const newProd = {
+        id: Date.now(),
+        sku: formData.sku || 'SKU-' + Math.floor(1000 + Math.random() * 9000),
+        name: formData.name,
+        image:
+          formData.image ||
+          'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&auto=format&fit=crop&q=80',
+        category: formData.category,
+        brand: formData.brand,
+        baseUnit: formData.baseUnit,
+        baseBarcode: formData.baseBarcode || '893' + Math.floor(100000000 + Math.random() * 900000000),
+        costPrice: Number(formData.costPrice) || 0,
+        retailPrice: Number(formData.retailPrice) || 0,
+        wholesalePrice: Number(formData.wholesalePrice) || 0,
+        stock: Number(formData.stock) || 0,
+        minStock: Number(formData.minStock) || 5,
+        status: 'ACTIVE',
+        conversions: formData.conversions.filter((c) => c.unit && c.factor > 1),
+      };
+
+      setProducts([newProd, ...products]);
+      showToast(`Đã thêm mới sản phẩm "${newProd.name}" thành công!`);
+    }
+
+    setIsFormModalOpen(false);
+    setEditingProduct(null);
   };
 
   const filteredProducts = products.filter((p) => {
@@ -224,6 +291,14 @@ export const ProductListPage = () => {
 
   return (
     <div className="space-y-6">
+      {/* Toast thông báo thành công */}
+      {toastMessage && (
+        <div className="fixed top-20 right-6 z-50 p-3.5 bg-emerald-600 text-white text-xs font-bold rounded-xl shadow-xl flex items-center gap-2 animate-in fade-in slide-in-from-top-4">
+          <CheckCircle2 className="w-4 h-4" />
+          <span>{toastMessage}</span>
+        </div>
+      )}
+
       {/* 1. Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -254,7 +329,7 @@ export const ProductListPage = () => {
           <Button
             variant="3d-solid"
             icon={Plus}
-            onClick={() => setIsCreateModalOpen(true)}
+            onClick={handleOpenCreate}
           >
             Thêm Sản Phẩm Mới
           </Button>
@@ -390,11 +465,18 @@ export const ProductListPage = () => {
                         <Eye className="w-4 h-4" />
                       </button>
                       <button
-                        onClick={() => alert(`Sửa thông tin sản phẩm: ${p.name}`)}
+                        onClick={() => handleOpenEdit(p)}
                         className="p-1.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition"
-                        title="Chỉnh sửa"
+                        title="Chỉnh sửa sản phẩm"
                       >
                         <Edit className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteProduct(p.id, p.name)}
+                        className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition"
+                        title="Xóa sản phẩm"
+                      >
+                        <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
                   </td>
@@ -405,19 +487,21 @@ export const ProductListPage = () => {
         </div>
       </div>
 
-      {/* Modal Thêm Mới Sản Phẩm Đa Đơn Vị & Hình Ảnh */}
-      {isCreateModalOpen && (
+      {/* Modal Thêm Mới HOẶC Chỉnh Sửa Sản Phẩm */}
+      {isFormModalOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto">
             <h2 className="text-base font-extrabold text-slate-900 mb-1 flex items-center gap-2">
               <Package className="w-5 h-5 text-blue-600" />
-              Thêm Mặt Hàng, Hình Ảnh & Cấu Hình Quy Đổi Đơn Vị
+              {editingProduct ? `Chỉnh Sửa Sản Phẩm: ${editingProduct.name}` : 'Thêm Mặt Hàng Mới & Hình Ảnh'}
             </h2>
             <p className="text-xs text-slate-500 mb-4">
-              Tải ảnh sản phẩm và cấu hình các cấp đơn vị quy đổi (VD: 1 Thùng = 24 Lon)
+              {editingProduct
+                ? 'Cập nhật lại giá bán, mã vạch, số lượng tồn kho hoặc hình ảnh của sản phẩm này'
+                : 'Tải ảnh sản phẩm và cấu hình các cấp đơn vị quy đổi (VD: 1 Thùng = 24 Lon)'}
             </p>
 
-            <form onSubmit={handleCreateProduct} className="space-y-4">
+            <form onSubmit={handleSaveProduct} className="space-y-4">
               {/* Component Upload Hình Ảnh Sản Phẩm */}
               <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200">
                 <ImageUpload
@@ -627,12 +711,15 @@ export const ProductListPage = () => {
                 <Button
                   type="button"
                   variant="3d-secondary"
-                  onClick={() => setIsCreateModalOpen(false)}
+                  onClick={() => {
+                    setIsFormModalOpen(false);
+                    setEditingProduct(null);
+                  }}
                 >
                   Hủy Bỏ
                 </Button>
                 <Button type="submit" variant="3d-solid">
-                  Lưu Sản Phẩm & Ảnh
+                  {editingProduct ? 'Lưu Thay Đổi' : 'Lưu Sản Phẩm & Ảnh'}
                 </Button>
               </div>
             </form>
@@ -716,7 +803,18 @@ export const ProductListPage = () => {
               )}
             </div>
 
-            <div className="flex justify-end">
+            <div className="flex justify-between items-center">
+              <Button
+                variant="3d-primary"
+                size="sm"
+                icon={Edit}
+                onClick={() => {
+                  setIsDetailModalOpen(false);
+                  handleOpenEdit(selectedProduct);
+                }}
+              >
+                Chỉnh Sửa Mặt Hàng Này
+              </Button>
               <Button variant="3d-secondary" onClick={() => setIsDetailModalOpen(false)}>
                 Đóng
               </Button>
