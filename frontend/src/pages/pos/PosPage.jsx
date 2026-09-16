@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import apiClient from '../../api/apiClient';
 import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
 import {
   Barcode,
   Search,
@@ -12,9 +11,10 @@ import {
   CreditCard,
   Banknote,
   CheckCircle2,
-  UserCheck,
   Printer,
-  X,
+  PauseCircle,
+  PlayCircle,
+  Clock
 } from 'lucide-react';
 
 export const PosPage = () => {
@@ -26,8 +26,9 @@ export const PosPage = () => {
   const [paymentMethod, setPaymentMethod] = useState('CASH');
   const [isProcessing, setIsProcessing] = useState(false);
   const [completedOrder, setCompletedOrder] = useState(null);
+  const [heldOrders, setHeldOrders] = useState([]);
+  const [isHeldModalOpen, setIsHeldModalOpen] = useState(false);
 
-  // Tải danh sách sản phẩm ban đầu
   useEffect(() => {
     fetchProducts();
   }, [searchKeyword]);
@@ -43,7 +44,6 @@ export const PosPage = () => {
     }
   };
 
-  // Quét mã vạch tự động thêm vào giỏ
   const handleBarcodeScan = async (e) => {
     e.preventDefault();
     if (!barcodeInput.trim()) return;
@@ -102,14 +102,40 @@ export const PosPage = () => {
     setCart((prev) => prev.filter((item) => item.productUnitId !== productUnitId));
   };
 
-  // Tính toán Tổng tiền đơn hàng
+  // Giữ đơn tạm
+  const handleHoldOrder = () => {
+    if (cart.length === 0) {
+      alert('Giỏ hàng đang trống, không thể giữ đơn!');
+      return;
+    }
+    const orderToHold = {
+      id: Date.now(),
+      holdTime: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
+      cart: [...cart],
+      totalAmount: grandTotal,
+    };
+    setHeldOrders([orderToHold, ...heldOrders]);
+    setCart([]);
+    setPaidAmount('');
+    alert('Đã giữ đơn tạm thành công! Bạn có thể tiếp tục tính tiền cho khách sau.');
+  };
+
+  // Khôi phục đơn tạm
+  const handleRestoreOrder = (held) => {
+    if (cart.length > 0 && !window.confirm('Giỏ hàng hiện tại có món. Bạn có muốn ghi đè bằng đơn tạm này?')) {
+      return;
+    }
+    setCart(held.cart);
+    setHeldOrders(heldOrders.filter((o) => o.id !== held.id));
+    setIsHeldModalOpen(false);
+  };
+
   const subtotal = cart.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0);
   const discount = 0;
   const grandTotal = subtotal - discount;
   const customerPaid = parseFloat(paidAmount || 0);
   const changeAmount = Math.max(0, customerPaid - grandTotal);
 
-  // Xử lý Thanh toán
   const handleCheckout = async () => {
     if (cart.length === 0) {
       alert('Giỏ hàng đang trống!');
@@ -153,11 +179,9 @@ export const PosPage = () => {
 
   return (
     <div className="h-[calc(100vh-5rem)] flex flex-col lg:flex-row gap-4 overflow-hidden">
-      
-      {/* 1. KHU VỰC BÊN TRÁI: BẮN MÃ VẠCH & DANH SÁCH SẢN PHẨM */}
+      {/* 1. KHU VỰC TRÁI: QUÉT MÃ VẠCH & CHỌN NHANH */}
       <div className="flex-1 flex flex-col gap-4 overflow-hidden">
-        
-        {/* Thanh Nhập Mã Vạch & Tìm Kiếm */}
+        {/* Thanh Nhập Mã Vạch */}
         <div className="soft-card p-4 flex flex-col sm:flex-row gap-3 items-center">
           <form onSubmit={handleBarcodeScan} className="w-full sm:w-1/2 relative">
             <Barcode className="w-5 h-5 text-blue-600 absolute left-3.5 top-2.5" />
@@ -183,7 +207,7 @@ export const PosPage = () => {
           </div>
         </div>
 
-        {/* Grid Sản Phẩm Thô Chọn Nhanh */}
+        {/* Grid Chọn Nhanh */}
         <div className="flex-1 overflow-y-auto soft-card p-4">
           <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wider mb-3">
             Sản Phẩm Chọn Nhanh ({products.length})
@@ -196,9 +220,9 @@ export const PosPage = () => {
                 onClick={() =>
                   addToCartFromScan({
                     product_id: prod.id,
-                    product_unit_id: prod.id, // Mock unit ID fallback
+                    product_unit_id: prod.id,
                     product_name: prod.name,
-                    unit_name: prod.base_unit_name || 'Cái',
+                    unit_name: prod.base_unit_name || 'Lon',
                     conversion_rate: 1,
                     retail_price: 15000,
                     cost_price: 10000,
@@ -208,9 +232,7 @@ export const PosPage = () => {
               >
                 <p className="text-xs font-bold text-slate-900 line-clamp-2">{prod.name}</p>
                 <div className="flex items-center justify-between">
-                  <span className="text-[11px] font-extrabold text-blue-600">
-                    15.000 đ
-                  </span>
+                  <span className="text-[11px] font-extrabold text-blue-600">15.000 đ</span>
                   <span className="text-[10px] text-slate-400 bg-white px-1.5 py-0.5 rounded border">
                     {prod.base_unit_name || 'Lon'}
                   </span>
@@ -219,30 +241,49 @@ export const PosPage = () => {
             ))}
           </div>
         </div>
-
       </div>
 
-      {/* 2. KHU VỰC BÊN PHẢI: GIỎ HÀNG POS & BẢNG THANH TOÁN */}
+      {/* 2. KHU VỰC PHẢI: GIỎ HÀNG & THANH TOÁN */}
       <div className="w-full lg:w-96 soft-card flex flex-col justify-between p-4 overflow-hidden border-l border-slate-200">
-        
-        {/* Header Giỏ Hàng */}
+        {/* Header Giỏ Hàng + Nút Giữ Đơn */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
           <div className="flex items-center gap-2">
             <ShoppingCart className="w-5 h-5 text-blue-600" />
             <h2 className="text-sm font-extrabold text-slate-900">Giỏ Hàng POS</h2>
+            <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
+              {cart.length} món
+            </span>
           </div>
-          <span className="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full">
-            {cart.length} món
-          </span>
+
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={handleHoldOrder}
+              title="Giữ đơn tạm này"
+              className="p-1.5 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded-lg transition"
+            >
+              <PauseCircle className="w-4 h-4" />
+            </button>
+
+            <button
+              onClick={() => setIsHeldModalOpen(true)}
+              title="Xem các đơn tạm đang giữ"
+              className="relative p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
+            >
+              <PlayCircle className="w-4 h-4" />
+              {heldOrders.length > 0 && (
+                <span className="absolute top-0 right-0 w-2 h-2 rounded-full bg-amber-500" />
+              )}
+            </button>
+          </div>
         </div>
 
-        {/* Danh Sách Món Trong Giỏ */}
+        {/* Danh Sách Món */}
         <div className="flex-1 overflow-y-auto py-3 divide-y divide-slate-100 space-y-2">
           {cart.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-slate-400 space-y-2 py-8">
               <ShoppingCart className="w-12 h-12 stroke-1" />
               <p className="text-xs font-medium">Giỏ hàng đang trống</p>
-              <span className="text-[10px] text-slate-400">Hãy quét mã vạch hoặc chọn sản phẩm</span>
+              <span className="text-[10px] text-slate-400">Quét mã vạch hoặc bấm chọn sản phẩm</span>
             </div>
           ) : (
             cart.map((item) => (
@@ -283,7 +324,7 @@ export const PosPage = () => {
           )}
         </div>
 
-        {/* Bảng Tính Tiền & Thanh Toán */}
+        {/* Tính Tiền & Thanh Toán */}
         <div className="border-t border-slate-100 pt-3 space-y-3 bg-slate-50/50 -mx-4 -mb-4 p-4">
           <div className="space-y-1.5 text-xs">
             <div className="flex justify-between text-slate-500">
@@ -300,7 +341,6 @@ export const PosPage = () => {
             </div>
           </div>
 
-          {/* Phương thức thanh toán */}
           <div className="grid grid-cols-2 gap-2 text-xs">
             <button
               onClick={() => setPaymentMethod('CASH')}
@@ -320,11 +360,10 @@ export const PosPage = () => {
                   : 'bg-white text-slate-700 border-slate-200'
               }`}
             >
-              <CreditCard className="w-4 h-4" /> VietQR Chuyển Khoản
+              <CreditCard className="w-4 h-4" /> Chuyển Khoản QR
             </button>
           </div>
 
-          {/* Ô Nhập Tiền Khách Đưa (Nếu dùng tiền mặt) */}
           {paymentMethod === 'CASH' && (
             <div className="space-y-1">
               <div className="flex justify-between text-xs">
@@ -343,7 +382,6 @@ export const PosPage = () => {
             </div>
           )}
 
-          {/* Nút Thanh Toán 3D Glass Transparent */}
           <Button
             variant="3d-solid"
             size="lg"
@@ -355,8 +393,55 @@ export const PosPage = () => {
             THANH TOÁN (F9)
           </Button>
         </div>
-
       </div>
+
+      {/* Modal Các Đơn Đang Giữ */}
+      {isHeldModalOpen && (
+        <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-5 shadow-2xl border border-slate-100">
+            <h3 className="text-sm font-extrabold text-slate-900 mb-1 flex items-center gap-2">
+              <Clock className="w-4 h-4 text-amber-500" />
+              Danh Sách Đơn Hàng Tạm Đang Giữ ({heldOrders.length})
+            </h3>
+            <p className="text-xs text-slate-500 mb-3">
+              Chọn đơn hàng tạm để khôi phục lại giỏ hàng và tiếp tục thanh toán
+            </p>
+
+            {heldOrders.length === 0 ? (
+              <p className="text-xs text-slate-400 py-6 text-center">Không có đơn hàng nào đang giữ</p>
+            ) : (
+              <div className="space-y-2 max-h-60 overflow-y-auto mb-4">
+                {heldOrders.map((held) => (
+                  <div
+                    key={held.id}
+                    className="p-3 bg-slate-50 rounded-xl flex items-center justify-between border border-slate-200"
+                  >
+                    <div>
+                      <p className="text-xs font-bold text-slate-800">
+                        {held.cart.length} món • {held.totalAmount.toLocaleString('vi-VN')} đ
+                      </p>
+                      <span className="text-[10px] text-slate-400">Giữ lúc {held.holdTime}</span>
+                    </div>
+                    <Button
+                      variant="3d-primary"
+                      size="sm"
+                      onClick={() => handleRestoreOrder(held)}
+                    >
+                      Mở Lại Đơn
+                    </Button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <div className="flex justify-end">
+              <Button variant="3d-secondary" onClick={() => setIsHeldModalOpen(false)}>
+                Đóng
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* MODAL HOÀN TẤT ĐƠN HÀNG IN BILL */}
       {completedOrder && (
@@ -371,11 +456,15 @@ export const PosPage = () => {
             <div className="bg-slate-50 p-3.5 rounded-xl space-y-2 text-xs border">
               <div className="flex justify-between">
                 <span>Tổng cộng:</span>
-                <span className="font-bold text-slate-900">{completedOrder.grandTotal.toLocaleString('vi-VN')} đ</span>
+                <span className="font-bold text-slate-900">
+                  {completedOrder.grandTotal.toLocaleString('vi-VN')} đ
+                </span>
               </div>
               <div className="flex justify-between">
                 <span>Tiền khách đưa:</span>
-                <span className="font-bold text-slate-900">{completedOrder.paidAmount.toLocaleString('vi-VN')} đ</span>
+                <span className="font-bold text-slate-900">
+                  {completedOrder.paidAmount.toLocaleString('vi-VN')} đ
+                </span>
               </div>
               <div className="flex justify-between border-t pt-1 text-emerald-600 font-bold">
                 <span>Tiền thối lại:</span>
@@ -406,7 +495,6 @@ export const PosPage = () => {
           </div>
         </div>
       )}
-
     </div>
   );
 };

@@ -16,8 +16,13 @@ backend/src/uploads/*
 logs/
 *.log
 
+# Build artifacts
+dist/
+frontend/dist/
+
 # OS / IDE
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
+

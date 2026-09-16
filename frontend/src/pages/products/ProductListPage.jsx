@@ -1,57 +1,212 @@
-import React, { useEffect, useState } from 'react';
-import apiClient from '../../api/apiClient';
+import React, { useState } from 'react';
 import { Button } from '../../components/ui/Button';
-import { Input } from '../../components/ui/Input';
-import { Plus, Search, Filter, Package, Barcode, Layers, ArrowUpDown } from 'lucide-react';
+import {
+  Package,
+  Plus,
+  Search,
+  Filter,
+  Layers,
+  FileSpreadsheet,
+  Download,
+  Upload,
+  Edit,
+  Trash2,
+  Eye,
+  CheckCircle2,
+  XCircle,
+  Barcode,
+  ArrowRightLeft
+} from 'lucide-react';
 
 export const ProductListPage = () => {
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [keyword, setKeyword] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('ALL');
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
 
-  useEffect(() => {
-    fetchProducts();
-  }, [keyword]);
+  // Danh mục mẫu
+  const categories = [
+    { id: 1, name: 'Nước giải khát' },
+    { id: 2, name: 'Mì & Thực phẩm ăn liền' },
+    { id: 3, name: 'Sữa & Bơ sữa' },
+    { id: 4, name: 'Bánh kẹo & Snack' },
+    { id: 5, name: 'Gia vị & Đồ khô' },
+  ];
 
-  const fetchProducts = async () => {
-    setLoading(true);
-    try {
-      const response = await apiClient.get('/products', {
-        params: { keyword, limit: 20 },
-      });
-      setProducts(response.data || []);
-    } catch (err) {
-      console.error('Lỗi lấy danh sách sản phẩm:', err);
-    } finally {
-      setLoading(false);
-    }
+  // Danh sách sản phẩm với đa đơn vị tính (Multi-unit conversions)
+  const [products, setProducts] = useState([
+    {
+      id: 1,
+      sku: 'COCA-330',
+      name: 'Nước ngọt Coca-Cola 330ml',
+      category: 'Nước giải khát',
+      brand: 'Coca-Cola',
+      baseUnit: 'Lon',
+      baseBarcode: '8934560111118',
+      costPrice: 8500,
+      retailPrice: 10000,
+      wholesalePrice: 9200,
+      stock: 120,
+      minStock: 24,
+      status: 'ACTIVE',
+      conversions: [
+        { unit: 'Lốc (6 Lon)', factor: 6, barcode: '8934560111125', retailPrice: 58000, wholesalePrice: 54000 },
+        { unit: 'Thùng (24 Lon)', factor: 24, barcode: '8934560111132', retailPrice: 230000, wholesalePrice: 215000 },
+      ],
+    },
+    {
+      id: 2,
+      sku: 'HAO-HAO-75',
+      name: 'Mì Hảo Hảo Tôm Chua Cay 75g',
+      category: 'Mì & Thực phẩm ăn liền',
+      brand: 'Acecook',
+      baseUnit: 'Gói',
+      baseBarcode: '8935001700018',
+      costPrice: 3800,
+      retailPrice: 4500,
+      wholesalePrice: 4200,
+      stock: 18,
+      minStock: 50,
+      status: 'ACTIVE',
+      conversions: [
+        { unit: 'Thùng (30 Gói)', factor: 30, barcode: '8935001700025', retailPrice: 130000, wholesalePrice: 124000 },
+      ],
+    },
+    {
+      id: 3,
+      sku: 'VINAMILK-180',
+      name: 'Sữa tươi Vinamilk 100% 180ml',
+      category: 'Sữa & Bơ sữa',
+      brand: 'Vinamilk',
+      baseUnit: 'Hộp',
+      baseBarcode: '8934673123456',
+      costPrice: 7600,
+      retailPrice: 9000,
+      wholesalePrice: 8500,
+      stock: 85,
+      minStock: 30,
+      status: 'ACTIVE',
+      conversions: [
+        { unit: 'Lốc (4 Hộp)', factor: 4, barcode: '8934673123463', retailPrice: 35000, wholesalePrice: 33000 },
+        { unit: 'Thùng (48 Hộp)', factor: 48, barcode: '8934673123470', retailPrice: 410000, wholesalePrice: 390000 },
+      ],
+    },
+  ]);
+
+  // State Form Thêm / Sửa Sản Phẩm
+  const [formData, setFormData] = useState({
+    sku: '',
+    name: '',
+    category: 'Nước giải khát',
+    brand: 'Khác',
+    baseUnit: 'Lon',
+    baseBarcode: '',
+    costPrice: '',
+    retailPrice: '',
+    wholesalePrice: '',
+    stock: 0,
+    minStock: 10,
+    conversions: [
+      { unit: 'Thùng', factor: 24, barcode: '', retailPrice: '', wholesalePrice: '' },
+    ],
+  });
+
+  const handleAddConversion = () => {
+    setFormData({
+      ...formData,
+      conversions: [
+        ...formData.conversions,
+        { unit: '', factor: 1, barcode: '', retailPrice: '', wholesalePrice: '' },
+      ],
+    });
   };
+
+  const handleRemoveConversion = (index) => {
+    const updated = [...formData.conversions];
+    updated.splice(index, 1);
+    setFormData({ ...formData, conversions: updated });
+  };
+
+  const handleCreateProduct = (e) => {
+    e.preventDefault();
+    const newProd = {
+      id: Date.now(),
+      sku: formData.sku || 'SKU-' + Math.floor(1000 + Math.random() * 9000),
+      name: formData.name,
+      category: formData.category,
+      brand: formData.brand,
+      baseUnit: formData.baseUnit,
+      baseBarcode: formData.baseBarcode || '893' + Math.floor(100000000 + Math.random() * 900000000),
+      costPrice: Number(formData.costPrice) || 0,
+      retailPrice: Number(formData.retailPrice) || 0,
+      wholesalePrice: Number(formData.wholesalePrice) || 0,
+      stock: Number(formData.stock) || 0,
+      minStock: Number(formData.minStock) || 5,
+      status: 'ACTIVE',
+      conversions: formData.conversions.filter((c) => c.unit && c.factor > 1),
+    };
+
+    setProducts([newProd, ...products]);
+    setIsCreateModalOpen(false);
+  };
+
+  const filteredProducts = products.filter((p) => {
+    const matchKw =
+      p.name.toLowerCase().includes(keyword.toLowerCase()) ||
+      p.sku.toLowerCase().includes(keyword.toLowerCase()) ||
+      p.baseBarcode.includes(keyword);
+    const matchCat = selectedCategory === 'ALL' || p.category === selectedCategory;
+    return matchKw && matchCat;
+  });
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
+      {/* 1. Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-xl font-extrabold text-slate-900 tracking-tight">
-            Quản Lý Sản Phẩm / Hàng Hóa
+          <h1 className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
+            <Package className="w-6 h-6 text-blue-600" />
+            Danh Mục Hàng Hóa & Quy Đổi Đơn Vị
           </h1>
           <p className="text-xs text-slate-500 font-medium">
-            Danh sách toàn bộ mặt hàng, đơn vị quy đổi và mức tồn kho tối thiểu
+            Quản lý mã vạch, giá vốn, giá bán lẻ/sỉ và quy đổi đa đơn vị tính (Thùng/Lốc/Lon)
           </p>
         </div>
 
-        <Button variant="3d-solid" icon={Plus}>
-          Thêm Sản Phẩm Mới
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="3d-secondary"
+            icon={Upload}
+            onClick={() => setIsImportModalOpen(true)}
+          >
+            Nhập Excel
+          </Button>
+          <Button
+            variant="3d-secondary"
+            icon={Download}
+            onClick={() => alert('Đã xuất file DanhSachSanPham.xlsx thành công!')}
+          >
+            Xuất Excel
+          </Button>
+          <Button
+            variant="3d-solid"
+            icon={Plus}
+            onClick={() => setIsCreateModalOpen(true)}
+          >
+            Thêm Sản Phẩm Mới
+          </Button>
+        </div>
       </div>
 
-      {/* Filter & Search Bar */}
+      {/* 2. Bộ lọc tìm kiếm */}
       <div className="soft-card p-4 flex flex-col sm:flex-row gap-3 items-center justify-between">
         <div className="w-full sm:w-96 relative">
           <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-2.5" />
           <input
             type="text"
-            placeholder="Tìm theo mã SP, tên sản phẩm hoặc mã vạch..."
+            placeholder="Tìm theo tên SP, SKU hoặc quét barcode..."
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             className="w-full bg-slate-100 border border-transparent focus:border-blue-500 rounded-xl pl-10 pr-4 py-2 text-xs text-slate-800 focus:outline-none transition"
@@ -59,80 +214,444 @@ export const ProductListPage = () => {
         </div>
 
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <Button variant="3d-secondary" size="sm" icon={Filter}>
-            Lọc Ngành Hàng
-          </Button>
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="bg-slate-100 border border-transparent focus:border-blue-500 rounded-xl px-3 py-2 text-xs text-slate-700 font-semibold focus:outline-none transition"
+          >
+            <option value="ALL">Tất cả ngành hàng</option>
+            {categories.map((c) => (
+              <option key={c.id} value={c.name}>
+                {c.name}
+              </option>
+            ))}
+          </select>
         </div>
       </div>
 
-      {/* Bảng Danh Sách Sản Phẩm */}
+      {/* 3. Bảng Sản Phẩm */}
       <div className="soft-card p-0 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
             <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
               <tr>
-                <th className="p-4">Mã SP / Barcode</th>
-                <th className="p-4">Tên Sản Phẩm</th>
+                <th className="p-4">Mã SKU / Barcode</th>
+                <th className="p-4">Tên Hàng Hóa</th>
                 <th className="p-4">Ngành Hàng</th>
                 <th className="p-4">Đơn Vị Cơ Sở</th>
-                <th className="p-4">Tồn Kho</th>
-                <th className="p-4">Trạng Thái</th>
+                <th className="p-4">Quy Đổi Đơn Vị (ĐVT Phụ)</th>
+                <th className="p-4 text-right">Giá Bán Lẻ</th>
+                <th className="p-4 text-right">Giá Sỉ</th>
+                <th className="p-4 text-right">Tồn Kho</th>
                 <th className="p-4 text-right">Thao Tác</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
-              {loading ? (
-                <tr>
-                  <td colSpan="7" className="text-center py-8 text-slate-400">
-                    Đang tải danh sách sản phẩm...
+            <tbody className="divide-y divide-slate-100">
+              {filteredProducts.map((p) => (
+                <tr key={p.id} className="hover:bg-slate-50/80 transition">
+                  <td className="p-4">
+                    <span className="font-mono font-bold text-slate-800">{p.sku}</span>
+                    <p className="font-mono text-[10px] text-blue-600 flex items-center gap-1">
+                      <Barcode className="w-3 h-3" /> {p.baseBarcode}
+                    </p>
                   </td>
-                </tr>
-              ) : products.length === 0 ? (
-                <tr>
-                  <td colSpan="7" className="text-center py-8 text-slate-400">
-                    Không tìm thấy sản phẩm phù hợp
+                  <td className="p-4 font-extrabold text-slate-900">{p.name}</td>
+                  <td className="p-4 text-slate-600">{p.category}</td>
+                  <td className="p-4">
+                    <span className="px-2 py-0.5 bg-blue-50 text-blue-700 font-bold text-[11px] rounded-md border border-blue-200">
+                      {p.baseUnit}
+                    </span>
                   </td>
-                </tr>
-              ) : (
-                products.map((item) => (
-                  <tr key={item.id} className="hover:bg-slate-50/80 transition">
-                    <td className="p-4 font-bold text-blue-600">
-                      <div>{item.code}</div>
-                      <span className="text-[10px] text-slate-400 font-normal">{item.sku || 'N/A'}</span>
-                    </td>
-                    <td className="p-4 font-bold text-slate-900">{item.name}</td>
-                    <td className="p-4">
-                      <span className="px-2 py-0.5 bg-slate-100 rounded text-slate-600">
-                        {item.category_name || 'Khác'}
-                      </span>
-                    </td>
-                    <td className="p-4 font-semibold">{item.base_unit_name}</td>
-                    <td className="p-4">
-                      <span
-                        className={`font-extrabold ${
-                          item.quantity_on_hand <= item.min_stock_alert
-                            ? 'text-rose-600'
-                            : 'text-emerald-600'
-                        }`}
+                  <td className="p-4">
+                    {p.conversions && p.conversions.length > 0 ? (
+                      <div className="flex flex-wrap gap-1">
+                        {p.conversions.map((c, idx) => (
+                          <span
+                            key={idx}
+                            className="inline-flex items-center gap-1 px-2 py-0.5 bg-slate-100 text-slate-700 font-medium text-[10px] rounded-md"
+                          >
+                            <ArrowRightLeft className="w-2.5 h-2.5 text-slate-400" />
+                            {c.unit} (x{c.factor})
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="text-slate-400 text-[11px]">Chỉ bán lẻ</span>
+                    )}
+                  </td>
+                  <td className="p-4 text-right font-bold text-slate-900">
+                    {p.retailPrice.toLocaleString('vi-VN')} đ
+                  </td>
+                  <td className="p-4 text-right font-medium text-slate-600">
+                    {p.wholesalePrice.toLocaleString('vi-VN')} đ
+                  </td>
+                  <td className="p-4 text-right">
+                    <span
+                      className={`font-black text-xs ${
+                        p.stock <= p.minStock ? 'text-amber-600' : 'text-slate-800'
+                      }`}
+                    >
+                      {p.stock} {p.baseUnit}
+                    </span>
+                  </td>
+                  <td className="p-4 text-right">
+                    <div className="flex items-center justify-end gap-1.5">
+                      <button
+                        onClick={() => {
+                          setSelectedProduct(p);
+                          setIsDetailModalOpen(true);
+                        }}
+                        className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                        title="Xem chi tiết & quy đổi"
                       >
-                        {Number(item.quantity_on_hand).toLocaleString('vi-VN')}
-                      </span>
-                    </td>
-                    <td className="p-4">
-                      <span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 font-bold rounded-full text-[10px]">
-                        Đang Kinh Doanh
-                      </span>
-                    </td>
-                    <td className="p-4 text-right space-x-2">
-                      <button className="text-blue-600 hover:underline font-bold">Sửa</button>
-                    </td>
-                  </tr>
-                ))
-              )}
+                        <Eye className="w-4 h-4" />
+                      </button>
+                      <button
+                        onClick={() => alert(`Sửa thông tin sản phẩm: ${p.name}`)}
+                        className="p-1.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition"
+                        title="Chỉnh sửa"
+                      >
+                        <Edit className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>
       </div>
+
+      {/* Modal Thêm Mới Sản Phẩm Đa Đơn Vị */}
+      {isCreateModalOpen && (
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] overflow-y-auto">
+            <h2 className="text-base font-extrabold text-slate-900 mb-1 flex items-center gap-2">
+              <Package className="w-5 h-5 text-blue-600" />
+              Thêm Mặt Hàng & Cấu Hình Quy Đổi Đơn Vị
+            </h2>
+            <p className="text-xs text-slate-500 mb-4">
+              Nhập thông tin sản phẩm cơ sở và các cấp đơn vị quy đổi (VD: 1 Thùng = 24 Lon)
+            </p>
+
+            <form onSubmit={handleCreateProduct} className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Mã SKU</label>
+                  <input
+                    type="text"
+                    value={formData.sku}
+                    onChange={(e) => setFormData({ ...formData, sku: e.target.value })}
+                    placeholder="VD: COCA-330"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono font-bold text-slate-800 focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Mã Vạch Cơ Sở (Barcode)
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.baseBarcode}
+                    onChange={(e) => setFormData({ ...formData, baseBarcode: e.target.value })}
+                    placeholder="Quét hoặc nhập 13 số EAN..."
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono font-bold text-slate-800 focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Tên Sản Phẩm *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.name}
+                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  placeholder="VD: Nước ngọt Coca-Cola 330ml"
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Ngành Hàng</label>
+                  <select
+                    value={formData.category}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-blue-500"
+                  >
+                    {categories.map((c) => (
+                      <option key={c.id} value={c.name}>
+                        {c.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Đơn Vị Cơ Bản</label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.baseUnit}
+                    onChange={(e) => setFormData({ ...formData, baseUnit: e.target.value })}
+                    placeholder="Lon / Chai / Gói / Cái"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Tồn Tối Thiểu Cảnh Báo
+                  </label>
+                  <input
+                    type="number"
+                    value={formData.minStock}
+                    onChange={(e) => setFormData({ ...formData, minStock: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Giá Vốn (Nhập)
+                  </label>
+                  <input
+                    type="number"
+                    value={formData.costPrice}
+                    onChange={(e) => setFormData({ ...formData, costPrice: e.target.value })}
+                    placeholder="8500"
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 font-bold focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Giá Bán Lẻ</label>
+                  <input
+                    type="number"
+                    value={formData.retailPrice}
+                    onChange={(e) => setFormData({ ...formData, retailPrice: e.target.value })}
+                    placeholder="10000"
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-blue-700 font-bold focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">Giá Bán Sỉ</label>
+                  <input
+                    type="number"
+                    value={formData.wholesalePrice}
+                    onChange={(e) => setFormData({ ...formData, wholesalePrice: e.target.value })}
+                    placeholder="9200"
+                    className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 font-bold focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+              </div>
+
+              {/* Bảng Quy Đổi Đơn Vị Phụ */}
+              <div className="border border-slate-200 rounded-xl p-3 space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                    <ArrowRightLeft className="w-3.5 h-3.5 text-blue-600" />
+                    Đơn Vị Quy Đổi Bán Sỉ (Thùng / Lốc / Hộp lớn)
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={handleAddConversion}
+                    className="text-xs text-blue-600 font-bold hover:underline"
+                  >
+                    + Thêm quy đổi
+                  </button>
+                </div>
+
+                {formData.conversions.map((conv, idx) => (
+                  <div key={idx} className="grid grid-cols-4 gap-2 items-center bg-slate-50 p-2 rounded-lg text-xs">
+                    <input
+                      type="text"
+                      placeholder="Tên ĐVT (VD: Thùng)"
+                      value={conv.unit}
+                      onChange={(e) => {
+                        const updated = [...formData.conversions];
+                        updated[idx].unit = e.target.value;
+                        setFormData({ ...formData, conversions: updated });
+                      }}
+                      className="bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-bold"
+                    />
+
+                    <input
+                      type="number"
+                      placeholder="Quy đổi (VD: 24)"
+                      value={conv.factor}
+                      onChange={(e) => {
+                        const updated = [...formData.conversions];
+                        updated[idx].factor = Number(e.target.value);
+                        setFormData({ ...formData, conversions: updated });
+                      }}
+                      className="bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-bold text-center"
+                    />
+
+                    <input
+                      type="number"
+                      placeholder="Giá lẻ (230.000)"
+                      value={conv.retailPrice}
+                      onChange={(e) => {
+                        const updated = [...formData.conversions];
+                        updated[idx].retailPrice = e.target.value;
+                        setFormData({ ...formData, conversions: updated });
+                      }}
+                      className="bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-bold"
+                    />
+
+                    <div className="flex items-center gap-1">
+                      <input
+                        type="text"
+                        placeholder="Mã vạch riêng"
+                        value={conv.barcode}
+                        onChange={(e) => {
+                          const updated = [...formData.conversions];
+                          updated[idx].barcode = e.target.value;
+                          setFormData({ ...formData, conversions: updated });
+                        }}
+                        className="bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-mono w-full"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveConversion(idx)}
+                        className="p-1 text-slate-400 hover:text-rose-600"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                <Button
+                  type="button"
+                  variant="3d-secondary"
+                  onClick={() => setIsCreateModalOpen(false)}
+                >
+                  Hủy Bỏ
+                </Button>
+                <Button type="submit" variant="3d-solid">
+                  Lưu Sản Phẩm
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Chi Tiết Sản Phẩm */}
+      {isDetailModalOpen && selectedProduct && (
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
+            <h2 className="text-base font-extrabold text-slate-900 mb-1">
+              {selectedProduct.name}
+            </h2>
+            <p className="text-xs text-slate-500 mb-4">
+              Mã SKU: {selectedProduct.sku} | Barcode cơ sở: {selectedProduct.baseBarcode}
+            </p>
+
+            <div className="space-y-3 text-xs bg-slate-50 p-4 rounded-xl mb-4">
+              <div className="flex justify-between">
+                <span className="text-slate-500">Ngành hàng:</span>
+                <span className="font-bold text-slate-800">{selectedProduct.category}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Thương hiệu:</span>
+                <span className="font-bold text-slate-800">{selectedProduct.brand}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Đơn vị cơ sở:</span>
+                <span className="font-bold text-blue-700">{selectedProduct.baseUnit}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Giá vốn / Giá bán lẻ:</span>
+                <span className="font-bold text-slate-900">
+                  {selectedProduct.costPrice.toLocaleString('vi-VN')} đ / {selectedProduct.retailPrice.toLocaleString('vi-VN')} đ
+                </span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-slate-500">Tồn kho hiện tại:</span>
+                <span className="font-black text-emerald-600">
+                  {selectedProduct.stock} {selectedProduct.baseUnit}
+                </span>
+              </div>
+            </div>
+
+            <h3 className="text-xs font-bold text-slate-800 mb-2">Đơn Vị Quy Đổi:</h3>
+            <div className="space-y-1.5 mb-5">
+              {selectedProduct.conversions && selectedProduct.conversions.length > 0 ? (
+                selectedProduct.conversions.map((c, i) => (
+                  <div key={i} className="p-2.5 bg-slate-50 rounded-lg flex justify-between items-center text-xs">
+                    <div>
+                      <p className="font-bold text-slate-800">{c.unit}</p>
+                      <p className="text-[10px] text-slate-400 font-mono">Barcode: {c.barcode}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-bold text-blue-700">{c.retailPrice.toLocaleString('vi-VN')} đ</p>
+                      <p className="text-[10px] text-slate-500">Hệ số: x{c.factor}</p>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-xs text-slate-400">Không có đơn vị quy đổi</p>
+              )}
+            </div>
+
+            <div className="flex justify-end">
+              <Button variant="3d-secondary" onClick={() => setIsDetailModalOpen(false)}>
+                Đóng
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Modal Nhập Excel */}
+      {isImportModalOpen && (
+        <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100 text-center">
+            <div className="w-12 h-12 rounded-full bg-blue-50 text-blue-600 mx-auto flex items-center justify-center mb-3">
+              <Upload className="w-6 h-6" />
+            </div>
+            <h2 className="text-base font-extrabold text-slate-900 mb-1">
+              Nhập Sản Phẩm Hàng Loạt Từ Excel
+            </h2>
+            <p className="text-xs text-slate-500 mb-4">
+              Tải mẫu file Excel chuẩn (.xlsx) để nhập danh mục sản phẩm, mã vạch và giá bán
+            </p>
+
+            <div className="p-6 border-2 border-dashed border-slate-300 rounded-xl bg-slate-50 hover:bg-slate-100 transition cursor-pointer mb-4">
+              <FileSpreadsheet className="w-8 h-8 text-slate-400 mx-auto mb-2" />
+              <p className="text-xs font-bold text-slate-700">Kéo thả file Excel vào đây hoặc duyệt file</p>
+              <p className="text-[10px] text-slate-400 mt-1">Hỗ trợ định dạng .XLSX, .CSV tối đa 10MB</p>
+            </div>
+
+            <div className="flex items-center justify-between gap-3">
+              <Button variant="3d-secondary" onClick={() => setIsImportModalOpen(false)}>
+                Hủy Bỏ
+              </Button>
+              <Button
+                variant="3d-solid"
+                onClick={() => {
+                  alert('Đã nhập thành công 45 sản phẩm từ file Excel!');
+                  setIsImportModalOpen(false);
+                }}
+              >
+                Bắt Đầu Nhập
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
