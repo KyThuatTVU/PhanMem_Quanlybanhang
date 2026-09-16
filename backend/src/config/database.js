@@ -25,7 +25,7 @@ const testConnection = async () => {
     console.log('✅ Chúc mừng đã kết nối thành công Cơ sở dữ liệu!');
     connection.release();
   } catch (error) {
-    console.error('❌ Vui lòng kiểm tra lại đã bật dịch vụ Xampp chưa!:', error.message);
+    console.error('❌ Vui lòng kiểm tra lại đã bật dịch vụ Xampp chưa:', error.message);
     process.exit(1);
   }
 };
