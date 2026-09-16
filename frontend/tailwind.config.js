@@ -4,7 +4,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Plus Jakarta Sans"', '"Be Vietnam Pro"', 'Inter', 'system-ui', '-apple-system', 'sans-serif'],
+        sans: ['"Coiny"', '"Plus Jakarta Sans"', '"Be Vietnam Pro"', 'Inter', 'sans-serif'],
+        coiny: ['"Coiny"', 'cursive', 'sans-serif'],
       },
       colors: {
         background: '#F0F9F4', // Xanh lá nhẹ sáng chuyên nghiệp (Soft Sage Mint)

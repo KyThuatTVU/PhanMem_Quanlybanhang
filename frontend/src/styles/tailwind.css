@@ -4,9 +4,14 @@
 
 @layer base {
   body {
-    font-family: 'Plus Jakarta Sans', 'Be Vietnam Pro', 'Inter', system-ui, -apple-system, sans-serif;
-    letter-spacing: -0.012em;
+    font-family: 'Coiny', 'Plus Jakarta Sans', 'Be Vietnam Pro', sans-serif;
+    letter-spacing: 0.01em;
     @apply bg-background text-slate-800 antialiased selection:bg-sky-500 selection:text-white;
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-coiny {
+    font-family: 'Coiny', cursive, sans-serif;
+    letter-spacing: 0.02em;
   }
 }
 
