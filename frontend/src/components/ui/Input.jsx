@@ -5,7 +5,7 @@ export const Input = React.forwardRef(
     return (
       <div className="w-full space-y-1.5">
         {label && (
-          <label className="block text-xs font-semibold text-slate-700 tracking-wide">
+          <label className="block text-xs font-extrabold text-slate-900 tracking-wide">
             {label}
           </label>
         )}

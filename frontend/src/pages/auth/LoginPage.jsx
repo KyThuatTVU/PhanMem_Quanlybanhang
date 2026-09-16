@@ -67,10 +67,13 @@ export const LoginPage = () => {
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-white p-2 border border-slate-100 shadow-lg shadow-sky-500/10 mb-1">
               <img src={brandLogo} alt="Tạp Hóa An Khang" className="w-full h-full object-contain" />
             </div>
-            <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+            <h1
+              className="text-3xl sm:text-4xl font-black text-black tracking-tight"
+              style={{ WebkitTextStroke: '0.65px #000000', letterSpacing: '-0.02em' }}
+            >
               Tạp Hóa An Khang
             </h1>
-            <p className="text-xs font-medium text-slate-500">
+            <p className="text-xs font-bold text-slate-600">
               Hệ thống phần mềm quản lý bán hàng POS chuyên nghiệp
             </p>
           </div>
@@ -172,9 +175,9 @@ export const LoginPage = () => {
 
           {/* Khu vực Điền nhanh tài khoản dùng thử (Quick Demo Login) */}
           <div className="pt-3 border-t border-slate-100 space-y-2">
-            <div className="flex items-center gap-1.5 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-              <Sparkles className="w-3.5 h-3.5 text-blue-500" />
-              <span>Dùng thử nhanh vai trò:</span>
+            <div className="flex items-center gap-1.5 text-xs font-black text-black uppercase tracking-wider">
+              <Sparkles className="w-4 h-4 text-sky-600" />
+              <span>DÙNG THỬ NHANH VAI TRÒ:</span>
             </div>
             <div className="grid grid-cols-3 gap-2 text-xs">
               <button
