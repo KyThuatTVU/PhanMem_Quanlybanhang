@@ -4,7 +4,8 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['"Comfortaa"', '"Baloo 2"', '"Nunito"', 'system-ui', 'sans-serif'],
+        sans: ['"Comfortaa"', '"Baloo 2"', 'sans-serif'],
+        mono: ['"Comfortaa"', '"Baloo 2"', 'sans-serif'],
         rounded: ['"Comfortaa"', '"Baloo 2"', 'sans-serif'],
       },
       colors: {
