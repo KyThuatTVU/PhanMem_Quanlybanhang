@@ -277,23 +277,23 @@ export const InventoryPage = () => {
             </div>
           </div>
 
-          <div className="soft-card p-0 overflow-hidden">
+          <div className="table-glass-container">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
+              <table className="table-3d-glass text-left text-xs">
+                <thead>
                   <tr>
-                    <th className="p-4">Mã SKU / Barcode</th>
-                    <th className="p-4">Tên Hàng Hóa</th>
-                    <th className="p-4">Ngành Hàng</th>
-                    <th className="p-4 text-center">ĐVT Cơ Sở</th>
-                    <th className="p-4 text-right">Tồn Thực Tế</th>
-                    <th className="p-4 text-right">Mức Tối Thiểu</th>
-                    <th className="p-4 text-right">Giá Vốn</th>
-                    <th className="p-4 text-right">Giá Trị Vốn Tồn</th>
-                    <th className="p-4 text-center">Tình Trạng</th>
+                    <th>Mã SKU / Barcode</th>
+                    <th>Tên Hàng Hóa</th>
+                    <th>Ngành Hàng</th>
+                    <th className="text-center">ĐVT Cơ Sở</th>
+                    <th className="text-right">Tồn Thực Tế</th>
+                    <th className="text-right">Mức Tối Thiểu</th>
+                    <th className="text-right">Giá Vốn</th>
+                    <th className="text-right">Giá Trị Vốn Tồn</th>
+                    <th className="text-center">Tình Trạng</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody>
                   {stocks
                     .filter(
                       (s) =>
@@ -303,7 +303,7 @@ export const InventoryPage = () => {
                     .map((item) => {
                       const isLow = item.quantity <= item.minStock;
                       return (
-                        <tr key={item.id} className="hover:bg-slate-50/80 transition">
+                        <tr key={item.id}>
                           <td className="p-4">
                             <span className="font-mono font-bold text-slate-700">{item.sku}</span>
                             <p className="text-[10px] text-slate-400 font-mono">{item.barcode}</p>

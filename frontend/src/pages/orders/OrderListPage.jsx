@@ -81,29 +81,29 @@ export const OrderListPage = () => {
         </span>
       </div>
 
-      <div className="soft-card p-0 overflow-hidden">
+      <div className="table-glass-container">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
+          <table className="table-3d-glass text-left text-xs">
+            <thead>
               <tr>
-                <th className="p-4">Mã Hóa Đơn</th>
-                <th className="p-4">Thời Gian</th>
-                <th className="p-4">Khách Hàng</th>
-                <th className="p-4">Thu Ngân</th>
-                <th className="p-4">Tổng Thanh Toán</th>
-                <th className="p-4">Thanh Toán</th>
-                <th className="p-4">Trạng Thái Đơn</th>
-                <th className="p-4 text-right">Thao Tác</th>
+                <th>Mã Hóa Đơn</th>
+                <th>Thời Gian</th>
+                <th>Khách Hàng</th>
+                <th>Thu Ngân</th>
+                <th>Tổng Thanh Toán</th>
+                <th>Thanh Toán</th>
+                <th>Trạng Thái Đơn</th>
+                <th className="text-right">Thao Tác</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
+            <tbody className="font-medium text-slate-700">
               {loading ? (
                 <tr><td colSpan="8" className="p-4 text-center">Đang tải danh sách đơn hàng...</td></tr>
               ) : orders.length === 0 ? (
                 <tr><td colSpan="8" className="p-4 text-center">Chưa có hóa đơn nào</td></tr>
               ) : (
                 orders.map((o) => (
-                  <tr key={o.id} className="hover:bg-slate-50/80 transition">
+                  <tr key={o.id}>
                     <td className="p-4 font-bold text-blue-600">{o.code}</td>
                     <td className="p-4 text-slate-500">{new Date(o.created_at).toLocaleString('vi-VN')}</td>
                     <td className="p-4 font-semibold text-slate-900">{o.customer_name || 'Khách lẻ tại quầy'}</td>

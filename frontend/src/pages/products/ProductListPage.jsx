@@ -365,27 +365,27 @@ export const ProductListPage = () => {
         </div>
       </div>
 
-      {/* 3. Bảng Sản Phẩm Kèm Hình Ảnh Thực Tế */}
-      <div className="soft-card p-0 overflow-hidden">
+      {/* 3. Bảng Sản Phẩm Kèm Hình Ảnh Thực Tế Dạng Lưới 3D Thủy Tinh */}
+      <div className="table-glass-container">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-emerald-50/50 text-slate-600 font-extrabold uppercase tracking-wider border-b border-emerald-100">
+          <table className="table-3d-glass text-left text-xs">
+            <thead>
               <tr>
-                <th className="p-4 w-16 text-center">Hình Ảnh</th>
-                <th className="p-4">Mã SKU / Barcode</th>
-                <th className="p-4">Tên Hàng Hóa</th>
-                <th className="p-4">Ngành Hàng</th>
-                <th className="p-4">Đơn Vị Cơ Sở</th>
-                <th className="p-4">Quy Đổi Đơn Vị (ĐVT Phụ)</th>
-                <th className="p-4 text-right">Giá Bán Lẻ</th>
-                <th className="p-4 text-right">Giá Sỉ</th>
-                <th className="p-4 text-right">Tồn Kho</th>
-                <th className="p-4 text-right">Thao Tác</th>
+                <th className="w-20 text-center">Hình Ảnh</th>
+                <th>Mã SKU / Barcode</th>
+                <th>Tên Hàng Hóa</th>
+                <th>Ngành Hàng</th>
+                <th>Đơn Vị Cơ Sở</th>
+                <th>Quy Đổi Đơn Vị (ĐVT Phụ)</th>
+                <th className="text-right">Giá Bán Lẻ</th>
+                <th className="text-right">Giá Sỉ</th>
+                <th className="text-right">Tồn Kho</th>
+                <th className="text-right">Thao Tác</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-emerald-50">
+            <tbody>
               {filteredProducts.map((p) => (
-                <tr key={p.id} className="hover:bg-emerald-50/40 transition">
+                <tr key={p.id}>
                   {/* Cột Hình Ảnh Sản Phẩm */}
                   <td className="p-3 text-center">
                     {p.image ? (

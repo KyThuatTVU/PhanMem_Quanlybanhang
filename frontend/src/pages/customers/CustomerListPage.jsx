@@ -166,25 +166,25 @@ export const CustomerListPage = () => {
         </div>
       </div>
 
-      {/* 3. Table */}
-      <div className="soft-card p-0 overflow-hidden">
+      {/* 3. Table Dạng Lưới 3D Thủy Tinh */}
+      <div className="table-glass-container">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
+          <table className="table-3d-glass text-left text-xs">
+            <thead>
               <tr>
-                <th className="p-4">Mã KH</th>
-                <th className="p-4">Họ & Tên</th>
-                <th className="p-4">Số Điện Thoại</th>
-                <th className="p-4">Nhóm Khách</th>
-                <th className="p-4 text-right">Điểm Thưởng</th>
-                <th className="p-4 text-right">Tổng Tiền Mua</th>
-                <th className="p-4 text-right">Nợ Hiện Tại</th>
-                <th className="p-4 text-right">Thao Tác</th>
+                <th>Mã KH</th>
+                <th>Họ & Tên</th>
+                <th>Số Điện Thoại</th>
+                <th>Nhóm Khách</th>
+                <th className="text-right">Điểm Thưởng</th>
+                <th className="text-right">Tổng Tiền Mua</th>
+                <th className="text-right">Nợ Hiện Tại</th>
+                <th className="text-right">Thao Tác</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody>
               {filteredCustomers.map((c) => (
-                <tr key={c.id} className="hover:bg-slate-50/80 transition">
+                <tr key={c.id}>
                   <td className="p-4 font-mono font-bold text-blue-700">{c.code}</td>
                   <td className="p-4 font-extrabold text-slate-900">{c.name}</td>
                   <td className="p-4 text-slate-600 font-medium">{c.phone}</td>
