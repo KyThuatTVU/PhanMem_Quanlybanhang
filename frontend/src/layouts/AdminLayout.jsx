@@ -70,67 +70,68 @@ export const AdminLayout = () => {
       <div className="fixed bottom-10 right-1/3 w-80 h-80 bg-emerald-200/20 rounded-full blur-3xl pointer-events-none -z-10" />
 
       {/* 1. HEADER TRONG SUỐT NHÌN XUYÊN THẤU (GLASSMORPHIC NAVBAR) */}
-      <header className="h-16 nav-glass fixed top-0 left-0 right-0 z-30 flex items-center justify-between px-4 sm:px-6">
-        <div className="flex items-center gap-3">
+      <header className="h-20 nav-glass fixed top-0 left-0 right-0 z-30 flex items-center justify-between px-4 sm:px-8 shadow-[0_4px_30px_rgba(0,0,0,0.03)]">
+        <div className="flex items-center gap-3.5">
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="p-2 text-slate-600 hover:text-sky-600 rounded-xl hover:bg-white/60 active:scale-95 transition backdrop-blur-sm"
+            className="p-2.5 text-slate-700 hover:text-sky-600 rounded-2xl hover:bg-white/70 active:scale-95 transition backdrop-blur-sm shadow-sm border border-white/60"
             title="Đóng / Mở menu"
           >
-            <Menu className="w-5 h-5" />
+            <Menu className="w-6 h-6" />
           </button>
 
-          <Link to="/dashboard" className="flex items-center gap-2.5 hover:opacity-95 transition">
-            <div className="w-10 h-10 rounded-2xl bg-white/70 backdrop-blur-md p-1 border border-white/90 shadow-sm flex items-center justify-center overflow-hidden">
+          <Link to="/dashboard" className="flex items-center gap-3.5 hover:opacity-95 transition group">
+            {/* Logo Thương Hiệu Phóng To Rõ Nét */}
+            <div className="w-14 h-14 rounded-2xl bg-white/90 backdrop-blur-md p-1.5 border-2 border-white/90 shadow-md shadow-sky-900/5 flex items-center justify-center overflow-hidden shrink-0 group-hover:scale-105 transition duration-200 ring-2 ring-sky-500/10">
               <img src={brandLogo} alt="Tạp Hóa An Khang Logo" className="w-full h-full object-contain" />
             </div>
             <div>
-              <div className="flex items-center gap-1.5">
-                <h1 className="text-sm font-extrabold text-slate-900 leading-none">
+              <div className="flex items-center gap-2">
+                <h1 className="text-base sm:text-lg font-black text-slate-900 leading-none tracking-tight">
                   Tạp Hóa An Khang
                 </h1>
-                <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-100" title="Hệ thống online" />
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-4 ring-emerald-100/80" title="Hệ thống online" />
               </div>
-              <span className="text-[10px] text-sky-600 font-bold tracking-wide">
+              <span className="text-xs text-sky-600 font-extrabold tracking-wide mt-1 block">
                 Hệ Thống Bán Lẻ POS & Quản Lý
               </span>
             </div>
           </Link>
         </div>
 
-        {/* Thanh tìm kiếm nhanh dạng kính trong suốt */}
-        <div className="hidden lg:flex items-center max-w-md w-full relative">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3.5" />
+        {/* Thanh tìm kiếm nhanh dạng kính trong suốt lớn hơn */}
+        <div className="hidden lg:flex items-center max-w-md xl:max-w-lg w-full relative">
+          <Search className="w-5 h-5 text-slate-400 absolute left-4" />
           <input
             type="text"
             placeholder="Tìm nhanh hóa đơn, khách hàng, mã vạch (Ctrl + K)..."
-            className="w-full bg-white/50 backdrop-blur-md border border-white/80 focus:border-sky-500 focus:bg-white/80 focus:ring-2 focus:ring-sky-200/50 rounded-xl pl-10 pr-4 py-2 text-xs text-slate-800 placeholder-slate-400 focus:outline-none transition-all shadow-inner"
+            className="w-full bg-white/60 backdrop-blur-md border border-white/90 focus:border-sky-500 focus:bg-white/95 focus:ring-4 focus:ring-sky-200/50 rounded-2xl pl-12 pr-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none transition-all shadow-inner"
           />
         </div>
 
-        {/* Khu vực thông báo & Tài khoản người dùng */}
-        <div className="flex items-center gap-3">
-          <button className="p-2 text-slate-600 hover:text-sky-600 rounded-xl hover:bg-white/60 relative transition backdrop-blur-sm">
-            <Bell className="w-5 h-5" />
-            <span className="w-2 h-2 bg-rose-500 rounded-full absolute top-2 right-2 ring-2 ring-white" />
+        {/* Khu vực thông báo & Tài khoản người dùng phóng to */}
+        <div className="flex items-center gap-3 sm:gap-4">
+          <button className="p-2.5 text-slate-700 hover:text-sky-600 rounded-2xl hover:bg-white/70 relative transition backdrop-blur-sm border border-white/60 shadow-sm">
+            <Bell className="w-6 h-6" />
+            <span className="w-2.5 h-2.5 bg-rose-500 rounded-full absolute top-2.5 right-2.5 ring-2 ring-white" />
           </button>
 
-          <div className="h-6 w-px bg-slate-300/60 hidden sm:block" />
+          <div className="h-8 w-px bg-slate-300/60 hidden sm:block" />
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-3">
             <Link
               to="/profile"
-              className="flex items-center gap-2 text-right hover:opacity-90 transition hidden sm:flex bg-white/55 hover:bg-white/80 backdrop-blur-md p-1.5 pr-3 rounded-xl border border-white/80 shadow-sm"
+              className="flex items-center gap-3 text-right hover:opacity-90 transition hidden sm:flex bg-white/65 hover:bg-white/90 backdrop-blur-md p-2 pr-4 rounded-2xl border border-white/90 shadow-sm"
             >
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-sky-500 to-blue-600 text-white font-bold text-xs flex items-center justify-center shadow-sm">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-blue-600 text-white font-black text-sm flex items-center justify-center shadow-md shadow-sky-500/20">
                 {user?.fullName ? user.fullName.charAt(0).toUpperCase() : 'U'}
               </div>
               <div>
-                <p className="text-xs font-bold text-slate-800 leading-tight">
-                  {user?.fullName || 'Nhân viên'}
+                <p className="text-sm font-black text-slate-800 leading-tight">
+                  {user?.fullName || 'Nguyễn Văn Chủ Quán'}
                 </p>
-                <span className="inline-block px-1.5 py-0.2 bg-sky-100/80 text-sky-700 font-bold text-[9px] rounded">
-                  {user?.roles?.[0] || 'CASHIER'}
+                <span className="inline-block px-2 py-0.5 bg-sky-100/90 text-sky-700 font-extrabold text-[10px] rounded-md tracking-wider mt-0.5">
+                  {user?.roles?.[0] || 'ADMIN'}
                 </span>
               </div>
             </Link>
@@ -138,18 +139,18 @@ export const AdminLayout = () => {
             <button
               onClick={handleLogout}
               title="Đăng xuất"
-              className="p-2 text-slate-400 hover:text-rose-600 hover:bg-white/60 rounded-xl transition backdrop-blur-sm"
+              className="p-2.5 text-slate-400 hover:text-rose-600 hover:bg-white/70 rounded-2xl transition backdrop-blur-sm border border-white/60 shadow-sm"
             >
-              <LogOut className="w-5 h-5" />
+              <LogOut className="w-6 h-6" />
             </button>
           </div>
         </div>
       </header>
 
       {/* 2. SIDEBAR TRONG SUỐT NHÌN XUYÊN THẤU (GLASSMORPHIC SIDEBAR) */}
-      <div className="flex pt-16 min-h-screen">
+      <div className="flex pt-20 min-h-screen">
         <aside
-          className={`fixed left-0 top-16 bottom-0 sidebar-glass transition-all duration-300 flex flex-col justify-between z-20 ${
+          className={`fixed left-0 top-20 bottom-0 sidebar-glass transition-all duration-300 flex flex-col justify-between z-20 ${
             isSidebarOpen ? 'w-64' : 'w-20'
           }`}
         >
@@ -182,14 +183,14 @@ export const AdminLayout = () => {
           </div>
 
           {isSidebarOpen && (
-            <div className="p-3 m-3 rounded-2xl bg-white/50 backdrop-blur-xl border border-white/80 text-[11px] flex items-center gap-3 shadow-sm">
-              <img src={brandLogo} alt="Logo" className="w-9 h-9 object-contain rounded-xl bg-white/80 p-1 border border-white/90 shadow-sm shrink-0" />
+            <div className="p-3.5 m-3 rounded-2xl bg-white/60 backdrop-blur-xl border border-white/90 text-xs flex items-center gap-3.5 shadow-sm">
+              <img src={brandLogo} alt="Logo" className="w-11 h-11 object-contain rounded-xl bg-white/90 p-1 border border-white shadow-sm shrink-0" />
               <div className="min-w-0">
-                <div className="flex items-center gap-1 text-sky-800 font-extrabold truncate">
-                  <Sparkles className="w-3.5 h-3.5 text-sky-600 shrink-0" />
+                <div className="flex items-center gap-1.5 text-sky-800 font-extrabold truncate">
+                  <Sparkles className="w-4 h-4 text-sky-600 shrink-0" />
                   <span className="truncate">Tạp Hóa An Khang</span>
                 </div>
-                <p className="text-slate-500 text-[10px] truncate">Phiên bản 1.0.0 • Glass Design</p>
+                <p className="text-slate-500 text-[11px] truncate">Phiên bản 1.0.0 • Glass Design</p>
               </div>
             </div>
           )}

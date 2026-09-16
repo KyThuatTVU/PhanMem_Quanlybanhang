@@ -290,7 +290,7 @@ export const PosPage = () => {
   };
 
   return (
-    <div className="h-[calc(100vh-5rem)] flex flex-col lg:flex-row gap-4 overflow-hidden">
+    <div className="h-[calc(100vh-6rem)] flex flex-col lg:flex-row gap-4 overflow-hidden">
       {/* 1. KHU VỰC TRÁI: QUÉT MÃ VẠCH & GRID CHỌN SẢN PHẨM CÓ ẢNH */}
       <div className="flex-1 flex flex-col gap-4 overflow-hidden">
         {/* Thanh Nhập Mã Vạch */}
