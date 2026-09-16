@@ -216,26 +216,27 @@ export const CustomerReturnPage = () => {
       )}
 
       {/* Lịch Sử Các Lần Trả Hàng */}
-      <div className="soft-card p-0 overflow-hidden">
-        <div className="p-4 border-b font-bold text-xs text-slate-700">
+      {/* Lịch Sử Các Lần Trả Hàng */}
+      <div className="table-glass-container">
+        <div className="p-4 border-b border-white/60 font-black text-xs text-slate-800 bg-white/40 backdrop-blur-sm">
           Lịch Sử Trả Hàng Gần Đây ({returnHistory.length})
         </div>
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b">
+          <table className="table-3d-glass text-left text-xs">
+            <thead>
               <tr>
-                <th className="p-3">Mã Phiếu Trả</th>
-                <th className="p-3">Hóa Đơn Gốc</th>
-                <th className="p-3">Khách Hàng</th>
-                <th className="p-3">Tổng Tiền Hoàn</th>
-                <th className="p-3">Phương Thức</th>
-                <th className="p-3">Lý Do</th>
-                <th className="p-3">Thời Gian</th>
+                <th>Mã Phiếu Trả</th>
+                <th>Hóa Đơn Gốc</th>
+                <th>Khách Hàng</th>
+                <th>Tổng Tiền Hoàn</th>
+                <th>Phương Thức</th>
+                <th>Lý Do</th>
+                <th>Thời Gian</th>
               </tr>
             </thead>
-            <tbody className="divide-y text-slate-700 font-medium">
+            <tbody className="text-slate-700 font-medium">
               {returnHistory.map((rh) => (
-                <tr key={rh.id} className="hover:bg-slate-50">
+                <tr key={rh.id}>
                   <td className="p-3 font-bold text-rose-600">{rh.code}</td>
                   <td className="p-3 font-semibold text-blue-600">{rh.original_order_code}</td>
                   <td className="p-3">{rh.customer_name || 'Khách lẻ'}</td>

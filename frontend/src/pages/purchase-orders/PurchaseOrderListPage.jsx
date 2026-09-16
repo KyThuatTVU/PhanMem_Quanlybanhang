@@ -197,24 +197,24 @@ export const PurchaseOrderListPage = () => {
       </div>
 
       {/* 4. Table */}
-      <div className="soft-card p-0 overflow-hidden">
+      <div className="table-glass-container">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
+          <table className="table-3d-glass text-left text-xs">
+            <thead>
               <tr>
-                <th className="p-4">Mã Phiếu Nhập</th>
-                <th className="p-4">Ngày Nhập</th>
-                <th className="p-4">Nhà Cung Cấp</th>
-                <th className="p-4 text-right">Tổng Tiền Hàng</th>
-                <th className="p-4 text-right">Đã Thanh Toán</th>
-                <th className="p-4 text-right">Còn Nợ NCC</th>
-                <th className="p-4 text-center">Trạng Thái</th>
-                <th className="p-4 text-right">Chi Tiết / In</th>
+                <th>Mã Phiếu Nhập</th>
+                <th>Ngày Nhập</th>
+                <th>Nhà Cung Cấp</th>
+                <th className="text-right">Tổng Tiền Hàng</th>
+                <th className="text-right">Đã Thanh Toán</th>
+                <th className="text-right">Còn Nợ NCC</th>
+                <th className="text-center">Trạng Thái</th>
+                <th className="text-right">Chi Tiết / In</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody>
               {filteredPOs.map((po) => (
-                <tr key={po.id} className="hover:bg-slate-50/80 transition">
+                <tr key={po.id}>
                   <td className="p-4">
                     <span className="font-mono font-bold text-blue-700">{po.poNumber}</span>
                   </td>

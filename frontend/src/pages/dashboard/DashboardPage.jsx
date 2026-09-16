@@ -141,10 +141,10 @@ export const DashboardPage = () => {
       {/* 2. BỘ 4 THẺ CHỈ SỐ KPI CHÍNH */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {/* Doanh thu hôm nay */}
-        <div className="soft-card p-5 border border-sky-100/80 bg-white relative overflow-hidden group">
+        <div className="metric-card-3d p-5 relative overflow-hidden group">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-slate-500">Doanh Thu Hôm Nay</span>
-            <div className="w-10 h-10 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center font-bold group-hover:scale-110 transition">
+            <div className="w-10 h-10 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center font-bold group-hover:scale-110 transition shadow-sm border border-sky-100">
               <DollarSign className="w-5 h-5" />
             </div>
           </div>
@@ -157,10 +157,10 @@ export const DashboardPage = () => {
         </div>
 
         {/* Số đơn hoàn tất */}
-        <div className="soft-card p-5 border border-sky-100/80 bg-white relative overflow-hidden group">
+        <div className="metric-card-3d p-5 relative overflow-hidden group">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-slate-500">Hóa Đơn Bán Ra</span>
-            <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold group-hover:scale-110 transition">
+            <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold group-hover:scale-110 transition shadow-sm border border-blue-100">
               <ShoppingCart className="w-5 h-5" />
             </div>
           </div>
@@ -173,10 +173,10 @@ export const DashboardPage = () => {
         </div>
 
         {/* Lợi nhuận gộp */}
-        <div className="soft-card p-5 border border-emerald-100/80 bg-white relative overflow-hidden group">
+        <div className="metric-card-3d p-5 relative overflow-hidden group">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-slate-500">Lợi Nhuận Gộp</span>
-            <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold group-hover:scale-110 transition">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold group-hover:scale-110 transition shadow-sm border border-emerald-100">
               <TrendingUp className="w-5 h-5" />
             </div>
           </div>
@@ -188,10 +188,10 @@ export const DashboardPage = () => {
         </div>
 
         {/* Giá trị tồn kho */}
-        <div className="soft-card p-5 border border-indigo-100/80 bg-white relative overflow-hidden group">
+        <div className="metric-card-3d p-5 relative overflow-hidden group">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-slate-500">Giá Trị Tồn Kho</span>
-            <div className="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold group-hover:scale-110 transition">
+            <div className="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold group-hover:scale-110 transition shadow-sm border border-indigo-100">
               <Boxes className="w-5 h-5" />
             </div>
           </div>

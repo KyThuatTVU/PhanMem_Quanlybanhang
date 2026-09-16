@@ -123,37 +123,37 @@ export const SettingPage = () => {
       )}
 
       {activeTab === 'DEVICES' && (
-        <div className="soft-card p-0 overflow-hidden">
-          <div className="p-4 border-b font-bold text-xs flex justify-between items-center">
+        <div className="table-glass-container">
+          <div className="p-4 border-b border-white/60 font-black text-xs flex justify-between items-center bg-white/40 backdrop-blur-sm">
             <span>Danh Sách Thiết Bị Ngoại Vi</span>
             <Button variant="3d-primary" size="sm" onClick={() => alert('Đang dò tìm thiết bị trong mạng LAN...')}>
               Dò Tìm Máy In
             </Button>
           </div>
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b">
+          <table className="table-3d-glass text-left text-xs">
+            <thead>
               <tr>
-                <th className="p-4">Tên Thiết Bị</th>
-                <th className="p-4">Loại Thiết Bị</th>
-                <th className="p-4">Kết Nối</th>
-                <th className="p-4">Địa Chỉ IP / Port</th>
-                <th className="p-4">Trạng Thái</th>
+                <th>Tên Thiết Bị</th>
+                <th>Loại Thiết Bị</th>
+                <th>Kết Nối</th>
+                <th>Địa Chỉ IP / Port</th>
+                <th className="text-center">Trạng Thái</th>
               </tr>
             </thead>
-            <tbody className="divide-y text-slate-700">
-              <tr className="hover:bg-slate-50">
+            <tbody className="text-slate-700">
+              <tr>
                 <td className="p-4 font-bold text-slate-900">Máy in Bill Quầy 1</td>
                 <td className="p-4">PRINTER (Khổ 80mm)</td>
                 <td className="p-4">LAN_TCP</td>
                 <td className="p-4 font-mono">192.168.1.200:9100</td>
-                <td className="p-4"><span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 font-bold rounded-full">Sẵn sàng</span></td>
+                <td className="p-4 text-center"><span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 font-bold rounded-full">Sẵn sàng</span></td>
               </tr>
-              <tr className="hover:bg-slate-50">
+              <tr>
                 <td className="p-4 font-bold text-slate-900">Súng Quét Mã Vạch</td>
                 <td className="p-4">BARCODE_SCANNER</td>
                 <td className="p-4">USB HID</td>
                 <td className="p-4 font-mono">COM3</td>
-                <td className="p-4"><span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 font-bold rounded-full">Hoạt động</span></td>
+                <td className="p-4 text-center"><span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 font-bold rounded-full">Hoạt động</span></td>
               </tr>
             </tbody>
           </table>
@@ -161,23 +161,23 @@ export const SettingPage = () => {
       )}
 
       {activeTab === 'AUDIT' && (
-        <div className="soft-card p-0 overflow-hidden">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 border-b">
+        <div className="table-glass-container">
+          <table className="table-3d-glass text-left text-xs">
+            <thead>
               <tr>
-                <th className="p-4">Thời Gian</th>
-                <th className="p-4">Người Thực Hiện</th>
-                <th className="p-4">Hành Động</th>
-                <th className="p-4">Phân Hệ</th>
-                <th className="p-4">Địa Chỉ IP</th>
+                <th>Thời Gian</th>
+                <th>Người Thực Hiện</th>
+                <th>Hành Động</th>
+                <th>Phân Hệ</th>
+                <th>Địa Chỉ IP</th>
               </tr>
             </thead>
-            <tbody className="divide-y text-slate-700">
+            <tbody className="text-slate-700">
               {auditLogs.length === 0 ? (
                 <tr><td colSpan="5" className="p-4 text-center">Chưa có nhật ký ghi nhận</td></tr>
               ) : (
                 auditLogs.map((log) => (
-                  <tr key={log.id} className="hover:bg-slate-50">
+                  <tr key={log.id}>
                     <td className="p-4">{new Date(log.created_at).toLocaleString('vi-VN')}</td>
                     <td className="p-4 font-bold text-slate-900">{log.user_name}</td>
                     <td className="p-4 font-bold text-blue-600">{log.action}</td>

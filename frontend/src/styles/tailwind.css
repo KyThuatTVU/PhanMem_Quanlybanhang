@@ -86,17 +86,58 @@
 
   /* 4. Khung Card Thủy Tinh Mềm (Glass Card Frame) */
   .soft-card {
-    @apply bg-white border border-slate-200/70 rounded-3xl p-6 transition-all duration-200;
+    @apply rounded-3xl p-6 transition-all duration-200;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.84) 0%, rgba(240, 253, 244, 0.65) 100%);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1.5px solid rgba(255, 255, 255, 0.9);
     box-shadow: 
-      0 2px 12px 0 rgba(15, 23, 42, 0.03),
-      inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
+      inset 0 1.5px 0 0 rgba(255, 255, 255, 1),
+      0 10px 30px -4px rgba(16, 185, 129, 0.07),
+      0 3px 8px 0 rgba(0, 0, 0, 0.02);
   }
 
   .soft-card:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0%, rgba(236, 253, 245, 0.8) 100%);
     box-shadow: 
-      0 12px 32px -4px rgba(2, 132, 199, 0.08),
-      0 4px 12px 0 rgba(15, 23, 42, 0.03),
-      inset 0 1px 0 0 rgba(255, 255, 255, 1);
+      inset 0 2px 0 0 rgba(255, 255, 255, 1),
+      0 16px 40px -4px rgba(16, 185, 129, 0.12),
+      0 6px 16px 0 rgba(0, 0, 0, 0.03);
+    transform: translateY(-2px);
+  }
+
+  /* 4.1 Khung Modal / Hộp Thoại 3D Thủy Tinh */
+  .modal-glass-3d {
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 253, 244, 0.9) 100%);
+    backdrop-filter: blur(28px) saturate(200%);
+    -webkit-backdrop-filter: blur(28px) saturate(200%);
+    border: 2px solid rgba(255, 255, 255, 0.95);
+    border-radius: 1.75rem;
+    box-shadow: 
+      inset 0 2px 0 0 rgba(255, 255, 255, 1),
+      0 25px 60px -12px rgba(16, 185, 129, 0.22),
+      0 10px 25px -5px rgba(0, 0, 0, 0.08);
+  }
+
+  /* 4.2 Thẻ Chỉ Số KPI 3D Nổi Khối */
+  .metric-card-3d {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(240, 253, 244, 0.7) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1.5px solid rgba(255, 255, 255, 0.95);
+    border-radius: 1.5rem;
+    box-shadow: 
+      inset 0 1.5px 0 0 rgba(255, 255, 255, 1),
+      0 8px 24px -4px rgba(16, 185, 129, 0.08);
+    transition: all 0.25s ease-in-out;
+  }
+
+  .metric-card-3d:hover {
+    transform: translateY(-3px);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(236, 253, 245, 0.85) 100%);
+    box-shadow: 
+      inset 0 2px 0 0 rgba(255, 255, 255, 1),
+      0 18px 38px -4px rgba(16, 185, 129, 0.16);
   }
 
   /* 5. Nav Thanh Tiêu Đề Trong Suốt Nhìn Xuyên Thấu (Glassmorphic Navbar) */

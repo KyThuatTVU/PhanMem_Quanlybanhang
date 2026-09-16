@@ -74,45 +74,45 @@ export const CategoryBrandPage = () => {
         </div>
       </div>
 
-      {/* Content Table */}
-      <div className="soft-card p-0 overflow-hidden">
-        <table className="w-full text-left text-xs">
-          <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b">
+      {/* Content Table Dạng Lưới 3D Thủy Tinh */}
+      <div className="table-glass-container">
+        <table className="table-3d-glass text-left text-xs">
+          <thead>
             <tr>
-              <th className="p-4">STT</th>
-              <th className="p-4">{activeTab === 'UNITS' ? 'Tên Đơn Vị' : 'Mã Định Danh'}</th>
-              <th className="p-4">Tên Hiển Thị</th>
-              <th className="p-4">Trạng Thái</th>
+              <th className="w-16 text-center">STT</th>
+              <th>{activeTab === 'UNITS' ? 'Tên Đơn Vị' : 'Mã Định Danh'}</th>
+              <th>Tên Hiển Thị</th>
+              <th className="text-center">Trạng Thái</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
+          <tbody className="font-medium text-slate-700">
             {loading ? (
               <tr><td colSpan="4" className="p-4 text-center">Đang tải dữ liệu...</td></tr>
             ) : activeTab === 'CATEGORIES' ? (
               categories.map((c, i) => (
-                <tr key={c.id} className="hover:bg-slate-50">
-                  <td className="p-4">{i + 1}</td>
-                  <td className="p-4 font-bold text-blue-600">{c.code}</td>
+                <tr key={c.id}>
+                  <td className="p-4 text-center">{i + 1}</td>
+                  <td className="p-4 font-bold text-sky-700">{c.code}</td>
                   <td className="p-4 font-bold text-slate-900">{c.name}</td>
-                  <td className="p-4"><span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-full font-bold">Hoạt động</span></td>
+                  <td className="p-4 text-center"><span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-full font-bold">Hoạt động</span></td>
                 </tr>
               ))
             ) : activeTab === 'BRANDS' ? (
               brands.map((b, i) => (
-                <tr key={b.id} className="hover:bg-slate-50">
-                  <td className="p-4">{i + 1}</td>
-                  <td className="p-4 font-bold text-blue-600">{b.code}</td>
+                <tr key={b.id}>
+                  <td className="p-4 text-center">{i + 1}</td>
+                  <td className="p-4 font-bold text-sky-700">{b.code}</td>
                   <td className="p-4 font-bold text-slate-900">{b.name}</td>
-                  <td className="p-4"><span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-full font-bold">Hoạt động</span></td>
+                  <td className="p-4 text-center"><span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-full font-bold">Hoạt động</span></td>
                 </tr>
               ))
             ) : (
               units.map((u, i) => (
-                <tr key={u.id} className="hover:bg-slate-50">
-                  <td className="p-4">{i + 1}</td>
-                  <td className="p-4 font-bold text-blue-600">ĐVT-{u.id}</td>
+                <tr key={u.id}>
+                  <td className="p-4 text-center">{i + 1}</td>
+                  <td className="p-4 font-bold text-sky-700">ĐVT-{u.id}</td>
                   <td className="p-4 font-bold text-slate-900">{u.name}</td>
-                  <td className="p-4"><span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-full font-bold">Chuẩn hóa</span></td>
+                  <td className="p-4 text-center"><span className="px-2 py-0.5 bg-emerald-50 text-emerald-700 rounded-full font-bold">Chuẩn hóa</span></td>
                 </tr>
               ))
             )}

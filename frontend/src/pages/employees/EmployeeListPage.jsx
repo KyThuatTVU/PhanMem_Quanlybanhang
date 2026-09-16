@@ -187,22 +187,22 @@ export const EmployeeListPage = () => {
             </div>
           </div>
 
-          <div className="soft-card p-0 overflow-hidden">
+          <div className="table-glass-container">
             <div className="overflow-x-auto">
-              <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
+              <table className="table-3d-glass text-left text-xs">
+                <thead>
                   <tr>
-                    <th className="p-4">Họ & Tên</th>
-                    <th className="p-4">Tài Khoản (Username)</th>
-                    <th className="p-4">Vai Trò (Role)</th>
-                    <th className="p-4">Số Điện Thoại</th>
-                    <th className="p-4 text-right">Doanh Số Tháng</th>
-                    <th className="p-4 text-right">Hoa Hồng</th>
-                    <th className="p-4 text-center">Trạng Thái</th>
-                    <th className="p-4 text-right">Khóa / Mở Khóa</th>
+                    <th>Họ & Tên</th>
+                    <th>Tài Khoản (Username)</th>
+                    <th>Vai Trò (Role)</th>
+                    <th>Số Điện Thoại</th>
+                    <th className="text-right">Doanh Số Tháng</th>
+                    <th className="text-right">Hoa Hồng</th>
+                    <th className="text-center">Trạng Thái</th>
+                    <th className="text-right">Khóa / Mở Khóa</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100">
+                <tbody>
                   {employees
                     .filter(
                       (e) =>
@@ -210,7 +210,7 @@ export const EmployeeListPage = () => {
                         e.username.toLowerCase().includes(keyword.toLowerCase())
                     )
                     .map((emp) => (
-                      <tr key={emp.id} className="hover:bg-slate-50/80 transition">
+                      <tr key={emp.id}>
                         <td className="p-4 font-bold text-slate-900">{emp.fullName}</td>
                         <td className="p-4 font-mono text-blue-700 font-semibold">
                           @{emp.username}
@@ -291,20 +291,20 @@ export const EmployeeListPage = () => {
             </span>
           </div>
 
-          <div className="soft-card p-0 overflow-hidden">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-600 font-bold uppercase tracking-wider border-b border-slate-200">
+          <div className="table-glass-container">
+            <table className="table-3d-glass text-left text-xs">
+              <thead>
                 <tr>
-                  <th className="p-4">Module Nghiệp Vụ</th>
-                  <th className="p-4 text-center">Chủ Quán (OWNER)</th>
-                  <th className="p-4 text-center">Quản Lý (MANAGER)</th>
-                  <th className="p-4 text-center">Thu Ngân (CASHIER)</th>
-                  <th className="p-4 text-center">Thủ Kho (WAREHOUSE)</th>
+                  <th>Module Nghiệp Vụ</th>
+                  <th className="text-center">Chủ Quán (OWNER)</th>
+                  <th className="text-center">Quản Lý (MANAGER)</th>
+                  <th className="text-center">Thu Ngân (CASHIER)</th>
+                  <th className="text-center">Thủ Kho (WAREHOUSE)</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 font-medium">
+              <tbody className="font-medium">
                 {modulesList.map((m, idx) => (
-                  <tr key={idx} className="hover:bg-slate-50/80 transition">
+                  <tr key={idx}>
                     <td className="p-4 font-bold text-slate-800">{m.name}</td>
                     <td className="p-4 text-center">
                       <span className="inline-block w-5 h-5 rounded-full bg-emerald-100 text-emerald-700 font-black leading-5 text-center text-xs">

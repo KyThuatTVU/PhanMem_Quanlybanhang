@@ -175,8 +175,8 @@ export const ReportPage = () => {
       </div>
 
       {/* 5. Phân Tích Mặt Hàng Bán Chạy & Bán Chậm */}
-      <div className="soft-card p-0 overflow-hidden border border-slate-200/80">
-        <div className="p-4 border-b border-slate-100 flex items-center justify-between">
+      <div className="table-glass-container">
+        <div className="p-4 border-b border-white/60 flex items-center justify-between bg-white/40 backdrop-blur-sm">
           <div>
             <h2 className="text-sm font-extrabold text-slate-900">
               Phân Tích Sản Phẩm Bán Chạy & Bán Chậm
@@ -188,20 +188,20 @@ export const ReportPage = () => {
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
+          <table className="table-3d-glass text-left text-xs">
+            <thead>
               <tr>
-                <th className="p-4">Tên Mặt Hàng</th>
-                <th className="p-4">Ngành Hàng</th>
-                <th className="p-4 text-right">Số Lượng Bán</th>
-                <th className="p-4 text-right">Doanh Thu Thu Được</th>
-                <th className="p-4 text-right">Lợi Nhuận Gộp</th>
-                <th className="p-4 text-center">Tốc Độ Tiêu Thụ</th>
+                <th>Tên Mặt Hàng</th>
+                <th>Ngành Hàng</th>
+                <th className="text-right">Số Lượng Bán</th>
+                <th className="text-right">Doanh Thu Thu Được</th>
+                <th className="text-right">Lợi Nhuận Gộp</th>
+                <th className="text-center">Tốc Độ Tiêu Thụ</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100">
+            <tbody>
               {productPerformance.map((item, idx) => (
-                <tr key={idx} className="hover:bg-sky-50/30 transition">
+                <tr key={idx}>
                   <td className="p-4 font-bold text-slate-900">{item.name}</td>
                   <td className="p-4 text-slate-600">{item.category}</td>
                   <td className="p-4 text-right font-black text-slate-800">{item.soldQty}</td>
