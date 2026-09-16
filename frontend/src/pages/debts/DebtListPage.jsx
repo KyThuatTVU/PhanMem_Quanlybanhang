@@ -122,28 +122,28 @@ export const DebtListPage = () => {
         </div>
       </div>
 
-      {/* Bảng Danh Sách Đối Tượng Nợ Dạng 3D Thủy Tinh */}
-      <div className="table-glass-container">
+      {/* Bảng Danh Sách Đối Tượng Nợ */}
+      <div className="soft-card p-0 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="table-3d-glass text-left text-xs">
-            <thead>
+          <table className="w-full text-left text-xs">
+            <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
               <tr>
-                <th>Mã</th>
-                <th>{activeTab === 'CUSTOMERS' ? 'Tên Khách Hàng' : 'Tên Nhà Phân Phối'}</th>
-                <th>Số Điện Thoại</th>
-                <th>Số Tiền Đang Nợ</th>
-                <th>Giao Dịch Gần Nhất</th>
-                <th className="text-right">Thao Tác</th>
+                <th className="p-4">Mã</th>
+                <th className="p-4">{activeTab === 'CUSTOMERS' ? 'Tên Khách Hàng' : 'Tên Nhà Phân Phối'}</th>
+                <th className="p-4">Số Điện Thoại</th>
+                <th className="p-4">Số Tiền Đang Nợ</th>
+                <th className="p-4">Giao Dịch Gần Nhất</th>
+                <th className="p-4 text-right">Thao Tác</th>
               </tr>
             </thead>
-            <tbody className="font-medium text-slate-700">
+            <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
               {loading ? (
                 <tr><td colSpan="6" className="p-4 text-center">Đang tải sổ nợ...</td></tr>
               ) : currentList.length === 0 ? (
                 <tr><td colSpan="6" className="p-4 text-center">Không có công nợ nào phát sinh!</td></tr>
               ) : (
                 currentList.map((item) => (
-                  <tr key={item.id}>
+                  <tr key={item.id} className="hover:bg-slate-50/80 transition">
                     <td className="p-4 font-bold text-blue-600">{item.code}</td>
                     <td className="p-4 font-bold text-slate-900">{item.name}</td>
                     <td className="p-4 text-slate-600">{item.phone}</td>

@@ -10,134 +10,195 @@
 
 /* Custom Component Classes: 3D Crystal Glassmorphism (Thủy Tinh Khúc Xạ Ánh Sáng) */
 @layer components {
-  /* 1. Nút 3D Thủy Tinh Xanh Sáng (Glass Primary) */
+  /* 1. Nút 3D Thủy Tinh Xanh Sáng Trong Suốt (Glass Primary) */
   .btn-3d-primary {
-    @apply relative inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full font-extrabold text-sky-700 transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:pointer-events-none active:scale-[0.97];
-    background: linear-gradient(180deg, rgba(240, 249, 255, 0.95) 0%, rgba(224, 242, 254, 0.65) 50%, rgba(186, 230, 253, 0.85) 100%);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.95);
+    @apply relative inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full font-extrabold text-sky-700 transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:pointer-events-none active:scale-[0.96];
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(224, 242, 254, 0.5) 50%, rgba(186, 230, 253, 0.7) 100%);
+    backdrop-filter: blur(18px) saturate(190%);
+    -webkit-backdrop-filter: blur(18px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.9);
     box-shadow: 
       inset 0 1.5px 0 0 rgba(255, 255, 255, 1),
       inset 0 -1.5px 2px 0 rgba(2, 132, 199, 0.15),
-      0 4px 16px -2px rgba(2, 132, 199, 0.2),
-      0 2px 4px 0 rgba(0, 0, 0, 0.04);
+      0 6px 20px -2px rgba(2, 132, 199, 0.22),
+      0 2px 4px 0 rgba(0, 0, 0, 0.03);
   }
 
   .btn-3d-primary:hover {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(224, 242, 254, 0.8) 50%, rgba(186, 230, 253, 0.95) 100%);
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(224, 242, 254, 0.7) 50%, rgba(186, 230, 253, 0.85) 100%);
     box-shadow: 
       inset 0 2px 0 0 rgba(255, 255, 255, 1),
-      inset 0 -1.5px 2px 0 rgba(2, 132, 199, 0.2),
-      0 8px 24px -2px rgba(2, 132, 199, 0.28),
-      0 3px 6px 0 rgba(0, 0, 0, 0.06);
-    transform: translateY(-1px);
+      inset 0 -1.5px 2px 0 rgba(2, 132, 199, 0.22),
+      0 10px 28px -2px rgba(2, 132, 199, 0.32),
+      0 4px 8px 0 rgba(0, 0, 0, 0.05);
+    transform: translateY(-1.5px);
   }
 
-  /* 2. Nút 3D Thủy Tinh Xanh Biển Đậm Nổi (Glass Solid) */
+  /* 2. Nút 3D Thủy Tinh Xanh Biển Đậm Nổi Trong Suốt (Glass Solid) */
   .btn-3d-solid {
-    @apply relative inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full font-extrabold text-white transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:pointer-events-none active:scale-[0.97];
-    background: linear-gradient(180deg, rgba(56, 189, 248, 0.95) 0%, rgba(2, 132, 199, 0.95) 50%, rgba(3, 105, 161, 1) 100%);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.65);
+    @apply relative inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full font-extrabold text-white transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:pointer-events-none active:scale-[0.96];
+    background: linear-gradient(180deg, rgba(56, 189, 248, 0.82) 0%, rgba(2, 132, 199, 0.86) 50%, rgba(3, 105, 161, 0.92) 100%);
+    backdrop-filter: blur(18px) saturate(190%);
+    -webkit-backdrop-filter: blur(18px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.75);
     box-shadow: 
-      inset 0 1.5px 0 0 rgba(255, 255, 255, 0.85),
-      inset 0 -2px 3px 0 rgba(0, 0, 0, 0.25),
-      0 6px 20px -2px rgba(2, 132, 199, 0.4),
-      0 2px 6px 0 rgba(0, 0, 0, 0.08);
+      inset 0 1.5px 0 0 rgba(255, 255, 255, 0.9),
+      inset 0 -2px 3px 0 rgba(0, 0, 0, 0.2),
+      0 8px 24px -2px rgba(2, 132, 199, 0.38),
+      0 2px 6px 0 rgba(0, 0, 0, 0.06);
   }
 
   .btn-3d-solid:hover {
-    background: linear-gradient(180deg, rgba(125, 211, 252, 1) 0%, rgba(14, 165, 233, 1) 50%, rgba(2, 132, 199, 1) 100%);
+    background: linear-gradient(180deg, rgba(125, 211, 252, 0.9) 0%, rgba(14, 165, 233, 0.92) 50%, rgba(2, 132, 199, 0.95) 100%);
     box-shadow: 
-      inset 0 2px 0 0 rgba(255, 255, 255, 0.95),
-      inset 0 -2px 3px 0 rgba(0, 0, 0, 0.3),
-      0 10px 28px -2px rgba(2, 132, 199, 0.5),
-      0 4px 8px 0 rgba(0, 0, 0, 0.1);
-    transform: translateY(-1px);
+      inset 0 2px 0 0 rgba(255, 255, 255, 1),
+      inset 0 -2px 3px 0 rgba(0, 0, 0, 0.25),
+      0 12px 32px -2px rgba(2, 132, 199, 0.48),
+      0 4px 10px 0 rgba(0, 0, 0, 0.08);
+    transform: translateY(-1.5px);
   }
 
   /* 3. Nút 3D Thủy Tinh Trong Suốt Thuần Khiết (Crystal Glass Frame) */
   .btn-3d-secondary {
-    @apply relative inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-full font-bold text-slate-700 transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:pointer-events-none active:scale-[0.97];
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.5) 55%, rgba(240, 249, 255, 0.75) 100%);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    @apply relative inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full font-bold text-slate-700 transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:pointer-events-none active:scale-[0.96];
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.4) 55%, rgba(240, 249, 255, 0.6) 100%);
+    backdrop-filter: blur(18px) saturate(190%);
+    -webkit-backdrop-filter: blur(18px) saturate(190%);
     border: 1px solid rgba(255, 255, 255, 0.9);
     box-shadow: 
       inset 0 1.5px 0 0 rgba(255, 255, 255, 1),
-      inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.06),
-      0 4px 16px -2px rgba(15, 23, 42, 0.08),
-      0 2px 4px 0 rgba(0, 0, 0, 0.03);
+      inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.05),
+      0 6px 20px -2px rgba(15, 23, 42, 0.06),
+      0 2px 4px 0 rgba(0, 0, 0, 0.02);
   }
 
   .btn-3d-secondary:hover {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 1) 0%, rgba(240, 249, 255, 0.75) 55%, rgba(224, 242, 254, 0.9) 100%);
-    color: #0369A1;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 249, 255, 0.65) 55%, rgba(224, 242, 254, 0.8) 100%);
+    color: #0284C7;
     border-color: rgba(255, 255, 255, 1);
     box-shadow: 
       inset 0 2px 0 0 rgba(255, 255, 255, 1),
-      inset 0 -1.5px 2px 0 rgba(0, 0, 0, 0.08),
-      0 8px 24px -2px rgba(2, 132, 199, 0.18),
+      inset 0 -1.5px 2px 0 rgba(2, 132, 199, 0.1),
+      0 10px 26px -2px rgba(2, 132, 199, 0.2),
+      0 3px 6px 0 rgba(0, 0, 0, 0.04);
+    transform: translateY(-1.5px);
+  }
+
+  /* 4. Nút 3D Thủy Tinh Xanh Lá / Bạc Hà Trong Suốt (Emerald Success Glass) */
+  .btn-3d-emerald {
+    @apply relative inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full font-extrabold text-white transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:pointer-events-none active:scale-[0.96];
+    background: linear-gradient(180deg, rgba(52, 211, 153, 0.82) 0%, rgba(16, 185, 129, 0.86) 50%, rgba(5, 150, 105, 0.92) 100%);
+    backdrop-filter: blur(18px) saturate(190%);
+    -webkit-backdrop-filter: blur(18px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 
+      inset 0 1.5px 0 0 rgba(255, 255, 255, 0.9),
+      inset 0 -2px 3px 0 rgba(0, 0, 0, 0.18),
+      0 8px 24px -2px rgba(16, 185, 129, 0.35),
+      0 2px 6px 0 rgba(0, 0, 0, 0.05);
+  }
+
+  .btn-3d-emerald:hover {
+    background: linear-gradient(180deg, rgba(110, 231, 183, 0.9) 0%, rgba(52, 211, 153, 0.92) 50%, rgba(16, 185, 129, 0.95) 100%);
+    box-shadow: 
+      inset 0 2px 0 0 rgba(255, 255, 255, 1),
+      inset 0 -2px 3px 0 rgba(0, 0, 0, 0.22),
+      0 12px 32px -2px rgba(16, 185, 129, 0.45),
+      0 4px 10px 0 rgba(0, 0, 0, 0.07);
+    transform: translateY(-1.5px);
+  }
+
+  /* 5. Nút 3D Thủy Tinh Đỏ Hồng Trong Suốt (Rose Danger Glass) */
+  .btn-3d-danger {
+    @apply relative inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full font-extrabold text-rose-600 transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:pointer-events-none active:scale-[0.96];
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.75) 0%, rgba(254, 226, 226, 0.55) 50%, rgba(254, 202, 202, 0.7) 100%);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 1px solid rgba(248, 113, 113, 0.45);
+    box-shadow: 
+      inset 0 1.5px 0 0 rgba(255, 255, 255, 1),
+      inset 0 -1.5px 2px 0 rgba(225, 29, 72, 0.1),
+      0 6px 18px -2px rgba(225, 29, 72, 0.18),
+      0 2px 4px 0 rgba(0, 0, 0, 0.03);
+  }
+
+  .btn-3d-danger:hover {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(254, 202, 202, 0.75) 50%, rgba(252, 165, 165, 0.85) 100%);
+    color: #be123c;
+    border-color: rgba(248, 113, 113, 0.7);
+    box-shadow: 
+      inset 0 2px 0 0 rgba(255, 255, 255, 1),
+      inset 0 -1.5px 2px 0 rgba(225, 29, 72, 0.15),
+      0 10px 24px -2px rgba(225, 29, 72, 0.28),
       0 3px 6px 0 rgba(0, 0, 0, 0.05);
+    transform: translateY(-1.5px);
+  }
+
+  /* 6. Nút Biểu Tượng Thao Tác 3D Trong Suốt (3D Glass Icon Action Button) */
+  .btn-3d-icon {
+    @apply relative inline-flex items-center justify-center rounded-2xl transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:pointer-events-none active:scale-[0.92];
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 
+      inset 0 1px 0 0 rgba(255, 255, 255, 1),
+      0 4px 12px -2px rgba(15, 23, 42, 0.06),
+      0 1px 2px 0 rgba(0, 0, 0, 0.02);
+  }
+
+  .btn-3d-icon:hover {
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 
+      inset 0 1.5px 0 0 rgba(255, 255, 255, 1),
+      0 8px 20px -2px rgba(2, 132, 199, 0.2),
+      0 2px 4px 0 rgba(0, 0, 0, 0.04);
+    transform: translateY(-1.5px);
+  }
+
+  /* 7. Nút Tab Điều Hướng 3D Trong Suốt (3D Glass Tabs) */
+  .btn-3d-tab {
+    @apply px-4 py-2 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer;
+    background: rgba(255, 255, 255, 0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    color: #475569;
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.9);
+  }
+
+  .btn-3d-tab:hover {
+    background: rgba(255, 255, 255, 0.75);
+    color: #0284C7;
+    transform: translateY(-1px);
+  }
+
+  .btn-3d-tab-active {
+    @apply px-4 py-2 rounded-xl text-xs font-black transition-all duration-200;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 249, 255, 0.85) 100%);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1.5px solid rgba(255, 255, 255, 1);
+    color: #0284C7;
+    box-shadow: 
+      inset 0 1.5px 0 0 rgba(255, 255, 255, 1),
+      0 4px 16px -2px rgba(2, 132, 199, 0.22);
     transform: translateY(-1px);
   }
 
   /* 4. Khung Card Thủy Tinh Mềm (Glass Card Frame) */
   .soft-card {
-    @apply rounded-3xl p-6 transition-all duration-200;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.84) 0%, rgba(240, 253, 244, 0.65) 100%);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1.5px solid rgba(255, 255, 255, 0.9);
+    @apply bg-white border border-slate-200/70 rounded-3xl p-6 transition-all duration-200;
     box-shadow: 
-      inset 0 1.5px 0 0 rgba(255, 255, 255, 1),
-      0 10px 30px -4px rgba(16, 185, 129, 0.07),
-      0 3px 8px 0 rgba(0, 0, 0, 0.02);
+      0 2px 12px 0 rgba(15, 23, 42, 0.03),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.8);
   }
 
   .soft-card:hover {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0%, rgba(236, 253, 245, 0.8) 100%);
     box-shadow: 
-      inset 0 2px 0 0 rgba(255, 255, 255, 1),
-      0 16px 40px -4px rgba(16, 185, 129, 0.12),
-      0 6px 16px 0 rgba(0, 0, 0, 0.03);
-    transform: translateY(-2px);
-  }
-
-  /* 4.1 Khung Modal / Hộp Thoại 3D Thủy Tinh */
-  .modal-glass-3d {
-    background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(240, 253, 244, 0.9) 100%);
-    backdrop-filter: blur(28px) saturate(200%);
-    -webkit-backdrop-filter: blur(28px) saturate(200%);
-    border: 2px solid rgba(255, 255, 255, 0.95);
-    border-radius: 1.75rem;
-    box-shadow: 
-      inset 0 2px 0 0 rgba(255, 255, 255, 1),
-      0 25px 60px -12px rgba(16, 185, 129, 0.22),
-      0 10px 25px -5px rgba(0, 0, 0, 0.08);
-  }
-
-  /* 4.2 Thẻ Chỉ Số KPI 3D Nổi Khối */
-  .metric-card-3d {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.88) 0%, rgba(240, 253, 244, 0.7) 100%);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1.5px solid rgba(255, 255, 255, 0.95);
-    border-radius: 1.5rem;
-    box-shadow: 
-      inset 0 1.5px 0 0 rgba(255, 255, 255, 1),
-      0 8px 24px -4px rgba(16, 185, 129, 0.08);
-    transition: all 0.25s ease-in-out;
-  }
-
-  .metric-card-3d:hover {
-    transform: translateY(-3px);
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.96) 0%, rgba(236, 253, 245, 0.85) 100%);
-    box-shadow: 
-      inset 0 2px 0 0 rgba(255, 255, 255, 1),
-      0 18px 38px -4px rgba(16, 185, 129, 0.16);
+      0 12px 32px -4px rgba(2, 132, 199, 0.08),
+      0 4px 12px 0 rgba(15, 23, 42, 0.03),
+      inset 0 1px 0 0 rgba(255, 255, 255, 1);
   }
 
   /* 5. Nav Thanh Tiêu Đề Trong Suốt Nhìn Xuyên Thấu (Glassmorphic Navbar) */

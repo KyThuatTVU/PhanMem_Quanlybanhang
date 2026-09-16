@@ -129,10 +129,9 @@ export const DashboardPage = () => {
 
           <div className="flex items-center gap-3">
             <Link to="/pos">
-              <button className="px-5 py-3 rounded-2xl bg-white text-sky-700 font-extrabold text-xs shadow-lg hover:shadow-xl hover:bg-sky-50 active:scale-95 transition-all flex items-center gap-2">
-                <ShoppingCart className="w-4 h-4 text-sky-600" />
+              <Button variant="3d-primary" icon={ShoppingCart} size="md">
                 Vào Bán Hàng POS (F9)
-              </button>
+              </Button>
             </Link>
           </div>
         </div>
@@ -141,10 +140,10 @@ export const DashboardPage = () => {
       {/* 2. BỘ 4 THẺ CHỈ SỐ KPI CHÍNH */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {/* Doanh thu hôm nay */}
-        <div className="metric-card-3d p-5 relative overflow-hidden group">
+        <div className="soft-card p-5 border border-sky-100/80 bg-white relative overflow-hidden group">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-slate-500">Doanh Thu Hôm Nay</span>
-            <div className="w-10 h-10 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center font-bold group-hover:scale-110 transition shadow-sm border border-sky-100">
+            <div className="w-10 h-10 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center font-bold group-hover:scale-110 transition">
               <DollarSign className="w-5 h-5" />
             </div>
           </div>
@@ -157,10 +156,10 @@ export const DashboardPage = () => {
         </div>
 
         {/* Số đơn hoàn tất */}
-        <div className="metric-card-3d p-5 relative overflow-hidden group">
+        <div className="soft-card p-5 border border-sky-100/80 bg-white relative overflow-hidden group">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-slate-500">Hóa Đơn Bán Ra</span>
-            <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold group-hover:scale-110 transition shadow-sm border border-blue-100">
+            <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold group-hover:scale-110 transition">
               <ShoppingCart className="w-5 h-5" />
             </div>
           </div>
@@ -173,10 +172,10 @@ export const DashboardPage = () => {
         </div>
 
         {/* Lợi nhuận gộp */}
-        <div className="metric-card-3d p-5 relative overflow-hidden group">
+        <div className="soft-card p-5 border border-emerald-100/80 bg-white relative overflow-hidden group">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-slate-500">Lợi Nhuận Gộp</span>
-            <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold group-hover:scale-110 transition shadow-sm border border-emerald-100">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold group-hover:scale-110 transition">
               <TrendingUp className="w-5 h-5" />
             </div>
           </div>
@@ -188,10 +187,10 @@ export const DashboardPage = () => {
         </div>
 
         {/* Giá trị tồn kho */}
-        <div className="metric-card-3d p-5 relative overflow-hidden group">
+        <div className="soft-card p-5 border border-indigo-100/80 bg-white relative overflow-hidden group">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-slate-500">Giá Trị Tồn Kho</span>
-            <div className="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold group-hover:scale-110 transition shadow-sm border border-indigo-100">
+            <div className="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold group-hover:scale-110 transition">
               <Boxes className="w-5 h-5" />
             </div>
           </div>

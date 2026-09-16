@@ -17,7 +17,7 @@ export const Input = React.forwardRef(
           )}
           <input
             ref={ref}
-            className={`w-full bg-white/75 backdrop-blur-md border border-white/95 shadow-inner rounded-xl px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-emerald-500 focus:bg-white focus:ring-4 focus:ring-emerald-500/15 transition-all ${
+            className={`w-full bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all ${
               Icon ? 'pl-10' : ''
             } ${error ? 'border-rose-500 focus:ring-rose-500/20' : ''} ${className}`}
             {...props}

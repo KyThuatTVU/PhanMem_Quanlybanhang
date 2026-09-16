@@ -298,23 +298,23 @@ export const BarcodePage = () => {
         </div>
       </div>
 
-      <div className="table-glass-container">
+      <div className="soft-card p-0 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="table-3d-glass text-left text-xs">
-            <thead>
+          <table className="w-full text-left text-xs">
+            <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
               <tr>
-                <th>Mã Vạch (Barcode)</th>
-                <th>Chuẩn</th>
-                <th>Sản Phẩm & Đơn Vị</th>
-                <th>Giá Niêm Yết</th>
-                <th>Trạng Thái</th>
-                <th>Ngày Tạo</th>
-                <th className="text-right">In Tem / Thao Tác</th>
+                <th className="p-4">Mã Vạch (Barcode)</th>
+                <th className="p-4">Chuẩn</th>
+                <th className="p-4">Sản Phẩm & Đơn Vị</th>
+                <th className="p-4">Giá Niêm Yết</th>
+                <th className="p-4">Trạng Thái</th>
+                <th className="p-4">Ngày Tạo</th>
+                <th className="p-4 text-right">In Tem / Thao Tác</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-slate-100">
               {filteredBarcodes.map((item) => (
-                <tr key={item.id}>
+                <tr key={item.id} className="hover:bg-slate-50/80 transition">
                   <td className="p-4">
                     <div className="flex items-center gap-2">
                       <span className="font-mono font-extrabold text-sm text-blue-700 tracking-wider bg-blue-50/80 px-2 py-1 rounded border border-blue-100">

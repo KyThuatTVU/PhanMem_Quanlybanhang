@@ -62,28 +62,28 @@ export const PromotionListPage = () => {
         </Button>
       </div>
 
-      <div className="table-glass-container">
+      <div className="soft-card p-0 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="table-3d-glass text-left text-xs">
-            <thead>
+          <table className="w-full text-left text-xs">
+            <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
               <tr>
-                <th>Mã KM</th>
-                <th>Tên Chương Trình</th>
-                <th>Loại Khuyến Mãi</th>
-                <th>Giá Trị Giảm</th>
-                <th>Thời Gian Hiệu Lực</th>
-                <th>Trạng Thái</th>
-                <th className="text-right">Thao Tác</th>
+                <th className="p-4">Mã KM</th>
+                <th className="p-4">Tên Chương Trình</th>
+                <th className="p-4">Loại Khuyến Mãi</th>
+                <th className="p-4">Giá Trị Giảm</th>
+                <th className="p-4">Thời Gian Hiệu Lực</th>
+                <th className="p-4">Trạng Thái</th>
+                <th className="p-4 text-right">Thao Tác</th>
               </tr>
             </thead>
-            <tbody className="font-medium text-slate-700">
+            <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
               {loading ? (
                 <tr><td colSpan="7" className="p-4 text-center">Đang tải khuyến mãi...</td></tr>
               ) : promotions.length === 0 ? (
                 <tr><td colSpan="7" className="p-4 text-center">Chưa có chương trình khuyến mãi nào</td></tr>
               ) : (
                 promotions.map((p) => (
-                  <tr key={p.id}>
+                  <tr key={p.id} className="hover:bg-slate-50/80 transition">
                     <td className="p-4 font-bold text-blue-600">{p.code}</td>
                     <td className="p-4 font-bold text-slate-900">{p.name}</td>
                     <td className="p-4">

@@ -12,16 +12,19 @@ export const Button = ({
   ...props
 }) => {
   const sizeClasses = {
-    sm: 'px-3 py-1.5 text-xs rounded-lg',
-    md: 'px-5 py-2.5 text-sm rounded-xl',
-    lg: 'px-6 py-3 text-base rounded-2xl',
+    sm: 'px-3.5 py-1.5 text-xs',
+    md: 'px-5 py-2.5 text-sm',
+    lg: 'px-7 py-3 text-base',
   };
 
   const variantClasses = {
     '3d-primary': 'btn-3d-primary',
     '3d-solid': 'btn-3d-solid',
     '3d-secondary': 'btn-3d-secondary',
-    danger: 'bg-rose-500/10 text-rose-600 hover:bg-rose-500/20 border border-rose-500/30 rounded-xl font-medium shadow-sm hover:shadow active:translate-y-0.5 transition-all',
+    '3d-emerald': 'btn-3d-emerald',
+    '3d-danger': 'btn-3d-danger',
+    danger: 'btn-3d-danger',
+    emerald: 'btn-3d-emerald',
   };
 
   return (

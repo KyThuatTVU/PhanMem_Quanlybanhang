@@ -459,21 +459,21 @@ export const ProductListPage = () => {
                           setSelectedProduct(p);
                           setIsDetailModalOpen(true);
                         }}
-                        className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                        className="btn-3d-icon p-2 text-slate-500 hover:text-sky-600"
                         title="Xem ảnh & chi tiết"
                       >
                         <Eye className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleOpenEdit(p)}
-                        className="p-1.5 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition"
+                        className="btn-3d-icon p-2 text-slate-500 hover:text-emerald-600"
                         title="Chỉnh sửa sản phẩm"
                       >
                         <Edit className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleDeleteProduct(p.id, p.name)}
-                        className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition"
+                        className="btn-3d-icon p-2 text-slate-500 hover:text-rose-600"
                         title="Xóa sản phẩm"
                       >
                         <Trash2 className="w-4 h-4" />

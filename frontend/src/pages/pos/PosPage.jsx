@@ -441,17 +441,17 @@ export const PosPage = () => {
                 </div>
 
                 <div className="flex items-center gap-1.5">
-                  <div className="flex items-center border border-slate-200 rounded-lg overflow-hidden bg-slate-50">
+                  <div className="flex items-center border border-white/90 rounded-xl overflow-hidden bg-white/70 backdrop-blur-md shadow-sm">
                     <button
                       onClick={() => updateQuantity(item.productUnitId, -1)}
-                      className="p-1 hover:bg-slate-200 text-slate-600"
+                      className="p-1.5 hover:bg-white text-slate-700 active:scale-90 transition"
                     >
                       <Minus className="w-3 h-3" />
                     </button>
-                    <span className="px-2 font-bold text-slate-800 text-xs">{item.quantity}</span>
+                    <span className="px-2 font-black text-slate-800 text-xs">{item.quantity}</span>
                     <button
                       onClick={() => updateQuantity(item.productUnitId, 1)}
-                      className="p-1 hover:bg-slate-200 text-slate-600"
+                      className="p-1.5 hover:bg-white text-slate-700 active:scale-90 transition"
                     >
                       <Plus className="w-3 h-3" />
                     </button>
@@ -459,7 +459,8 @@ export const PosPage = () => {
 
                   <button
                     onClick={() => removeFromCart(item.productUnitId)}
-                    className="p-1 text-slate-400 hover:text-rose-600"
+                    className="btn-3d-icon p-1.5 text-slate-400 hover:text-rose-600"
+                    title="Xóa khỏi giỏ"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -469,11 +470,11 @@ export const PosPage = () => {
           )}
         </div>
 
-        {/* Tính Tiền & Thanh Toán */}
-        <div className="border-t border-slate-100 pt-3 space-y-3 bg-slate-50/50 -mx-4 -mb-4 p-4">
+        {/* Tổng Tiền & Nút Thanh Toán */}
+        <div className="border-t border-slate-100 pt-3 space-y-3">
           <div className="space-y-1.5 text-xs">
             <div className="flex justify-between text-slate-500">
-              <span>Tổng tiền hàng:</span>
+              <span>Tạm tính:</span>
               <span className="font-bold text-slate-800">{subtotal.toLocaleString('vi-VN')} đ</span>
             </div>
             <div className="flex justify-between text-slate-500">
@@ -489,20 +490,20 @@ export const PosPage = () => {
           <div className="grid grid-cols-2 gap-2 text-xs">
             <button
               onClick={() => setPaymentMethod('CASH')}
-              className={`py-2 px-3 rounded-xl border font-bold flex items-center justify-center gap-1.5 transition ${
+              className={`py-2.5 px-3 rounded-full font-bold flex items-center justify-center gap-1.5 transition ${
                 paymentMethod === 'CASH'
-                  ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
-                  : 'bg-white text-slate-700 border-slate-200'
+                  ? 'btn-3d-solid'
+                  : 'btn-3d-secondary'
               }`}
             >
               <Banknote className="w-4 h-4" /> Tiền Mặt
             </button>
             <button
               onClick={() => setPaymentMethod('BANK_TRANSFER')}
-              className={`py-2 px-3 rounded-xl border font-bold flex items-center justify-center gap-1.5 transition ${
+              className={`py-2.5 px-3 rounded-full font-bold flex items-center justify-center gap-1.5 transition ${
                 paymentMethod === 'BANK_TRANSFER'
-                  ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
-                  : 'bg-white text-slate-700 border-slate-200'
+                  ? 'btn-3d-solid'
+                  : 'btn-3d-secondary'
               }`}
             >
               <CreditCard className="w-4 h-4" /> Chuyển Khoản QR
