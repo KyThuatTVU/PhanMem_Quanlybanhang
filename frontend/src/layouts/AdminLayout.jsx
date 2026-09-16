@@ -28,6 +28,7 @@ import {
   User,
   Sparkles
 } from 'lucide-react';
+import brandLogo from '../assets/images/logo.png';
 
 export const AdminLayout = () => {
   const location = useLocation();
@@ -73,22 +74,22 @@ export const AdminLayout = () => {
             <Menu className="w-5 h-5" />
           </button>
 
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-sky-600 to-blue-500 text-white flex items-center justify-center font-extrabold shadow-md shadow-sky-500/20">
-              <Store className="w-5 h-5" />
+          <Link to="/dashboard" className="flex items-center gap-2.5 hover:opacity-95 transition">
+            <div className="w-10 h-10 rounded-2xl bg-white p-1 border border-slate-200/80 shadow-sm flex items-center justify-center overflow-hidden">
+              <img src={brandLogo} alt="Tạp Hóa An Khang Logo" className="w-full h-full object-contain" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
                 <h1 className="text-sm font-extrabold text-slate-900 leading-none">
                   Tạp Hóa An Khang
                 </h1>
-                <span className="w-2 h-2 rounded-full bg-emerald-500" title="Hệ thống online" />
+                <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-100" title="Hệ thống online" />
               </div>
               <span className="text-[10px] text-sky-600 font-bold tracking-wide">
                 Hệ Thống Bán Lẻ POS & Quản Lý
               </span>
             </div>
-          </div>
+          </Link>
         </div>
 
         {/* Thanh tìm kiếm nhanh */}
@@ -175,12 +176,15 @@ export const AdminLayout = () => {
           </div>
 
           {isSidebarOpen && (
-            <div className="p-4 m-3 rounded-2xl bg-gradient-to-br from-sky-50 to-blue-50/50 border border-sky-100/80 text-[11px] space-y-1">
-              <div className="flex items-center gap-1.5 text-sky-800 font-extrabold">
-                <Sparkles className="w-3.5 h-3.5 text-sky-600" />
-                <span>Tạp Hóa An Khang</span>
+            <div className="p-3 m-3 rounded-2xl bg-gradient-to-br from-sky-50 to-blue-50/50 border border-sky-100/80 text-[11px] flex items-center gap-3 shadow-sm">
+              <img src={brandLogo} alt="Logo" className="w-9 h-9 object-contain rounded-xl bg-white p-1 border border-sky-200/60 shadow-sm shrink-0" />
+              <div className="min-w-0">
+                <div className="flex items-center gap-1 text-sky-800 font-extrabold truncate">
+                  <Sparkles className="w-3.5 h-3.5 text-sky-600 shrink-0" />
+                  <span className="truncate">Tạp Hóa An Khang</span>
+                </div>
+                <p className="text-slate-500 text-[10px] truncate">Phiên bản 1.0.0 • Production</p>
               </div>
-              <p className="text-slate-500 text-[10px]">Phiên bản 1.0.0 • Xanh Sáng & Trắng</p>
             </div>
           )}
         </aside>

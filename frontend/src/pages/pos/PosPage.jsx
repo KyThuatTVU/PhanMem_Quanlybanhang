@@ -18,6 +18,7 @@ import {
   Package,
   Image as ImageIcon
 } from 'lucide-react';
+import brandLogo from '../../assets/images/logo.png';
 
 export const PosPage = () => {
   const [barcodeInput, setBarcodeInput] = useState('');
@@ -591,10 +592,16 @@ export const PosPage = () => {
       {completedOrder && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="soft-card bg-white max-w-sm w-full p-6 space-y-4 rounded-3xl animate-scaleUp">
-            <div className="text-center space-y-1">
-              <CheckCircle2 className="w-12 h-12 text-emerald-500 mx-auto" />
-              <h3 className="text-lg font-extrabold text-slate-900">Thanh Toán Thành Công!</h3>
-              <p className="text-xs text-slate-500 font-bold">Mã Hóa Đơn: {completedOrder.code}</p>
+            <div className="text-center space-y-1.5">
+              <div className="w-12 h-12 mx-auto rounded-xl bg-white p-1 border border-slate-200 shadow-sm flex items-center justify-center">
+                <img src={brandLogo} alt="Logo" className="w-full h-full object-contain" />
+              </div>
+              <h3 className="text-lg font-extrabold text-slate-900">Tạp Hóa An Khang</h3>
+              <p className="text-xs text-emerald-600 font-bold flex items-center justify-center gap-1">
+                <CheckCircle2 className="w-4 h-4" />
+                Thanh Toán Thành Công!
+              </p>
+              <p className="text-[11px] text-slate-400 font-mono">Mã HĐ: {completedOrder.code}</p>
             </div>
 
             <div className="bg-slate-50 p-3.5 rounded-xl space-y-2 text-xs border">

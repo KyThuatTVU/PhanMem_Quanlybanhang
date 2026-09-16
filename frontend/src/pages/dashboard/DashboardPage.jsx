@@ -19,6 +19,7 @@ import {
   CheckCircle2,
   ArrowRight
 } from 'lucide-react';
+import brandLogo from '../../assets/images/logo.png';
 import {
   AreaChart,
   Area,
@@ -108,17 +109,22 @@ export const DashboardPage = () => {
         <div className="absolute right-32 -top-10 w-48 h-48 bg-sky-300/20 rounded-full blur-xl pointer-events-none" />
 
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="space-y-1.5">
-            <div className="inline-flex items-center gap-2 px-3 py-1 bg-white/20 backdrop-blur-md rounded-full text-xs font-bold text-white mb-1 border border-white/30">
-              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-              Tổng Quan Hoạt Động Cửa Hàng
+          <div className="flex items-center gap-4">
+            <div className="w-14 h-14 rounded-2xl bg-white/95 p-1.5 shadow-lg border border-white/40 flex items-center justify-center shrink-0">
+              <img src={brandLogo} alt="Logo" className="w-full h-full object-contain" />
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
-              Tạp Hóa & Siêu Thị Mini An Khang
-            </h1>
-            <p className="text-xs sm:text-sm text-sky-100 font-medium max-w-xl">
-              Doanh số hôm nay đang tăng trưởng ổn định. Ca bán hàng buổi chiều đang mở với 42 giao dịch hoàn tất.
-            </p>
+            <div className="space-y-1">
+              <div className="inline-flex items-center gap-2 px-3 py-0.5 bg-white/20 backdrop-blur-md rounded-full text-[11px] font-bold text-white border border-white/30">
+                <Sparkles className="w-3 h-3 text-amber-300" />
+                Tổng Quan Hoạt Động Cửa Hàng
+              </div>
+              <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+                Tạp Hóa & Siêu Thị Mini An Khang
+              </h1>
+              <p className="text-xs sm:text-sm text-sky-100 font-medium max-w-xl">
+                Doanh số hôm nay đang tăng trưởng ổn định. Ca bán hàng buổi chiều đang mở với 42 giao dịch hoàn tất.
+              </p>
+            </div>
           </div>
 
           <div className="flex items-center gap-3">

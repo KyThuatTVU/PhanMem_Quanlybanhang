@@ -4,6 +4,7 @@ import { useAuthStore } from '../../stores/useAuthStore';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { ShoppingBag, Lock, User, Eye, EyeOff, AlertCircle, Sparkles } from 'lucide-react';
+import brandLogo from '../../assets/images/logo.png';
 
 export const LoginPage = () => {
   const navigate = useNavigate();
@@ -62,9 +63,9 @@ export const LoginPage = () => {
         <div className="soft-card bg-white/95 backdrop-blur-xl border border-white/40 shadow-2xl p-8 rounded-3xl space-y-6">
           
           {/* Header Tiêu đề & Logo */}
-          <div className="text-center space-y-2">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600/10 border border-blue-500/20 text-blue-600 mb-2 shadow-inner">
-              <ShoppingBag className="w-8 h-8" />
+          <div className="text-center space-y-3">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-white p-2 border border-slate-100 shadow-lg shadow-sky-500/10 mb-1">
+              <img src={brandLogo} alt="Tạp Hóa An Khang" className="w-full h-full object-contain" />
             </div>
             <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">
               Tạp Hóa An Khang
