@@ -11,7 +11,8 @@ import {
   Boxes,
   Users,
   PieChart as PieIcon,
-  ArrowUpRight
+  ArrowUpRight,
+  Sparkles
 } from 'lucide-react';
 import {
   BarChart,
@@ -28,7 +29,6 @@ import {
 
 export const ReportPage = () => {
   const [timeFilter, setTimeFilter] = useState('7_DAYS'); // 'TODAY', '7_DAYS', '30_DAYS', 'THIS_MONTH'
-  const [activeReportTab, setActiveReportTab] = useState('revenue'); // 'revenue', 'products', 'inventory'
 
   // Dữ liệu tài chính Doanh thu vs Giá vốn (COGS) vs Lợi nhuận
   const financialData = [
@@ -38,7 +38,7 @@ export const ReportPage = () => {
     { name: 'T5 (13/09)', doanhThu: 6200000, giaVon: 4350000, loiNhuan: 1850000 },
     { name: 'T6 (14/09)', doanhThu: 7500000, giaVon: 5300000, loiNhuan: 2200000 },
     { name: 'T7 (15/09)', doanhThu: 9800000, giaVon: 6850000, loiNhuan: 2950000 },
-    { name: 'CN (16/09)', doanhThu: 8400000, giaVon: 5900000, loiNhuan: 2500000 },
+    { name: 'CN (16/09)', doanhThu: 8450000, giaVon: 5940000, loiNhuan: 2510000 },
   ];
 
   // Sản phẩm bán chạy & bán chậm
@@ -46,9 +46,9 @@ export const ReportPage = () => {
     { name: 'Mì Hảo Hảo Tôm Cay', category: 'Mì gói', soldQty: 210, revenue: 945000, profit: 245000, speed: 'Bán chạy' },
     { name: 'Coca-Cola 330ml', category: 'Nước ngọt', soldQty: 145, revenue: 1450000, profit: 410000, speed: 'Bán chạy' },
     { name: 'Sữa tươi Vinamilk 180ml', category: 'Sữa', soldQty: 95, revenue: 855000, profit: 220000, speed: 'Bán chạy' },
-    { name: 'Dầu ăn Simply 1L', category: 'Gia vị', soldQty: 22, revenue: 1430000, profit: 280000, speed: 'Trung bình' },
-    { name: 'Bột giặt OMO 800g', category: 'Hóa mỹ phẩm', soldQty: 4, revenue: 180000, profit: 28000, speed: 'Bán chậm' },
-    { name: 'Nước xả Comfort túi 500ml', category: 'Hóa mỹ phẩm', soldQty: 2, revenue: 84000, profit: 12000, speed: 'Bán chậm' },
+    { name: 'Dầu ăn Simply 1L', category: 'Gia vị', soldQty: 28, revenue: 1820000, profit: 360000, speed: 'Trung bình' },
+    { name: 'Bột giặt OMO 800g', category: 'Hóa mỹ phẩm', soldQty: 6, revenue: 270000, profit: 42000, speed: 'Bán chậm' },
+    { name: 'Nước xả Comfort túi 500ml', category: 'Hóa mỹ phẩm', soldQty: 3, revenue: 126000, profit: 18000, speed: 'Bán chậm' },
   ];
 
   return (
@@ -57,11 +57,11 @@ export const ReportPage = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
-            <BarChart3 className="w-6 h-6 text-blue-600" />
+            <BarChart3 className="w-6 h-6 text-sky-600" />
             Báo Cáo Doanh Thu, Lợi Nhuận & Tồn Kho
           </h1>
           <p className="text-xs text-slate-500 font-medium">
-            Phân tích số liệu kinh doanh, giá vốn COGS, mặt hàng bán chạy và tốc độ quay vòng vốn
+            Phân tích số liệu kinh doanh, giá vốn COGS, mặt hàng bán chạy và biên lợi nhuận ròng
           </p>
         </div>
 
@@ -84,7 +84,7 @@ export const ReportPage = () => {
       </div>
 
       {/* 2. Bộ Lọc Thời Gian */}
-      <div className="soft-card p-4 flex flex-col sm:flex-row gap-3 items-center justify-between">
+      <div className="soft-card p-4 flex flex-col sm:flex-row gap-3 items-center justify-between border border-slate-200/80">
         <div className="flex items-center gap-2 w-full sm:w-auto">
           {['TODAY', '7_DAYS', '30_DAYS', 'THIS_MONTH'].map((tab) => {
             const labels = {
@@ -97,10 +97,10 @@ export const ReportPage = () => {
               <button
                 key={tab}
                 onClick={() => setTimeFilter(tab)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                   timeFilter === tab
-                    ? 'bg-blue-600 text-white shadow-glass-3d'
-                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                    ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md shadow-sky-500/20'
+                    : 'bg-slate-100 text-slate-600 hover:bg-sky-50 hover:text-sky-700'
                 }`}
               >
                 {labels[tab]}
@@ -110,77 +110,79 @@ export const ReportPage = () => {
         </div>
 
         <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
-          <Calendar className="w-4 h-4 text-slate-400" />
-          <span>Khoảng: 10/09/2026 – 16/09/2026</span>
+          <Calendar className="w-4 h-4 text-sky-600" />
+          <span>Khoảng thời gian: 10/09/2026 – 16/09/2026</span>
         </div>
       </div>
 
       {/* 3. Báo Cáo Tài Chính Tổng Quan */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="soft-card p-5 border-t-4 border-t-blue-600">
+        <div className="soft-card p-5 border border-sky-100 bg-white">
           <p className="text-[11px] text-slate-500 font-bold uppercase">Tổng Doanh Thu</p>
           <p className="text-2xl font-black text-slate-900 mt-1">45.100.000 đ</p>
           <p className="text-xs text-emerald-600 font-bold mt-1 flex items-center gap-0.5">
-            <ArrowUpRight className="w-4 h-4" /> +18.4% so với kỳ trước
+            <ArrowUpRight className="w-4 h-4" /> +18.4% so với tuần trước
           </p>
         </div>
 
-        <div className="soft-card p-5 border-t-4 border-t-slate-400">
+        <div className="soft-card p-5 border border-slate-200 bg-white">
           <p className="text-[11px] text-slate-500 font-bold uppercase">Tổng Giá Vốn (COGS)</p>
           <p className="text-2xl font-black text-slate-700 mt-1">31.770.000 đ</p>
           <p className="text-xs text-slate-500 font-medium mt-1">Chiếm 70.4% doanh thu</p>
         </div>
 
-        <div className="soft-card p-5 border-t-4 border-t-emerald-500">
+        <div className="soft-card p-5 border border-emerald-100 bg-white">
           <p className="text-[11px] text-slate-500 font-bold uppercase">Lợi Nhuận Gộp</p>
           <p className="text-2xl font-black text-emerald-600 mt-1">13.330.000 đ</p>
-          <p className="text-xs text-emerald-700 font-bold mt-1">Biên lợi nhuận gộp: 29.6%</p>
+          <p className="text-xs text-emerald-700 font-bold mt-1">Tỷ suất biên lợi nhuận: 29.6%</p>
         </div>
       </div>
 
-      {/* 4. Biểu Đồ So Sánh Doanh Thu vs Giá Vốn vs Lợi Nhuận */}
-      <div className="soft-card p-5 space-y-4">
+      {/* 4. Biểu Đồ Đối Soát Doanh Thu vs Giá Vốn vs Lợi Nhuận */}
+      <div className="soft-card p-6 space-y-4 border border-slate-200/80">
         <div>
           <h2 className="text-sm font-extrabold text-slate-900">
             Biểu Đồ Đối Soát Doanh Thu & Biên Lợi Nhuận
           </h2>
           <p className="text-xs text-slate-500">
-            So sánh trực quan Doanh thu bán ra và Giá vốn nhập hàng theo từng ngày
+            So sánh trực quan Doanh thu bán lẻ và Giá vốn hàng hóa nhập kho theo từng ngày
           </p>
         </div>
 
-        <div className="h-72 w-full">
+        <div className="h-72 w-full pt-2">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={financialData} margin={{ top: 20, right: 20, left: 10, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" />
-              <XAxis dataKey="name" stroke="#94A3B8" fontSize={11} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
+              <XAxis dataKey="name" stroke="#94A3B8" fontSize={11} tickLine={false} />
               <YAxis
                 stroke="#94A3B8"
                 fontSize={11}
                 tickFormatter={(val) => `${val / 1000000}M`}
+                tickLine={false}
+                axisLine={false}
               />
               <Tooltip
                 formatter={(val) => [`${Number(val).toLocaleString('vi-VN')} đ`]}
-                contentStyle={{ borderRadius: '12px', border: '1px solid #E2E8F0' }}
+                contentStyle={{ borderRadius: '16px', border: '1px solid #E2E8F0', fontSize: '11px' }}
               />
               <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '10px' }} />
-              <Bar dataKey="doanhThu" name="Doanh thu bán" fill="#2563EB" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="giaVon" name="Giá vốn (COGS)" fill="#94A3B8" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="loiNhuan" name="Lợi nhuận gộp" fill="#10B981" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="doanhThu" name="Doanh thu bán" fill="#0284C7" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="giaVon" name="Giá vốn (COGS)" fill="#94A3B8" radius={[6, 6, 0, 0]} />
+              <Bar dataKey="loiNhuan" name="Lợi nhuận gộp" fill="#10B981" radius={[6, 6, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </div>
 
-      {/* 5. Báo Cáo Hiệu Quả Từng Sản Phẩm (Bán Chạy / Bán Chậm) */}
-      <div className="soft-card p-0 overflow-hidden">
+      {/* 5. Phân Tích Mặt Hàng Bán Chạy & Bán Chậm */}
+      <div className="soft-card p-0 overflow-hidden border border-slate-200/80">
         <div className="p-4 border-b border-slate-100 flex items-center justify-between">
           <div>
             <h2 className="text-sm font-extrabold text-slate-900">
               Phân Tích Sản Phẩm Bán Chạy & Bán Chậm
             </h2>
             <p className="text-xs text-slate-500">
-              Giúp quản lý lên kế hoạch nhập thêm hàng hot và xả bớt hàng chậm luân chuyển
+              Giúp chủ quán nắm bắt xu hướng nhập hàng và tối ưu luân chuyển vốn
             </p>
           </div>
         </div>
@@ -194,16 +196,16 @@ export const ReportPage = () => {
                 <th className="p-4 text-right">Số Lượng Bán</th>
                 <th className="p-4 text-right">Doanh Thu Thu Được</th>
                 <th className="p-4 text-right">Lợi Nhuận Gộp</th>
-                <th className="p-4 text-center">Tốc Độ Bán Hàng</th>
+                <th className="p-4 text-center">Tốc Độ Tiêu Thụ</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {productPerformance.map((item, idx) => (
-                <tr key={idx} className="hover:bg-slate-50/80 transition">
+                <tr key={idx} className="hover:bg-sky-50/30 transition">
                   <td className="p-4 font-bold text-slate-900">{item.name}</td>
                   <td className="p-4 text-slate-600">{item.category}</td>
                   <td className="p-4 text-right font-black text-slate-800">{item.soldQty}</td>
-                  <td className="p-4 text-right font-bold text-blue-700">
+                  <td className="p-4 text-right font-bold text-sky-700">
                     {item.revenue.toLocaleString('vi-VN')} đ
                   </td>
                   <td className="p-4 text-right font-extrabold text-emerald-600">
@@ -215,7 +217,7 @@ export const ReportPage = () => {
                         item.speed === 'Bán chạy'
                           ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
                           : item.speed === 'Trung bình'
-                          ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                          ? 'bg-sky-50 text-sky-700 border border-sky-200'
                           : 'bg-rose-50 text-rose-700 border border-rose-200'
                       }`}
                     >
