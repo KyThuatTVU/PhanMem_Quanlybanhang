@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '../../components/ui/Button';
+import { exportToExcel } from '../../utils/excelExport';
 import {
   BarChart3,
   Calendar,
@@ -51,6 +52,19 @@ export const ReportPage = () => {
     { name: 'Nước xả Comfort túi 500ml', category: 'Hóa mỹ phẩm', soldQty: 3, revenue: 126000, profit: 18000, speed: 'Bán chậm' },
   ];
 
+  const handleExportReport = () => {
+    exportToExcel(
+      financialData.map((item) => ({
+        'Thời gian': item.name,
+        'Doanh thu': item.doanhThu,
+        'Giá vốn (COGS)': item.giaVon,
+        'Lợi nhuận gộp': item.loiNhuan,
+      })),
+      'BaoCaoDoanhThu',
+      'Báo cáo doanh thu'
+    );
+  };
+
   return (
     <div className="space-y-6">
       {/* 1. Header */}
@@ -76,7 +90,7 @@ export const ReportPage = () => {
           <Button
             variant="3d-solid"
             icon={FileSpreadsheet}
-            onClick={() => alert('Đang xuất Báo Cáo Doanh Thu ra file Excel .xlsx...')}
+            onClick={handleExportReport}
           >
             Xuất Excel
           </Button>

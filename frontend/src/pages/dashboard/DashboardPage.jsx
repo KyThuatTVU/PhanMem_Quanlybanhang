@@ -20,7 +20,6 @@ import {
   ArrowRight
 } from 'lucide-react';
 import brandLogo from '../../assets/images/logo.png';
-import storeBanner from '../../assets/images/banner.png';
 import {
   AreaChart,
   Area,
@@ -77,6 +76,18 @@ export const DashboardPage = () => {
     { id: 'HD-8918', time: '13:52', customer: 'Khách lẻ', items: 1, total: 10000, method: 'Tiền mặt', status: 'Hoàn tất' },
   ];
 
+  const stockAlertData = [
+    { name: 'Mì Hảo Hảo', tonKho: 18, nguongNhap: 50 },
+    { name: 'Snack Ostar', tonKho: 6, nguongNhap: 20 },
+    { name: 'Coca-Cola', tonKho: 24, nguongNhap: 40 },
+    { name: 'Sữa Vinamilk', tonKho: 31, nguongNhap: 45 },
+  ];
+
+  const debtBalanceData = [
+    { name: 'Khách hàng nợ', giaTri: 1450000, color: '#F43F5E' },
+    { name: 'Nợ nhà cung cấp', giaTri: 2100000, color: '#0284C7' },
+  ];
+
   // Custom Tooltip sang trọng cho Recharts
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
@@ -109,10 +120,10 @@ export const DashboardPage = () => {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-              Tổng Quan Cửa Hàng
+              Thống Kê Cửa Hàng
             </h1>
             <p className="text-xs font-bold text-slate-500">
-              Chào mừng trở lại! Theo dõi doanh số và hoạt động kinh doanh hôm nay.
+              Theo dõi doanh thu, tồn kho, công nợ và hiệu quả kinh doanh theo thời gian.
             </p>
           </div>
           <Link to="/pos" className="self-start sm:self-auto">
@@ -122,20 +133,12 @@ export const DashboardPage = () => {
           </Link>
         </div>
 
-        {/* Khung chứa Banner hiển thị 100% đầy đủ góc cạnh, không bị cắt xén */}
-        <div className="w-full rounded-3xl overflow-hidden border border-slate-200/90 shadow-lg bg-white">
-          <img
-            src={storeBanner}
-            alt="Banner Cửa Hàng Tạp Hóa An Khang"
-            className="w-full h-auto object-contain block rounded-3xl"
-          />
-        </div>
       </div>
 
       {/* 2. BỘ 4 THẺ CHỈ SỐ KPI CHÍNH */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {/* Doanh thu hôm nay */}
-        <div className="soft-card p-5 border border-sky-100/80 bg-white relative overflow-hidden group">
+        <div className="soft-card dashboard-glass-card p-5 border border-sky-100/80 relative overflow-hidden group">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-slate-500">Doanh Thu Hôm Nay</span>
             <div className="w-10 h-10 rounded-2xl bg-sky-50 text-sky-600 flex items-center justify-center font-bold group-hover:scale-110 transition">
@@ -151,7 +154,7 @@ export const DashboardPage = () => {
         </div>
 
         {/* Số đơn hoàn tất */}
-        <div className="soft-card p-5 border border-sky-100/80 bg-white relative overflow-hidden group">
+        <div className="soft-card dashboard-glass-card p-5 border border-sky-100/80 relative overflow-hidden group">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-slate-500">Hóa Đơn Bán Ra</span>
             <div className="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold group-hover:scale-110 transition">
@@ -167,7 +170,7 @@ export const DashboardPage = () => {
         </div>
 
         {/* Lợi nhuận gộp */}
-        <div className="soft-card p-5 border border-emerald-100/80 bg-white relative overflow-hidden group">
+        <div className="soft-card dashboard-glass-card p-5 border border-emerald-100/80 relative overflow-hidden group">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-slate-500">Lợi Nhuận Gộp</span>
             <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold group-hover:scale-110 transition">
@@ -182,7 +185,7 @@ export const DashboardPage = () => {
         </div>
 
         {/* Giá trị tồn kho */}
-        <div className="soft-card p-5 border border-indigo-100/80 bg-white relative overflow-hidden group">
+        <div className="soft-card dashboard-glass-card p-5 border border-indigo-100/80 relative overflow-hidden group">
           <div className="flex items-center justify-between mb-3">
             <span className="text-xs font-bold text-slate-500">Giá Trị Tồn Kho</span>
             <div className="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold group-hover:scale-110 transition">
@@ -200,7 +203,7 @@ export const DashboardPage = () => {
       {/* 3. KHU VỰC BIỂU ĐỒ CHÍNH (DOANH THU & CƠ CẤU NGÀNH HÀNG) */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Biểu đồ AreaChart: Xu hướng Doanh Thu & Lợi Nhuận 7 Ngày */}
-        <div className="soft-card p-6 lg:col-span-2 space-y-4 border border-slate-200/80">
+        <div className="soft-card dashboard-glass-card p-6 lg:col-span-2 space-y-4 border border-slate-200/80">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
             <div>
               <h2 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
@@ -299,7 +302,7 @@ export const DashboardPage = () => {
         </div>
 
         {/* Biểu đồ Donut: Cơ Cấu Doanh Thu Theo Ngành Hàng */}
-        <div className="soft-card p-6 space-y-4 border border-slate-200/80 flex flex-col justify-between">
+        <div className="soft-card dashboard-glass-card p-6 space-y-4 border border-slate-200/80 flex flex-col justify-between">
           <div className="border-b border-slate-100 pb-3">
             <h2 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
               <Layers className="w-5 h-5 text-sky-600" />
@@ -355,7 +358,7 @@ export const DashboardPage = () => {
       {/* 4. TOP SẢN PHẨM BÁN CHẠY & BẢNG GIAO DỊCH QUẦY MỚI NHẤT */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Biểu đồ Cột Ngang: Top 5 Sản Phẩm Bán Chạy */}
-        <div className="soft-card p-6 space-y-4 border border-slate-200/80">
+        <div className="soft-card dashboard-glass-card p-6 space-y-4 border border-slate-200/80">
           <div className="flex items-center justify-between border-b border-slate-100 pb-3">
             <div>
               <h2 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
@@ -397,7 +400,7 @@ export const DashboardPage = () => {
         </div>
 
         {/* Hóa đơn quầy thu ngân mới nhất */}
-        <div className="soft-card p-6 space-y-4 border border-slate-200/80 flex flex-col justify-between">
+        <div className="soft-card dashboard-glass-card p-6 space-y-4 border border-slate-200/80 flex flex-col justify-between">
           <div className="flex items-center justify-between border-b border-slate-100 pb-3">
             <div>
               <h2 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
@@ -449,65 +452,55 @@ export const DashboardPage = () => {
         </div>
       </div>
 
-      {/* 5. CẢNH BÁO QUẦY KỆ & CÔNG NỢ THÔNG MINH */}
+      {/* 5. BIỂU ĐỒ TỒN KHO & CÔNG NỢ */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Cảnh báo hàng sắp hết */}
-        <div className="soft-card p-5 border border-amber-200/80 bg-white space-y-3">
+        <div className="soft-card dashboard-glass-card p-6 border border-amber-200/80 space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
               <AlertTriangle className="w-4 h-4 text-amber-500" />
-              Mặt Hàng Sắp Hết (Cần Nhập Hàng)
+              Tồn Kho Cần Bổ Sung
             </h3>
-            <span className="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-lg border border-amber-200">
-              3 sản phẩm
-            </span>
+            <Link to="/inventory" className="text-xs font-bold text-sky-600 hover:text-sky-700">Mở kho hàng</Link>
           </div>
-
-          <div className="divide-y divide-slate-100 text-xs">
-            <div className="py-2.5 flex justify-between items-center">
-              <div>
-                <p className="font-bold text-slate-800">Mì Hảo Hảo Tôm Chua Cay 75g</p>
-                <p className="text-[11px] text-slate-400">Mức tối thiểu: 50 gói</p>
-              </div>
-              <span className="font-black text-rose-600 bg-rose-50 px-2.5 py-1 rounded-lg border border-rose-100">
-                Tồn: 18 gói
-              </span>
-            </div>
-
-            <div className="py-2.5 flex justify-between items-center">
-              <div>
-                <p className="font-bold text-slate-800">Bánh snack khoai tây Ostar 65g</p>
-                <p className="text-[11px] text-slate-400">Mức tối thiểu: 20 gói</p>
-              </div>
-              <span className="font-black text-rose-600 bg-rose-50 px-2.5 py-1 rounded-lg border border-rose-100">
-                Tồn: 6 gói
-              </span>
-            </div>
+          <div className="h-56 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={stockAlertData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
+                <XAxis dataKey="name" stroke="#64748B" fontSize={10} tickLine={false} axisLine={false} />
+                <YAxis stroke="#94A3B8" fontSize={10} tickLine={false} axisLine={false} />
+                <Tooltip formatter={(value, name) => [`${value} sản phẩm`, name === 'tonKho' ? 'Tồn hiện tại' : 'Ngưỡng nhập']} />
+                <Bar dataKey="nguongNhap" name="Ngưỡng nhập" fill="#FCD34D" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="tonKho" name="Tồn hiện tại" fill="#F43F5E" radius={[6, 6, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
+          <p className="text-xs text-slate-500 border-t border-slate-100 pt-3">Các cột đỏ đang thấp hơn mức tồn tối thiểu cần duy trì.</p>
         </div>
 
-        {/* Cảnh báo sổ công nợ */}
-        <div className="soft-card p-5 border border-sky-200/80 bg-white space-y-3">
+        <div className="soft-card dashboard-glass-card p-6 border border-sky-200/80 space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
               <CreditCard className="w-4 h-4 text-sky-600" />
-              Tình Trạng Sổ Nợ Khách & Nhà Cung Cấp
+              Dòng Tiền Công Nợ
             </h3>
             <Link to="/debts" className="text-xs font-bold text-sky-600 hover:text-sky-700">
-              Chi tiết sổ nợ
+              Mở sổ nợ
             </Link>
           </div>
-
-          <div className="bg-sky-50/50 p-3.5 rounded-2xl border border-sky-100 space-y-2.5 text-xs">
-            <div className="flex justify-between items-center">
-              <span className="text-slate-600 font-medium">Khách hàng còn nợ quán:</span>
-              <span className="font-black text-rose-600 text-sm">1.450.000 đ</span>
-            </div>
-            <div className="flex justify-between items-center border-t border-sky-100 pt-2">
-              <span className="text-slate-600 font-medium">Quán đang nợ Nhà cung cấp:</span>
-              <span className="font-black text-slate-900 text-sm">2.100.000 đ</span>
-            </div>
+          <div className="h-56 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={debtBalanceData} layout="vertical" margin={{ top: 8, right: 18, left: 20, bottom: 0 }}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" horizontal={false} />
+                <XAxis type="number" stroke="#94A3B8" fontSize={10} tickLine={false} axisLine={false} tickFormatter={(value) => `${(value / 1000000).toFixed(1)}M`} />
+                <YAxis dataKey="name" type="category" stroke="#475569" fontSize={10} width={92} tickLine={false} axisLine={false} />
+                <Tooltip formatter={(value) => [`${Number(value).toLocaleString('vi-VN')} đ`, 'Giá trị']} />
+                <Bar dataKey="giaTri" name="Giá trị công nợ" radius={[0, 7, 7, 0]}>
+                  {debtBalanceData.map((entry) => <Cell key={entry.name} fill={entry.color} />)}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
           </div>
+          <p className="text-xs text-slate-500 border-t border-slate-100 pt-3">Theo dõi khoản phải thu và phải trả để chủ động cân đối dòng tiền.</p>
         </div>
       </div>
     </div>

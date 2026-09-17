@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button } from '../../components/ui/Button';
 import { ImageUpload } from '../../components/ui/ImageUpload';
+import { exportToExcel } from '../../utils/excelExport';
 import {
   Package,
   Plus,
@@ -289,6 +290,29 @@ export const ProductListPage = () => {
     return matchKw && matchCat;
   });
 
+  const handleExportProducts = () => {
+    exportToExcel(
+      filteredProducts.map((product) => ({
+        SKU: product.sku,
+        'Tên sản phẩm': product.name,
+        'Ngành hàng': product.category,
+        'Thương hiệu': product.brand,
+        'Đơn vị cơ sở': product.baseUnit,
+        Barcode: product.baseBarcode,
+        'Giá vốn': product.costPrice,
+        'Giá bán lẻ': product.retailPrice,
+        'Giá bán sỉ': product.wholesalePrice,
+        'Tồn kho': product.stock,
+        'Tồn tối thiểu': product.minStock,
+        'Trạng thái': product.status === 'ACTIVE' ? 'Đang bán' : 'Ngừng bán',
+        'Đơn vị quy đổi': (product.conversions || []).map((item) => item.unit).join(', '),
+      })),
+      'DanhSachSanPham',
+      'Sản phẩm'
+    );
+    showToast(`Đã xuất ${filteredProducts.length} sản phẩm ra Excel.`);
+  };
+
   return (
     <div className="space-y-6">
       {/* Toast thông báo thành công */}
@@ -322,7 +346,7 @@ export const ProductListPage = () => {
           <Button
             variant="3d-secondary"
             icon={Download}
-            onClick={() => alert('Đã xuất file DanhSachSanPham.xlsx thành công!')}
+            onClick={handleExportProducts}
           >
             Xuất Excel
           </Button>

@@ -6,6 +6,7 @@ import { LoginPage } from '../pages/auth/LoginPage';
 import { ForgotPasswordPage } from '../pages/auth/ForgotPasswordPage';
 import { ProfilePage } from '../pages/auth/ProfilePage';
 import { DashboardPage } from '../pages/dashboard/DashboardPage';
+import { OverviewPage } from '../pages/dashboard/OverviewPage';
 import { PosPage } from '../pages/pos/PosPage';
 import { ProductListPage } from '../pages/products/ProductListPage';
 import { BarcodePage } from '../pages/barcodes/BarcodePage';
@@ -48,7 +49,8 @@ export const AppRoutes = () => {
         }
       >
         <Route index element={<Navigate to="/dashboard" replace />} />
-        <Route path="dashboard" element={<DashboardPage />} />
+        <Route path="dashboard" element={<OverviewPage />} />
+        <Route path="statistics" element={<DashboardPage />} />
         <Route path="pos" element={<PosPage />} />
         <Route path="products" element={<ProductListPage />} />
         <Route path="barcodes" element={<BarcodePage />} />

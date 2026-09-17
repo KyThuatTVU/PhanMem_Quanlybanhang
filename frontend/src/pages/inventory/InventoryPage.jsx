@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '../../components/ui/Button';
+import { exportToExcel } from '../../utils/excelExport';
 import {
   Boxes,
   Search,
@@ -130,6 +131,31 @@ export const InventoryPage = () => {
     reason: 'Rách bao bì / Hư hỏng',
     note: '',
   });
+
+  const handleExportStocks = () => {
+    const filteredStocks = stocks.filter(
+      (stock) =>
+        stock.name.toLowerCase().includes(keyword.toLowerCase()) ||
+        stock.barcode.includes(keyword)
+    );
+
+    exportToExcel(
+      filteredStocks.map((stock) => ({
+        SKU: stock.sku,
+        Barcode: stock.barcode,
+        'Tên hàng hóa': stock.name,
+        'Ngành hàng': stock.category,
+        'Đơn vị': stock.unit,
+        'Tồn thực tế': stock.quantity,
+        'Tồn tối thiểu': stock.minStock,
+        'Giá vốn': stock.costPrice,
+        'Giá trị vốn tồn': stock.quantity * stock.costPrice,
+        'Tình trạng': stock.quantity <= stock.minStock ? 'Sắp hết hàng' : 'Đủ hàng',
+      })),
+      'TheKho',
+      'Thẻ kho'
+    );
+  };
 
   const handleCreateAdjustment = (e) => {
     e.preventDefault();
@@ -271,7 +297,7 @@ export const InventoryPage = () => {
               />
             </div>
             <div className="flex items-center gap-2">
-              <Button variant="3d-secondary" size="sm" icon={FileSpreadsheet}>
+              <Button variant="3d-secondary" size="sm" icon={FileSpreadsheet} onClick={handleExportStocks}>
                 Xuất Thẻ Kho Excel
               </Button>
             </div>

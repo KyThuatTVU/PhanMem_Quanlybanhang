@@ -19,7 +19,6 @@ import {
   Settings,
   LogOut,
   Bell,
-  Search,
   Menu,
   X,
   Store,
@@ -41,9 +40,15 @@ export const AdminLayout = () => {
       label: 'Bán Hàng & Thu Ngân',
       items: [
         { title: 'Tổng Quan (Dashboard)', path: '/dashboard', icon: LayoutDashboard },
-        { title: 'Bán Hàng POS', path: '/pos', icon: ShoppingCart, highlight: true },
+        { title: 'Thống Kê Cửa Hàng', path: '/statistics', icon: BarChart3 },
         { title: 'Hóa Đơn Bán Hàng', path: '/orders', icon: FileText },
         { title: 'Khách Trả Hàng', path: '/returns', icon: RotateCcw },
+      ],
+    },
+    {
+      label: 'Máy Bán Hàng',
+      items: [
+        { title: 'Bán Hàng POS', path: '/pos', icon: ShoppingCart, highlight: true },
       ],
     },
     {
@@ -124,14 +129,16 @@ export const AdminLayout = () => {
           </Link>
         </div>
 
-        {/* Thanh tìm kiếm nhanh trên nền trắng */}
-        <div className="hidden lg:flex items-center max-w-md xl:max-w-lg w-full relative">
-          <Search className="w-5 h-5 text-slate-400 absolute left-4" />
-          <input
-            type="text"
-            placeholder="Tìm nhanh hóa đơn, khách hàng, mã vạch (Ctrl + K)..."
-            className="w-full bg-slate-50 border border-slate-200 focus:border-sky-500 focus:bg-white focus:ring-4 focus:ring-sky-100 rounded-2xl pl-12 pr-4 py-2.5 text-sm text-slate-800 placeholder-slate-400 focus:outline-none transition-all shadow-inner"
-          />
+        {/* Tên hệ thống ở trung tâm header */}
+        <div className="hidden lg:flex flex-1 justify-center text-center">
+          <div>
+            <h2 className="text-base font-bold font-sans text-slate-900 leading-tight tracking-normal">
+              KORA Retail
+            </h2>
+            <p className="text-[11px] text-sky-600 font-semibold font-sans tracking-normal mt-0.5">
+              Hệ thống quản lý bán hàng & kho
+            </p>
+          </div>
         </div>
 
         {/* Khu vực thông báo & Tài khoản người dùng */}
