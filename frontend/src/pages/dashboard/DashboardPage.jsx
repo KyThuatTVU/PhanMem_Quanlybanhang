@@ -233,7 +233,7 @@ export const DashboardPage = () => {
             </div>
           </div>
 
-          <div className="h-72 w-full pt-2">
+          <div className="statistics-chart-surface rounded-2xl h-72 w-full pt-2 px-2">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={revenueTrendData} margin={{ top: 10, right: 10, left: -10, bottom: 0 }}>
                 <defs>
@@ -311,7 +311,7 @@ export const DashboardPage = () => {
             <p className="text-xs text-slate-500">Tỷ trọng đóng góp doanh thu</p>
           </div>
 
-          <div className="h-56 w-full relative flex items-center justify-center">
+          <div className="statistics-chart-surface statistics-chart-surface--green rounded-2xl h-56 w-full relative flex items-center justify-center">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
@@ -372,7 +372,7 @@ export const DashboardPage = () => {
             </Link>
           </div>
 
-          <div className="h-64 w-full">
+          <div className="statistics-chart-surface statistics-chart-surface--amber rounded-2xl h-64 w-full px-2">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart
                 data={topProductsData}
@@ -462,7 +462,7 @@ export const DashboardPage = () => {
             </h3>
             <Link to="/inventory" className="text-xs font-bold text-sky-600 hover:text-sky-700">Mở kho hàng</Link>
           </div>
-          <div className="h-56 w-full">
+          <div className="statistics-chart-surface statistics-chart-surface--rose rounded-2xl h-56 w-full px-2">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={stockAlertData} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
@@ -487,7 +487,7 @@ export const DashboardPage = () => {
               Mở sổ nợ
             </Link>
           </div>
-          <div className="h-56 w-full">
+          <div className="statistics-chart-surface rounded-2xl h-56 w-full px-2">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={debtBalanceData} layout="vertical" margin={{ top: 8, right: 18, left: 20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" horizontal={false} />

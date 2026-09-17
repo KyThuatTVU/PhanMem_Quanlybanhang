@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import apiClient from '../../api/apiClient';
 import { Button } from '../../components/ui/Button';
+import { useStoreSettings } from '../../stores/useStoreSettings';
 import {
   Barcode,
   Search,
@@ -21,6 +22,7 @@ import {
 import brandLogo from '../../assets/images/logo.png';
 
 export const PosPage = () => {
+  const { settings } = useStoreSettings();
   const [barcodeInput, setBarcodeInput] = useState('');
   const [searchKeyword, setSearchKeyword] = useState('');
   const [cart, setCart] = useState([]);
@@ -597,7 +599,7 @@ export const PosPage = () => {
               <div className="w-12 h-12 mx-auto rounded-xl bg-white p-1 border border-slate-200 shadow-sm flex items-center justify-center">
                 <img src={brandLogo} alt="Logo" className="w-full h-full object-contain" />
               </div>
-              <h3 className="text-lg font-extrabold text-slate-900">Tạp Hóa An Khang</h3>
+              <h3 className="text-lg font-extrabold text-slate-900">{settings.STORE_NAME}</h3>
               <p className="text-xs text-emerald-600 font-bold flex items-center justify-center gap-1">
                 <CheckCircle2 className="w-4 h-4" />
                 Thanh Toán Thành Công!

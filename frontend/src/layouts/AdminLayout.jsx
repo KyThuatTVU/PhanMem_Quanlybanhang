@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { useAuthStore } from '../stores/useAuthStore';
+import { useStoreSettings } from '../stores/useStoreSettings';
+import apiClient from '../api/apiClient';
 import {
   LayoutDashboard,
   ShoppingCart,
@@ -33,7 +35,14 @@ export const AdminLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuthStore();
+  const { settings, setSettings } = useStoreSettings();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  React.useEffect(() => {
+    apiClient.get('/settings').then((response) => {
+      if (response.data) setSettings(response.data);
+    }).catch(() => {});
+  }, [setSettings]);
 
   const menuSections = [
     {
@@ -100,7 +109,7 @@ export const AdminLayout = () => {
       <div className="fixed bottom-10 right-1/3 w-80 h-80 bg-emerald-200/15 rounded-full blur-3xl pointer-events-none -z-10" />
 
       {/* 1. HEADER MÀU TRẮNG TINH KHÔI NỔI BẬT KHỎI NỀN TRANG (WHITE NAVBAR) */}
-      <header className="h-20 nav-glass fixed top-0 left-0 right-0 z-30 flex items-center justify-between px-4 sm:px-8 border-b border-slate-200">
+      <header className="h-20 topbar-glass fixed top-0 left-0 right-0 z-30 flex items-center justify-between px-4 sm:px-8">
         <div className="flex items-center gap-3.5">
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -113,12 +122,12 @@ export const AdminLayout = () => {
           <Link to="/dashboard" className="flex items-center gap-3.5 hover:opacity-95 transition group">
             {/* Logo Thương Hiệu Phóng To Rõ Nét */}
             <div className="w-14 h-14 rounded-2xl bg-white p-1.5 border border-slate-200 shadow-sm flex items-center justify-center overflow-hidden shrink-0 group-hover:scale-105 transition duration-200 ring-2 ring-sky-500/10">
-              <img src={brandLogo} alt="Tạp Hóa An Khang Logo" className="w-full h-full object-contain" />
+              <img src={brandLogo} alt={`${settings.STORE_NAME} Logo`} className="w-full h-full object-contain" />
             </div>
-            <div>
+            <div className="hidden sm:block">
               <div className="flex items-center gap-2">
                 <h1 className="text-base sm:text-lg font-black text-slate-900 leading-none tracking-tight">
-                  Tạp Hóa An Khang
+                  {settings.STORE_NAME}
                 </h1>
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 ring-4 ring-emerald-100/80" title="Hệ thống online" />
               </div>
@@ -184,7 +193,7 @@ export const AdminLayout = () => {
         <aside
           className={`fixed left-0 top-20 bottom-0 sidebar-glass transition-all duration-300 flex flex-col justify-between z-20 ${
             isSidebarOpen ? 'w-64' : 'w-20'
-          }`}
+          } ${isSidebarOpen ? 'sidebar-open' : ''}`}
         >
           {/* Danh sách các nhóm chức năng */}
           <div className="p-3 overflow-y-auto flex-1 space-y-3">
@@ -244,7 +253,7 @@ export const AdminLayout = () => {
               <div className="min-w-0">
                 <div className="flex items-center gap-1.5 text-slate-800 font-extrabold truncate">
                   <Sparkles className="w-3.5 h-3.5 text-sky-600 shrink-0" />
-                  <span className="truncate">Tạp Hóa An Khang</span>
+                  <span className="truncate">{settings.STORE_NAME}</span>
                 </div>
                 <p className="text-slate-400 text-[10.5px] truncate">Hệ Thống Quản Lý POS</p>
               </div>
@@ -252,8 +261,17 @@ export const AdminLayout = () => {
           )}
         </aside>
 
+        {isSidebarOpen && (
+          <button
+            type="button"
+            aria-label="Đóng menu"
+            onClick={() => setIsSidebarOpen(false)}
+            className="mobile-sidebar-backdrop fixed inset-0 top-20 z-10 bg-slate-900/20 backdrop-blur-[2px]"
+          />
+        )}
+
         <main
-          className={`flex-1 p-4 sm:p-6 lg:p-8 transition-all duration-300 bg-transparent ${
+          className={`app-main flex-1 p-4 sm:p-6 lg:p-8 transition-all duration-300 bg-transparent ${
             isSidebarOpen ? 'ml-64' : 'ml-20'
           }`}
         >

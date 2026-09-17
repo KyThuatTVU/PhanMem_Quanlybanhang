@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Button } from '../../components/ui/Button';
+import { useStoreSettings } from '../../stores/useStoreSettings';
 import {
   Barcode,
   Plus,
@@ -14,6 +15,7 @@ import {
 } from 'lucide-react';
 
 export const BarcodePage = () => {
+  const { settings } = useStoreSettings();
   const [keyword, setKeyword] = useState('');
   const [statusFilter, setStatusFilter] = useState('ALL');
   const [isGenerateModalOpen, setIsGenerateModalOpen] = useState(false);
@@ -497,7 +499,7 @@ export const BarcodePage = () => {
                 <p className="text-xs font-black text-blue-700 mt-1">
                   {selectedBarcodeForPrint.price.toLocaleString('vi-VN')} đ
                 </p>
-                <p className="text-[9px] text-slate-400 mt-0.5">TẠP HÓA AN KHANG</p>
+                <p className="text-[9px] text-slate-400 mt-0.5">{settings.STORE_NAME.toUpperCase()}</p>
               </div>
             </div>
 

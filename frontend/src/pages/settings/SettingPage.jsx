@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import apiClient from '../../api/apiClient';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
+import { useStoreSettings } from '../../stores/useStoreSettings';
 import { Settings, Printer, Shield, Save, CheckCircle2 } from 'lucide-react';
 
 export const SettingPage = () => {
@@ -15,6 +16,7 @@ export const SettingPage = () => {
   const [devices, setDevices] = useState([]);
   const [auditLogs, setAuditLogs] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { setSettings: setStoreSettings } = useStoreSettings();
 
   useEffect(() => {
     fetchSettings();
@@ -25,7 +27,7 @@ export const SettingPage = () => {
     try {
       if (activeTab === 'STORE') {
         const res = await apiClient.get('/settings');
-        setSettings(res.data || {});
+        setStoreSettings(res.data || {});
       } else if (activeTab === 'DEVICES') {
         const res = await apiClient.get('/settings/devices');
         setDevices(res.data || []);
@@ -44,6 +46,7 @@ export const SettingPage = () => {
     e.preventDefault();
     try {
       await apiClient.post('/settings', settings);
+      setStoreSettings(settings);
       alert('Lưu cấu hình cửa hàng thành công!');
     } catch (err) {
       alert(err.message || 'Lỗi lưu cấu hình');

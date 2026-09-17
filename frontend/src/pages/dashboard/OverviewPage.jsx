@@ -64,6 +64,51 @@ export const OverviewPage = () => {
         />
       </section>
 
+      <section className="dashboard-glass-card rounded-3xl p-6 sm:p-8">
+        <div className="max-w-3xl">
+          <p className="text-xs font-extrabold uppercase tracking-wide text-sky-600">Giới thiệu phần mềm</p>
+          <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 mt-1">KORA Retail giúp bạn quản lý cửa hàng từ một nơi</h2>
+          <p className="text-sm leading-6 text-slate-600 mt-3">
+            Phần mềm kết nối các công việc hằng ngày của cửa hàng: nhập sản phẩm, bán hàng tại quầy, quản lý tồn kho, theo dõi công nợ và xem kết quả kinh doanh. Bạn chỉ cần cập nhật dữ liệu một lần, hệ thống sẽ giúp kiểm soát số liệu rõ ràng hơn.
+          </p>
+        </div>
+
+        <div className="mt-7 border-t border-slate-200/70 pt-6">
+          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2">
+            <div>
+              <p className="text-xs font-extrabold uppercase tracking-wide text-sky-600">Quy trình sử dụng</p>
+              <h3 className="text-lg font-extrabold text-slate-900 mt-1">Bắt đầu theo 5 bước sau</h3>
+            </div>
+            <span className="text-xs font-bold text-slate-400">Dành cho chủ quán và nhân viên</span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mt-5">
+          {[
+            { number: '01', title: 'Thiết lập thông tin cửa hàng', description: 'Vào Cài Đặt để nhập tên, số điện thoại, địa chỉ và lời chào in trên hóa đơn.', path: '/settings' },
+            { number: '02', title: 'Tạo danh mục hàng hóa', description: 'Thêm tên hàng, mã SKU, mã vạch, giá vốn, giá bán và mức tồn tối thiểu.', path: '/products' },
+            { number: '03', title: 'Cập nhật số lượng trong kho', description: 'Ghi nhận hàng nhập, kiểm kê hoặc điều chỉnh để số tồn luôn chính xác.', path: '/inventory' },
+            { number: '04', title: 'Thực hiện bán hàng tại quầy', description: 'Mở Máy Bán Hàng, chọn sản phẩm, nhận thanh toán và hoàn tất hóa đơn.', path: '/pos' },
+            { number: '05', title: 'Kiểm tra kết quả kinh doanh', description: 'Xem doanh thu, lợi nhuận, công nợ và hàng bán chạy trong Báo Cáo.', path: '/reports' },
+          ].map(({ number, title, description, path }) => (
+            <Link
+              key={number}
+              to={path}
+              className="group rounded-2xl border border-white/80 bg-white/55 p-4 transition hover:-translate-y-1 hover:bg-white/85 hover:shadow-lg"
+            >
+              <div className="flex items-center gap-2">
+                <span className="text-xs font-black text-sky-700 bg-sky-50 border border-sky-100 rounded-lg px-2 py-1">Bước {number}</span>
+              </div>
+              <h3 className="text-sm font-extrabold text-slate-900 mt-4">{title}</h3>
+              <p className="text-xs leading-5 text-slate-500 mt-1.5">{description}</p>
+              <span className="inline-flex items-center gap-1 text-xs font-bold text-sky-700 mt-3">
+                Mở chức năng <ArrowRight className="w-3.5 h-3.5 transition group-hover:translate-x-1" />
+              </span>
+            </Link>
+          ))}
+          </div>
+        </div>
+      </section>
+
       <section className="grid grid-cols-1 lg:grid-cols-[1.35fr_1fr] gap-6">
         <div className="soft-card p-6 sm:p-8 border border-slate-200/80 bg-white">
           <div className="flex items-start gap-4">

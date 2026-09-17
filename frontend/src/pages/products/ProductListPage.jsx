@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button } from '../../components/ui/Button';
 import { ImageUpload } from '../../components/ui/ImageUpload';
 import { exportToExcel } from '../../utils/excelExport';
@@ -40,7 +40,10 @@ export const ProductListPage = () => {
   ];
 
   // Danh sách sản phẩm với hình ảnh và đa đơn vị tính
-  const [products, setProducts] = useState([
+  const [products, setProducts] = useState(() => {
+    try {
+      const savedProducts = localStorage.getItem('product_catalog');
+      return savedProducts ? JSON.parse(savedProducts) : [
     {
       id: 1,
       sku: 'COCA-330',
@@ -138,7 +141,21 @@ export const ProductListPage = () => {
         { unit: 'Thùng (12 Chai)', factor: 12, barcode: '8935031201018', retailPrice: 760000, wholesalePrice: 720000 },
       ],
     },
-  ]);
+      ];
+    } catch (error) {
+      console.error('Không thể đọc danh sách sản phẩm đã lưu:', error);
+      return [];
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('product_catalog', JSON.stringify(products));
+    } catch (error) {
+      console.error('Không thể lưu danh sách sản phẩm:', error);
+      showToast('Không thể lưu sản phẩm. Ảnh có thể quá lớn, vui lòng chọn ảnh nhẹ hơn.');
+    }
+  }, [products]);
 
   // State Form Thêm / Sửa Sản Phẩm
   const initialFormState = {
@@ -390,9 +407,9 @@ export const ProductListPage = () => {
       </div>
 
       {/* 3. Bảng Sản Phẩm Kèm Hình Ảnh Thực Tế Dạng Lưới 3D Thủy Tinh */}
-      <div className="table-glass-container">
+      <div className="hidden sm:block table-glass-container">
         <div className="overflow-x-auto">
-          <table className="table-3d-glass text-left text-xs">
+          <table className="product-table table-3d-glass text-left text-xs">
             <thead>
               <tr>
                 <th className="w-20 text-center">Hình Ảnh</th>
@@ -509,6 +526,88 @@ export const ProductListPage = () => {
             </tbody>
           </table>
         </div>
+      </div>
+
+      <div className="sm:hidden space-y-3">
+        {filteredProducts.map((p) => (
+          <article key={p.id} className="dashboard-glass-card rounded-2xl p-3.5">
+            <div className="flex items-start gap-3">
+              {p.image ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedProduct(p);
+                    setIsDetailModalOpen(true);
+                  }}
+                  className="w-16 h-16 rounded-xl border border-white/80 overflow-hidden bg-white/80 shadow-sm shrink-0"
+                  title="Xem ảnh sản phẩm"
+                >
+                  <img src={p.image} alt={p.name} className="w-full h-full object-cover" />
+                </button>
+              ) : (
+                <div className="w-16 h-16 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400 shrink-0">
+                  <ImageIcon className="w-5 h-5" />
+                </div>
+              )}
+
+              <div className="min-w-0 flex-1">
+                <h3 className="text-sm font-extrabold text-slate-900 leading-5">{p.name}</h3>
+                <p className="text-[10px] font-mono font-bold text-sky-700 mt-1 break-all">SKU: {p.sku}</p>
+                <p className="text-[10px] text-slate-500 mt-0.5">{p.category} · {p.baseUnit}</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-3 gap-2 mt-3 text-[10px]">
+              <div className="rounded-lg bg-white/65 border border-white/80 p-2">
+                <span className="block text-slate-400">Giá lẻ</span>
+                <strong className="block text-slate-900 mt-0.5">{p.retailPrice.toLocaleString('vi-VN')} đ</strong>
+              </div>
+              <div className="rounded-lg bg-white/65 border border-white/80 p-2">
+                <span className="block text-slate-400">Giá sỉ</span>
+                <strong className="block text-slate-700 mt-0.5">{p.wholesalePrice.toLocaleString('vi-VN')} đ</strong>
+              </div>
+              <div className="rounded-lg bg-white/65 border border-white/80 p-2">
+                <span className="block text-slate-400">Tồn kho</span>
+                <strong className={`block mt-0.5 ${p.stock <= p.minStock ? 'text-amber-600' : 'text-slate-900'}`}>
+                  {p.stock} {p.baseUnit}
+                </strong>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between gap-2 mt-3 pt-3 border-t border-white/80">
+              <span className="text-[10px] text-slate-500 truncate">Barcode: {p.baseBarcode}</span>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedProduct(p);
+                    setIsDetailModalOpen(true);
+                  }}
+                  className="btn-3d-icon p-2 text-slate-500 hover:text-sky-600"
+                  title="Xem chi tiết"
+                >
+                  <Eye className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleOpenEdit(p)}
+                  className="btn-3d-icon p-2 text-slate-500 hover:text-emerald-600"
+                  title="Chỉnh sửa sản phẩm"
+                >
+                  <Edit className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleDeleteProduct(p.id, p.name)}
+                  className="btn-3d-icon p-2 text-slate-500 hover:text-rose-600"
+                  title="Xóa sản phẩm"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+          </article>
+        ))}
       </div>
 
       {/* Modal Thêm Mới HOẶC Chỉnh Sửa Sản Phẩm */}

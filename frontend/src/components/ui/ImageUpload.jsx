@@ -1,19 +1,41 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Upload, X, Image as ImageIcon, Link as LinkIcon } from 'lucide-react';
 
 export const ImageUpload = ({ value, onChange, label = 'Hình Ảnh Sản Phẩm' }) => {
   const [isUrlMode, setIsUrlMode] = useState(false);
   const [urlInput, setUrlInput] = useState('');
+  const [error, setError] = useState('');
+  const [isDragging, setIsDragging] = useState(false);
+  const fileInputRef = useRef(null);
+
+  const processFile = (file) => {
+    setError('');
+
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setError('Vui lòng chọn tệp hình ảnh PNG, JPG hoặc WEBP.');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setError('Ảnh vượt quá 5MB. Vui lòng chọn ảnh nhẹ hơn.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => onChange(reader.result);
+    reader.onerror = () => setError('Không thể đọc ảnh. Vui lòng thử lại.');
+    reader.readAsDataURL(file);
+  };
 
   const handleFileChange = (e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        onChange(reader.result); // Base64 data URL for instant display
-      };
-      reader.readAsDataURL(file);
-    }
+    processFile(e.target.files?.[0]);
+    e.target.value = '';
+  };
+
+  const handleDrop = (e) => {
+    e.preventDefault();
+    setIsDragging(false);
+    processFile(e.dataTransfer.files?.[0]);
   };
 
   const handleApplyUrl = () => {
@@ -64,6 +86,8 @@ export const ImageUpload = ({ value, onChange, label = 'Hình Ảnh Sản Phẩm
         </div>
       ) : null}
 
+      {error && <p className="text-[11px] font-semibold text-rose-600">{error}</p>}
+
       {value ? (
         <div className="relative w-full h-36 rounded-xl border border-slate-200 overflow-hidden bg-slate-50 flex items-center justify-center group">
           <img
@@ -81,7 +105,20 @@ export const ImageUpload = ({ value, onChange, label = 'Hình Ảnh Sản Phẩm
           </button>
         </div>
       ) : (
-        <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-slate-200 hover:border-blue-400 rounded-xl cursor-pointer bg-slate-50/60 hover:bg-blue-50/30 transition group">
+        <label
+          htmlFor="product-image-upload"
+          onDragOver={(e) => {
+            e.preventDefault();
+            setIsDragging(true);
+          }}
+          onDragLeave={() => setIsDragging(false)}
+          onDrop={handleDrop}
+          className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-xl cursor-pointer transition group ${
+            isDragging
+              ? 'border-blue-500 bg-blue-50'
+              : 'border-slate-200 bg-slate-50/60 hover:border-blue-400 hover:bg-blue-50/30'
+          }`}
+        >
           <div className="flex flex-col items-center justify-center pt-2 pb-3">
             <div className="w-10 h-10 rounded-full bg-slate-100 group-hover:bg-blue-100 text-slate-400 group-hover:text-blue-600 flex items-center justify-center mb-1.5 transition">
               <ImageIcon className="w-5 h-5" />
@@ -94,6 +131,8 @@ export const ImageUpload = ({ value, onChange, label = 'Hình Ảnh Sản Phẩm
             </p>
           </div>
           <input
+            ref={fileInputRef}
+            id="product-image-upload"
             type="file"
             accept="image/*"
             onChange={handleFileChange}
