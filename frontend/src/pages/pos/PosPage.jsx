@@ -31,7 +31,27 @@ export const PosPage = () => {
   const [cart, setCart] = useState(() => {
     try {
       const savedCart = localStorage.getItem('pos_cart');
-      return savedCart ? JSON.parse(savedCart) : [];
+      if (!savedCart) return [];
+      const parsed = JSON.parse(savedCart);
+      let changed = false;
+      const cleaned = parsed.map((item) => {
+        if (
+          item.image &&
+          (item.image.includes('photo-1622483767028-3f66f32aef97') ||
+            (item.name && item.name.toLowerCase().includes('coca') && !item.image.includes('1554866585')))
+        ) {
+          changed = true;
+          return {
+            ...item,
+            image: 'https://images.unsplash.com/photo-1554866585-cd94860890b7?w=400&auto=format&fit=crop&q=80',
+          };
+        }
+        return item;
+      });
+      if (changed) {
+        localStorage.setItem('pos_cart', JSON.stringify(cleaned));
+      }
+      return cleaned;
     } catch {
       return [];
     }
@@ -570,7 +590,7 @@ export const PosPage = () => {
   };
 
   return (
-    <div className="h-[calc(100vh-6.8rem)] flex flex-row gap-3 overflow-hidden">
+    <div className="w-full max-w-full h-[calc(100vh-6.8rem)] flex flex-row gap-3 overflow-hidden">
       {/* 1. KHU VỰC TRÁI: QUÉT MÃ VẠCH & GRID CHỌN SẢN PHẨM CÓ ẢNH */}
       <div className="flex-1 min-w-0 flex flex-col gap-2.5 overflow-hidden">
         {/* Thanh Nhập Mã Vạch */}
@@ -600,7 +620,7 @@ export const PosPage = () => {
         </div>
 
         {/* Thanh Chọn Danh Mục Ngành Hàng (Category Filter Tabs) */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 px-0.5 scrollbar-thin shrink-0">
+        <div className="w-full min-w-0 flex items-center gap-1.5 overflow-x-auto pb-1 px-0.5 scrollbar-thin shrink-0">
           <button
             onClick={() => setSelectedCategory('ALL')}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${
@@ -725,7 +745,7 @@ export const PosPage = () => {
       </div>
 
       {/* 2. KHU VỰC PHẢI: GIỎ HÀNG POS & THANH TOÁN */}
-      <div className="w-80 lg:w-[340px] xl:w-96 shrink-0 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between p-3.5 h-full overflow-hidden">
+      <div className="w-72 sm:w-80 lg:w-[330px] xl:w-[360px] 2xl:w-[380px] shrink-0 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between p-3.5 h-full overflow-hidden">
         {/* Header Giỏ Hàng + Nút Giữ Đơn */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
           <div className="flex items-center gap-2">
