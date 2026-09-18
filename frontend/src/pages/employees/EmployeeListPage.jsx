@@ -19,12 +19,18 @@ export const EmployeeListPage = () => {
   const [keyword, setKeyword] = useState('');
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  const [employees, setEmployees] = useState([
+  const [employees, setEmployees] = useState(() => {
+    try {
+      const saved = localStorage.getItem('employee_catalog');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return [
     {
       id: 1,
       fullName: 'Nguyễn Văn Chủ Quán',
       username: 'owner_ankhang',
       role: 'OWNER',
+      password: '123',
       phone: '0903 111 222',
       status: 'ACTIVE',
       salesThisMonth: 120500000,
@@ -36,6 +42,7 @@ export const EmployeeListPage = () => {
       fullName: 'Trần Thị Quản Lý',
       username: 'manager_lan',
       role: 'MANAGER',
+      password: '123',
       phone: '0908 333 444',
       status: 'ACTIVE',
       salesThisMonth: 45000000,
@@ -47,6 +54,7 @@ export const EmployeeListPage = () => {
       fullName: 'Lê Văn Thu Ngân 1',
       username: 'cashier_minh',
       role: 'CASHIER',
+      password: '123',
       phone: '0912 555 666',
       status: 'ACTIVE',
       salesThisMonth: 28400000,
@@ -58,13 +66,24 @@ export const EmployeeListPage = () => {
       fullName: 'Phạm Văn Thủ Kho',
       username: 'warehouse_tuan',
       role: 'WAREHOUSE',
+      password: '123',
       phone: '0933 777 888',
       status: 'ACTIVE',
       salesThisMonth: 0,
       commission: 0,
       createdAt: '10/02/2026',
     },
-  ]);
+  ];
+  });
+
+  // Đồng bộ danh sách nhân viên vào localStorage cho máy POS
+  React.useEffect(() => {
+    try {
+      localStorage.setItem('employee_catalog', JSON.stringify(employees));
+    } catch (e) {
+      console.error('Không thể lưu danh mục nhân viên:', e);
+    }
+  }, [employees]);
 
   // Form Thêm Nhân Viên
   const [formData, setFormData] = useState({
@@ -83,6 +102,7 @@ export const EmployeeListPage = () => {
       username: formData.username,
       phone: formData.phone,
       role: formData.role,
+      password: formData.password || '123',
       status: 'ACTIVE',
       salesThisMonth: 0,
       commission: 0,

@@ -58,7 +58,13 @@ export const AdminLayout = () => {
     {
       label: 'Máy Bán Hàng',
       items: [
-        { title: 'Bán Hàng POS', path: '/pos', icon: ShoppingCart, highlight: true },
+        {
+          title: 'Bán Hàng POS',
+          path: '/pos',
+          icon: ShoppingCart,
+          highlight: true,
+          openNewTab: true,
+        },
       ],
     },
     {
@@ -226,6 +232,8 @@ export const AdminLayout = () => {
                       <Link
                         key={item.path}
                         to={item.path}
+                        target={item.openNewTab ? '_blank' : undefined}
+                        rel={item.openNewTab ? 'noopener noreferrer' : undefined}
                         title={!isSidebarOpen ? item.title : undefined}
                         className={`flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold transition-all duration-150 ${
                           isActive
@@ -244,7 +252,16 @@ export const AdminLayout = () => {
                               : 'text-slate-400 group-hover:text-sky-600'
                           }`}
                         />
-                        {isSidebarOpen && <span className="truncate">{item.title}</span>}
+                        {isSidebarOpen && (
+                          <div className="flex items-center justify-between flex-1 min-w-0">
+                            <span className="truncate">{item.title}</span>
+                            {item.openNewTab && (
+                              <span className="text-[9px] bg-emerald-600 text-white px-1.5 py-0.5 rounded-md font-black shrink-0 tracking-tight shadow-sm">
+                                TAB MỚI ↗
+                              </span>
+                            )}
+                          </div>
+                        )}
                       </Link>
                     );
                   })}

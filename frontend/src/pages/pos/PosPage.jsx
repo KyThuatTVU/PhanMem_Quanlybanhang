@@ -3,6 +3,7 @@ import apiClient from '../../api/apiClient';
 import { Button } from '../../components/ui/Button';
 import { useStoreSettings } from '../../stores/useStoreSettings';
 import { useAuthStore } from '../../stores/useAuthStore';
+import { usePosAuthStore } from '../../stores/usePosAuthStore';
 import {
   Barcode,
   Search,
@@ -26,6 +27,7 @@ import { QRCodeSVG } from 'qrcode.react';
 export const PosPage = () => {
   const { settings } = useStoreSettings();
   const { user } = useAuthStore();
+  const { cashier } = usePosAuthStore();
   const [barcodeInput, setBarcodeInput] = useState('');
   const [searchKeyword, setSearchKeyword] = useState('');
   const [cart, setCart] = useState(() => {
@@ -590,7 +592,7 @@ export const PosPage = () => {
   };
 
   return (
-    <div className="w-full max-w-full h-[calc(100vh-6.8rem)] flex flex-row gap-3 overflow-hidden">
+    <div className="w-full max-w-full h-full flex flex-row gap-3 overflow-hidden">
       {/* 1. KHU VỰC TRÁI: QUÉT MÃ VẠCH & GRID CHỌN SẢN PHẨM CÓ ẢNH */}
       <div className="flex-1 min-w-0 flex flex-col gap-2.5 overflow-hidden">
         {/* Thanh Nhập Mã Vạch */}
@@ -1037,7 +1039,7 @@ export const PosPage = () => {
                 <p className="text-sm font-black text-slate-900 uppercase">Hóa đơn tính tiền</p>
                 <p className="text-[10px] text-slate-500">Mã HĐ: {completedOrder.code}</p>
                 <p className="text-[10px] text-slate-500">Ngày: {new Date(completedOrder.soldAt).toLocaleString('vi-VN')}</p>
-                <p className="text-[10px] text-slate-500">Người bán: {user?.fullName || user?.name || 'Nhân viên bán hàng'}</p>
+                <p className="text-[10px] text-slate-500">Người bán: {cashier?.fullName || user?.fullName || user?.name || 'Nhân viên bán hàng'}</p>
               </div>
 
               <div className="receipt-items border-y border-dashed border-slate-400 py-2">

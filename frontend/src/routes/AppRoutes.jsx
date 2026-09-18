@@ -1,9 +1,12 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from '../stores/useAuthStore';
+import { usePosAuthStore } from '../stores/usePosAuthStore';
 import { AdminLayout } from '../layouts/AdminLayout';
+import { PosLayout } from '../layouts/PosLayout';
 import { LoginPage } from '../pages/auth/LoginPage';
 import { ForgotPasswordPage } from '../pages/auth/ForgotPasswordPage';
+import { PosLoginPage } from '../pages/pos/PosLoginPage';
 import { ProfilePage } from '../pages/auth/ProfilePage';
 import { DashboardPage } from '../pages/dashboard/DashboardPage';
 import { OverviewPage } from '../pages/dashboard/OverviewPage';
@@ -33,6 +36,14 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
+const PosProtectedRoute = ({ children }) => {
+  const { isPosAuthenticated } = usePosAuthStore();
+  if (!isPosAuthenticated) {
+    return <Navigate to="/pos/login" replace />;
+  }
+  return children;
+};
+
 export const AppRoutes = () => {
   return (
     <Routes>
@@ -40,7 +51,22 @@ export const AppRoutes = () => {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
-      {/* Toàn Bộ Route Nghiệp Vụ Trong Admin Layout */}
+      {/* Cổng Đăng Nhập Riêng Biệt Cho Máy Bán Hàng POS */}
+      <Route path="/pos/login" element={<PosLoginPage />} />
+
+      {/* Trạm Bán Hàng POS Hoàn Toàn Độc Lập Khỏi Giao Diện Admin */}
+      <Route
+        path="/pos"
+        element={
+          <PosProtectedRoute>
+            <PosLayout />
+          </PosProtectedRoute>
+        }
+      >
+        <Route index element={<PosPage />} />
+      </Route>
+
+      {/* Toàn Bộ Route Nghiệp Vụ Quản Trị Trong Admin Layout */}
       <Route
         path="/"
         element={
@@ -52,7 +78,6 @@ export const AppRoutes = () => {
         <Route index element={<Navigate to="/dashboard" replace />} />
         <Route path="dashboard" element={<OverviewPage />} />
         <Route path="statistics" element={<DashboardPage />} />
-        <Route path="pos" element={<PosPage />} />
         <Route path="products" element={<ProductListPage />} />
         <Route path="barcodes" element={<BarcodePage />} />
         <Route path="categories" element={<CategoryBrandPage />} />
