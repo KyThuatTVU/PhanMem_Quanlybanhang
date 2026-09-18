@@ -66,18 +66,25 @@ export const PosPage = () => {
     }
   };
 
-  const mapCatalogProduct = (product) => ({
-    ...product,
-    id: product.id,
-    name: product.name,
-    image: product.image,
-    barcode: product.baseBarcode,
-    base_unit_name: product.baseUnit,
-    retail_price: Number(product.retailPrice) || 0,
-    cost_price: Number(product.costPrice) || 0,
-    stock: Number.isFinite(Number(product.stock)) ? Number(product.stock) : null,
-    conversion_rate: 1,
-  });
+  const mapCatalogProduct = (product) => {
+    let img = product.image;
+    if (img && img.includes('photo-1622483767028-3f66f32aef97')) {
+      img = 'https://images.unsplash.com/photo-1554866585-cd94860890b7?w=400&auto=format&fit=crop&q=80';
+    }
+    return {
+      ...product,
+      id: product.id,
+      name: product.name,
+      category: product.category || 'Nước giải khát & Bia',
+      image: img,
+      barcode: product.baseBarcode,
+      base_unit_name: product.baseUnit,
+      retail_price: Number(product.retailPrice) || 0,
+      cost_price: Number(product.costPrice) || 0,
+      stock: Number.isFinite(Number(product.stock)) ? Number(product.stock) : null,
+      conversion_rate: 1,
+    };
+  };
 
   // Danh mục sản phẩm có sẵn hình ảnh thực tế (Phân loại rõ ngành hàng đặc biệt là Gia vị)
   const defaultProducts = [
@@ -85,7 +92,7 @@ export const PosPage = () => {
       id: 1,
       name: 'Nước ngọt Coca-Cola 330ml',
       category: 'Nước giải khát & Bia',
-      image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&auto=format&fit=crop&q=80',
+      image: 'https://images.unsplash.com/photo-1554866585-cd94860890b7?w=400&auto=format&fit=crop&q=80',
       barcode: '8934560111118',
       base_unit_name: 'Lon',
       retail_price: 10000,
@@ -539,9 +546,9 @@ export const PosPage = () => {
   };
 
   return (
-    <div className="h-[calc(100vh-6rem)] flex flex-col lg:flex-row gap-4 overflow-hidden">
+    <div className="h-[calc(100vh-8.5rem)] flex flex-row gap-4 overflow-hidden min-h-[560px]">
       {/* 1. KHU VỰC TRÁI: QUÉT MÃ VẠCH & GRID CHỌN SẢN PHẨM CÓ ẢNH */}
-      <div className="flex-1 flex flex-col gap-4 overflow-hidden">
+      <div className="flex-1 min-w-0 flex flex-col gap-3 overflow-hidden">
         {/* Thanh Nhập Mã Vạch */}
         <div className="soft-card p-4 flex flex-col sm:flex-row gap-3 items-center">
           <form onSubmit={handleBarcodeScan} className="w-full sm:w-1/2 relative">
@@ -635,7 +642,7 @@ export const PosPage = () => {
             )}
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 xl:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-3">
             {products
               .filter((prod) => {
                 if (selectedCategory === 'ALL') return true;
@@ -694,7 +701,7 @@ export const PosPage = () => {
       </div>
 
       {/* 2. KHU VỰC PHẢI: GIỎ HÀNG POS & THANH TOÁN */}
-      <div className="w-full lg:w-96 soft-card flex flex-col justify-between p-4 overflow-hidden border-l border-slate-200">
+      <div className="w-80 xl:w-96 shrink-0 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between p-4 h-full overflow-hidden">
         {/* Header Giỏ Hàng + Nút Giữ Đơn */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
           <div className="flex items-center gap-2">

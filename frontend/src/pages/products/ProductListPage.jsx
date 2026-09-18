@@ -68,7 +68,7 @@ export const ProductListPage = () => {
       id: 1,
       sku: 'COCA-330',
       name: 'Nước ngọt Coca-Cola 330ml',
-      image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&auto=format&fit=crop&q=80',
+      image: 'https://images.unsplash.com/photo-1554866585-cd94860890b7?w=400&auto=format&fit=crop&q=80',
       category: 'Nước giải khát & Bia',
       brand: 'Coca-Cola',
       baseUnit: 'Lon',
