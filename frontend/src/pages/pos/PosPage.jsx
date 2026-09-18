@@ -227,7 +227,8 @@ export const PosPage = () => {
   };
 
   useEffect(() => {
-    fetchProducts();
+    const timer = window.setTimeout(() => fetchProducts(), 300);
+    return () => window.clearTimeout(timer);
   }, [searchKeyword]);
 
   const fetchProducts = async () => {

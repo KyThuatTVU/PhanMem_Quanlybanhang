@@ -27,6 +27,7 @@ export default [
 				navigator: 'readonly',
 				prompt: 'readonly',
 				__dirname: 'readonly',
+				URLSearchParams: 'readonly',
 			},
 		},
 		plugins: {

@@ -19,7 +19,8 @@ export const SupplierListPage = () => {
   });
 
   useEffect(() => {
-    fetchSuppliers();
+    const timer = window.setTimeout(() => fetchSuppliers(), 300);
+    return () => window.clearTimeout(timer);
   }, [keyword]);
 
   const fetchSuppliers = async () => {

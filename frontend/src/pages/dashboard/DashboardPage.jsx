@@ -52,11 +52,11 @@ export const DashboardPage = () => {
 
   // Cơ cấu doanh thu theo ngành hàng (Donut Chart)
   const categoryShareData = [
-    { name: 'Nước giải khát', value: 38, color: '#0284C7' },   // Sky 600
-    { name: 'Bánh kẹo & Snack', value: 24, color: '#0EA5E9' }, // Sky 500
-    { name: 'Mì & Ăn liền', value: 18, color: '#38BDF8' },     // Sky 400
-    { name: 'Sữa & Bơ sữa', value: 12, color: '#10B981' },     // Emerald
-    { name: 'Gia vị & Khác', value: 8, color: '#6366F1' },      // Indigo
+    { name: 'Nước giải khát & Bia', value: 38, color: '#0284C7' },   // Sky 600
+    { name: 'Gia vị & Dầu ăn', value: 24, color: '#0EA5E9' },        // Sky 500
+    { name: 'Mì & Thực phẩm ăn liền', value: 18, color: '#38BDF8' }, // Sky 400
+    { name: 'Sữa & Sản phẩm từ sữa', value: 12, color: '#10B981' },  // Emerald
+    { name: 'Bánh kẹo & Snack', value: 8, color: '#6366F1' },        // Indigo
   ];
 
   // Top 5 sản phẩm bán chạy nhất

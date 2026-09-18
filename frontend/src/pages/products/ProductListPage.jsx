@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import apiClient from '../../api/apiClient';
 import { Button } from '../../components/ui/Button';
 import { ImageUpload } from '../../components/ui/ImageUpload';
 import { exportToExcel } from '../../utils/excelExport';
@@ -30,14 +32,32 @@ export const ProductListPage = () => {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [toastMessage, setToastMessage] = useState('');
 
-  // Danh mục mẫu
-  const categories = [
-    { id: 1, name: 'Nước giải khát' },
-    { id: 2, name: 'Mì & Thực phẩm ăn liền' },
-    { id: 3, name: 'Sữa & Bơ sữa' },
-    { id: 4, name: 'Bánh kẹo & Snack' },
-    { id: 5, name: 'Gia vị & Dầu ăn' },
-  ];
+  // Danh mục ngành hàng đồng bộ động từ CSDL
+  const [categories, setCategories] = useState([
+    { id: 1, name: 'Gia vị & Dầu ăn' },
+    { id: 2, name: 'Nước giải khát & Bia' },
+    { id: 3, name: 'Mì & Thực phẩm ăn liền' },
+    { id: 4, name: 'Sữa & Sản phẩm từ sữa' },
+    { id: 5, name: 'Bánh kẹo & Snack' },
+    { id: 6, name: 'Gia vị & Đồ khô' },
+    { id: 7, name: 'Gạo & Nông sản khô' },
+    { id: 8, name: 'Hóa mỹ phẩm & Tẩy rửa' },
+  ]);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const res = await apiClient.get('/products/categories');
+      if (res.data && res.data.length > 0) {
+        setCategories(res.data);
+      }
+    } catch (err) {
+      console.error('Lỗi khi tải danh mục từ API:', err);
+    }
+  };
 
   // Danh sách sản phẩm với hình ảnh và đa đơn vị tính
   const [products, setProducts] = useState(() => {
@@ -49,7 +69,7 @@ export const ProductListPage = () => {
       sku: 'COCA-330',
       name: 'Nước ngọt Coca-Cola 330ml',
       image: 'https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=400&auto=format&fit=crop&q=80',
-      category: 'Nước giải khát',
+      category: 'Nước giải khát & Bia',
       brand: 'Coca-Cola',
       baseUnit: 'Lon',
       baseBarcode: '8934560111118',
@@ -88,7 +108,7 @@ export const ProductListPage = () => {
       sku: 'VINAMILK-180',
       name: 'Sữa tươi Vinamilk 100% 180ml',
       image: 'https://images.unsplash.com/photo-1550583724-b2692b85b150?w=400&auto=format&fit=crop&q=80',
-      category: 'Sữa & Bơ sữa',
+      category: 'Sữa & Sản phẩm từ sữa',
       brand: 'Vinamilk',
       baseUnit: 'Hộp',
       baseBarcode: '8934673123456',
@@ -162,7 +182,7 @@ export const ProductListPage = () => {
     sku: '',
     name: '',
     image: '',
-    category: 'Nước giải khát',
+    category: 'Gia vị & Dầu ăn',
     brand: 'Khác',
     baseUnit: 'Lon',
     baseBarcode: '',
@@ -181,7 +201,10 @@ export const ProductListPage = () => {
   // Mở modal thêm mới
   const handleOpenCreate = () => {
     setEditingProduct(null);
-    setFormData(initialFormState);
+    setFormData({
+      ...initialFormState,
+      category: categories[0]?.name || 'Gia vị & Dầu ăn',
+    });
     setIsFormModalOpen(true);
   };
 
@@ -192,7 +215,7 @@ export const ProductListPage = () => {
       sku: product.sku || '',
       name: product.name || '',
       image: product.image || '',
-      category: product.category || 'Nước giải khát',
+      category: product.category || categories[0]?.name || 'Gia vị & Dầu ăn',
       brand: product.brand || 'Khác',
       baseUnit: product.baseUnit || 'Lon',
       baseBarcode: product.baseBarcode || '',
@@ -398,7 +421,7 @@ export const ProductListPage = () => {
           >
             <option value="ALL">Tất cả ngành hàng</option>
             {categories.map((c) => (
-              <option key={c.id} value={c.name}>
+              <option key={c.id || c.code || c.name} value={c.name}>
                 {c.name}
               </option>
             ))}
@@ -676,14 +699,23 @@ export const ProductListPage = () => {
 
               <div className="grid grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Ngành Hàng</label>
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-xs font-bold text-slate-700">Ngành Hàng</label>
+                    <Link
+                      to="/categories"
+                      target="_blank"
+                      className="text-[10px] font-bold text-sky-600 hover:text-sky-700 hover:underline"
+                    >
+                      + Quản lý
+                    </Link>
+                  </div>
                   <select
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-blue-500"
                   >
                     {categories.map((c) => (
-                      <option key={c.id} value={c.name}>
+                      <option key={c.id || c.code || c.name} value={c.name}>
                         {c.name}
                       </option>
                     ))}

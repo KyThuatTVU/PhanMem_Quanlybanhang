@@ -32,7 +32,7 @@ export const InventoryPage = () => {
       minStock: 24,
       costPrice: 8500,
       retailPrice: 10000,
-      category: 'Nước giải khát',
+      category: 'Nước giải khát & Bia',
     },
     {
       id: 2,
@@ -56,7 +56,7 @@ export const InventoryPage = () => {
       minStock: 30,
       costPrice: 7600,
       retailPrice: 9000,
-      category: 'Sữa & Bơ sữa',
+      category: 'Sữa & Sản phẩm từ sữa',
     },
     {
       id: 4,

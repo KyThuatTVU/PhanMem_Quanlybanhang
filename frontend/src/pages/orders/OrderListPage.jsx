@@ -11,7 +11,8 @@ export const OrderListPage = () => {
   const [loadingDetail, setLoadingDetail] = useState(false);
 
   useEffect(() => {
-    fetchOrders();
+    const timer = window.setTimeout(() => fetchOrders(), 300);
+    return () => window.clearTimeout(timer);
   }, [keyword]);
 
   const fetchOrders = async () => {
