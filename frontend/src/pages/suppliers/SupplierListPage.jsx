@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import apiClient from '../../api/apiClient';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
-import { Truck, Plus, Search, Phone, MapPin, DollarSign, X, Check } from 'lucide-react';
+import { Truck, Plus, Search, Phone, MapPin, DollarSign, X, Check, Eye } from 'lucide-react';
 
 export const SupplierListPage = () => {
   const [suppliers, setSuppliers] = useState([]);
@@ -113,7 +113,11 @@ export const SupplierListPage = () => {
                       {Number(s.current_debt || 0).toLocaleString('vi-VN')} đ
                     </td>
                     <td className="p-4 text-right">
-                      <button className="text-blue-600 hover:underline font-bold">Chi tiết</button>
+                      <div className="flex items-center justify-end">
+                        <button className="btn-3d-icon-view" title="Xem chi tiết nhà cung cấp">
+                          <Eye className="w-4 h-4" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))

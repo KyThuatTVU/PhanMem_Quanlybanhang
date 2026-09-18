@@ -176,8 +176,8 @@ export const CashbookPage = () => {
                   <p className="text-[11px] text-slate-500 truncate">{item.note || 'Không có ghi chú'}</p>
                 </div>
                 <strong className={`text-xs whitespace-nowrap ${item.type === 'INCOME' ? 'text-emerald-700' : 'text-rose-700'}`}>{item.type === 'INCOME' ? '+' : '-'}{formatMoney(item.amount)}</strong>
-                <button type="button" onClick={() => handleEdit(item)} className="btn-3d-icon p-2 text-slate-500 hover:text-sky-600" title="Chỉnh sửa"><Pencil className="w-3.5 h-3.5" /></button>
-                <button type="button" onClick={() => handleDelete(item.id)} className="btn-3d-icon p-2 text-slate-500 hover:text-rose-600" title="Xóa"><Trash2 className="w-3.5 h-3.5" /></button>
+                <button type="button" onClick={() => handleEdit(item)} className="btn-3d-icon-edit" title="Chỉnh sửa"><Pencil className="w-3.5 h-3.5" /></button>
+                <button type="button" onClick={() => handleDelete(item.id)} className="btn-3d-icon-delete" title="Xóa"><Trash2 className="w-3.5 h-3.5" /></button>
               </div>
             ))}
           </div>

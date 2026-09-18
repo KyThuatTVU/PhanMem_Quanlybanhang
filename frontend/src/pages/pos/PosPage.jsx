@@ -776,7 +776,7 @@ export const PosPage = () => {
 
                   <button
                     onClick={() => removeFromCart(item.productUnitId)}
-                    className="btn-3d-icon p-1.5 text-slate-400 hover:text-rose-600"
+                    className="btn-3d-icon-delete"
                     title="Xóa khỏi giỏ"
                   >
                     <Trash2 className="w-3.5 h-3.5" />

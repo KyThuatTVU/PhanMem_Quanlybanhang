@@ -419,18 +419,18 @@ export const CategoryBrandPage = () => {
                       </span>
                     </td>
                     <td className="text-center">
-                      <div className="flex items-center justify-center gap-1.5">
+                      <div className="flex items-center justify-center gap-2">
                         <button
                           onClick={() => handleOpenEditModal(c)}
                           title="Sửa ngành hàng"
-                          className="p-1.5 text-sky-600 hover:bg-sky-50 rounded-lg transition"
+                          className="btn-3d-icon-edit"
                         >
                           <Edit2 className="w-4 h-4" />
                         </button>
                         <button
                           onClick={() => handleDeleteItem(c)}
                           title="Xóa ngành hàng"
-                          className="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition"
+                          className="btn-3d-icon-delete"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -460,11 +460,11 @@ export const CategoryBrandPage = () => {
                       </span>
                     </td>
                     <td className="text-center">
-                      <div className="flex items-center justify-center gap-1.5">
+                      <div className="flex items-center justify-center gap-2">
                         <button
                           onClick={() => handleDeleteItem(b)}
                           title="Xóa thương hiệu"
-                          className="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition"
+                          className="btn-3d-icon-delete"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>
@@ -494,11 +494,11 @@ export const CategoryBrandPage = () => {
                       </span>
                     </td>
                     <td className="text-center">
-                      <div className="flex items-center justify-center gap-1.5">
+                      <div className="flex items-center justify-center gap-2">
                         <button
                           onClick={() => handleDeleteItem(u)}
                           title="Xóa đơn vị tính"
-                          className="p-1.5 text-rose-500 hover:bg-rose-50 rounded-lg transition"
+                          className="btn-3d-icon-delete"
                         >
                           <Trash2 className="w-4 h-4" />
                         </button>

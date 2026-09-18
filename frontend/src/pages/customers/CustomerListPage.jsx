@@ -217,7 +217,7 @@ export const CustomerListPage = () => {
                           setSelectedCustomer(c);
                           setIsDetailModalOpen(true);
                         }}
-                        className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition"
+                        className="btn-3d-icon-view"
                         title="Xem chi tiết & lịch sử"
                       >
                         <Eye className="w-4 h-4" />

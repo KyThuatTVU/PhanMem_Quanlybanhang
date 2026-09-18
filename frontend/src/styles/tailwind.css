@@ -177,25 +177,47 @@
   }
 
   /* 6. Nút Biểu Tượng Thao Tác 3D Trong Suốt (3D Glass Icon Action Button) */
+  /* 6. Nút Biểu Tượng Thao Tác 3D Chuẩn Đồng Bộ (3D Squircle Action Button) */
   .btn-3d-icon {
-    @apply relative inline-flex items-center justify-center rounded-2xl transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:pointer-events-none active:scale-[0.92];
-    background: rgba(255, 255, 255, 0.65);
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.9);
+    @apply relative inline-flex items-center justify-center w-8 h-8 rounded-xl transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:pointer-events-none active:scale-[0.92];
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0;
     box-shadow: 
-      inset 0 1px 0 0 rgba(255, 255, 255, 1),
-      0 4px 12px -2px rgba(15, 23, 42, 0.06),
-      0 1px 2px 0 rgba(0, 0, 0, 0.02);
+      0 1px 3px 0 rgba(15, 23, 42, 0.08),
+      0 1px 2px -1px rgba(15, 23, 42, 0.05);
   }
 
   .btn-3d-icon:hover {
-    background: rgba(255, 255, 255, 0.92);
+    background: #ffffff !important;
+    border-color: #cbd5e1;
     box-shadow: 
-      inset 0 1.5px 0 0 rgba(255, 255, 255, 1),
-      0 8px 20px -2px rgba(2, 132, 199, 0.2),
-      0 2px 4px 0 rgba(0, 0, 0, 0.04);
+      0 6px 16px -2px rgba(15, 23, 42, 0.12),
+      0 2px 4px -1px rgba(15, 23, 42, 0.06);
     transform: translateY(-1.5px);
+  }
+
+  .btn-3d-icon-edit {
+    @apply btn-3d-icon text-sky-600;
+  }
+  .btn-3d-icon-edit:hover {
+    @apply bg-sky-50 text-sky-700 border-sky-300;
+    box-shadow: 0 6px 16px -2px rgba(2, 132, 199, 0.25) !important;
+  }
+
+  .btn-3d-icon-delete {
+    @apply btn-3d-icon text-rose-500;
+  }
+  .btn-3d-icon-delete:hover {
+    @apply bg-rose-50 text-rose-600 border-rose-300;
+    box-shadow: 0 6px 16px -2px rgba(244, 63, 94, 0.25) !important;
+  }
+
+  .btn-3d-icon-view {
+    @apply btn-3d-icon text-slate-500;
+  }
+  .btn-3d-icon-view:hover {
+    @apply bg-slate-50 text-sky-600 border-sky-200;
+    box-shadow: 0 6px 16px -2px rgba(15, 23, 42, 0.15) !important;
   }
 
   /* 7. Nút Tab Điều Hướng 3D Trong Suốt (3D Glass Tabs) */

@@ -500,21 +500,21 @@ export const ProductListPage = () => {
                           setSelectedProduct(p);
                           setIsDetailModalOpen(true);
                         }}
-                        className="btn-3d-icon p-2 text-slate-500 hover:text-sky-600"
+                        className="btn-3d-icon-view"
                         title="Xem ảnh & chi tiết"
                       >
                         <Eye className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleOpenEdit(p)}
-                        className="btn-3d-icon p-2 text-slate-500 hover:text-emerald-600"
+                        className="btn-3d-icon-edit"
                         title="Chỉnh sửa sản phẩm"
                       >
                         <Edit className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleDeleteProduct(p.id, p.name)}
-                        className="btn-3d-icon p-2 text-slate-500 hover:text-rose-600"
+                        className="btn-3d-icon-delete"
                         title="Xóa sản phẩm"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -583,7 +583,7 @@ export const ProductListPage = () => {
                     setSelectedProduct(p);
                     setIsDetailModalOpen(true);
                   }}
-                  className="btn-3d-icon p-2 text-slate-500 hover:text-sky-600"
+                  className="btn-3d-icon-view"
                   title="Xem chi tiết"
                 >
                   <Eye className="w-4 h-4" />
@@ -591,7 +591,7 @@ export const ProductListPage = () => {
                 <button
                   type="button"
                   onClick={() => handleOpenEdit(p)}
-                  className="btn-3d-icon p-2 text-slate-500 hover:text-emerald-600"
+                  className="btn-3d-icon-edit"
                   title="Chỉnh sửa sản phẩm"
                 >
                   <Edit className="w-4 h-4" />
@@ -599,7 +599,7 @@ export const ProductListPage = () => {
                 <button
                   type="button"
                   onClick={() => handleDeleteProduct(p.id, p.name)}
-                  className="btn-3d-icon p-2 text-slate-500 hover:text-rose-600"
+                  className="btn-3d-icon-delete"
                   title="Xóa sản phẩm"
                 >
                   <Trash2 className="w-4 h-4" />

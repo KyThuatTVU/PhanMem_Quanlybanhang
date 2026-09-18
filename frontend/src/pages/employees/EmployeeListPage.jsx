@@ -252,11 +252,7 @@ export const EmployeeListPage = () => {
                           {emp.role !== 'OWNER' && (
                             <button
                               onClick={() => handleToggleLock(emp.id)}
-                              className={`p-1.5 rounded-lg transition ${
-                                emp.status === 'ACTIVE'
-                                  ? 'text-slate-400 hover:text-rose-600 hover:bg-rose-50'
-                                  : 'text-rose-600 hover:text-emerald-600 hover:bg-emerald-50'
-                              }`}
+                              className={emp.status === 'ACTIVE' ? 'btn-3d-icon-delete' : 'btn-3d-icon-edit'}
                               title={emp.status === 'ACTIVE' ? 'Khóa tài khoản' : 'Mở khóa tài khoản'}
                             >
                               {emp.status === 'ACTIVE' ? (
