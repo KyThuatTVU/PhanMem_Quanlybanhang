@@ -60,7 +60,27 @@ export const PosPage = () => {
   const readCatalogProducts = () => {
     try {
       const savedProducts = localStorage.getItem('product_catalog');
-      return savedProducts ? JSON.parse(savedProducts) : [];
+      if (!savedProducts) return [];
+      const parsed = JSON.parse(savedProducts);
+      let changed = false;
+      const cleaned = parsed.map((p) => {
+        if (
+          p.image &&
+          (p.image.includes('photo-1622483767028-3f66f32aef97') ||
+            (p.name && p.name.toLowerCase().includes('coca') && !p.image.includes('1554866585')))
+        ) {
+          changed = true;
+          return {
+            ...p,
+            image: 'https://images.unsplash.com/photo-1554866585-cd94860890b7?w=400&auto=format&fit=crop&q=80',
+          };
+        }
+        return p;
+      });
+      if (changed) {
+        localStorage.setItem('product_catalog', JSON.stringify(cleaned));
+      }
+      return cleaned;
     } catch {
       return [];
     }
@@ -68,7 +88,11 @@ export const PosPage = () => {
 
   const mapCatalogProduct = (product) => {
     let img = product.image;
-    if (img && img.includes('photo-1622483767028-3f66f32aef97')) {
+    if (
+      img &&
+      (img.includes('photo-1622483767028-3f66f32aef97') ||
+        (product.name && product.name.toLowerCase().includes('coca') && !img.includes('1554866585')))
+    ) {
       img = 'https://images.unsplash.com/photo-1554866585-cd94860890b7?w=400&auto=format&fit=crop&q=80';
     }
     return {
@@ -546,11 +570,11 @@ export const PosPage = () => {
   };
 
   return (
-    <div className="h-[calc(100vh-8.5rem)] flex flex-row gap-4 overflow-hidden min-h-[560px]">
+    <div className="h-[calc(100vh-6.8rem)] flex flex-row gap-3 overflow-hidden">
       {/* 1. KHU VỰC TRÁI: QUÉT MÃ VẠCH & GRID CHỌN SẢN PHẨM CÓ ẢNH */}
-      <div className="flex-1 min-w-0 flex flex-col gap-3 overflow-hidden">
+      <div className="flex-1 min-w-0 flex flex-col gap-2.5 overflow-hidden">
         {/* Thanh Nhập Mã Vạch */}
-        <div className="soft-card p-4 flex flex-col sm:flex-row gap-3 items-center">
+        <div className="soft-card p-3 flex flex-col sm:flex-row gap-2.5 items-center shrink-0">
           <form onSubmit={handleBarcodeScan} className="w-full sm:w-1/2 relative">
             <Barcode className="w-5 h-5 text-blue-600 absolute left-3.5 top-2.5" />
             <input
@@ -576,7 +600,7 @@ export const PosPage = () => {
         </div>
 
         {/* Thanh Chọn Danh Mục Ngành Hàng (Category Filter Tabs) */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-1 px-1 scrollbar-thin">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 px-0.5 scrollbar-thin shrink-0">
           <button
             onClick={() => setSelectedCategory('ALL')}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${
@@ -620,8 +644,8 @@ export const PosPage = () => {
         </div>
 
         {/* Grid Chọn Nhanh Sản Phẩm Có Hình Ảnh */}
-        <div className="flex-1 overflow-y-auto soft-card p-4">
-          <div className="flex items-center justify-between mb-3">
+        <div className="flex-1 overflow-y-auto soft-card p-3">
+          <div className="flex items-center justify-between mb-2.5">
             <h2 className="text-xs font-bold text-slate-500 uppercase tracking-wider">
               {selectedCategory === 'ALL' ? 'Tất cả sản phẩm' : `Ngành hàng: ${selectedCategory}`} ({
                 products.filter((prod) => {
@@ -642,7 +666,7 @@ export const PosPage = () => {
             )}
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-2.5">
             {products
               .filter((prod) => {
                 if (selectedCategory === 'ALL') return true;
@@ -669,7 +693,7 @@ export const PosPage = () => {
                   className="p-2.5 bg-white hover:bg-blue-50/40 border border-slate-200 hover:border-blue-400 rounded-2xl text-left transition flex flex-col justify-between shadow-sm hover:shadow-md group"
                 >
                   {/* Ảnh Thumbnail Sản Phẩm */}
-                  <div className="w-full h-28 rounded-xl overflow-hidden bg-slate-50 mb-2 flex items-center justify-center border border-slate-100">
+                  <div className="w-full h-24 sm:h-28 rounded-xl overflow-hidden bg-slate-50 mb-2 flex items-center justify-center border border-slate-100">
                     {prod.image ? (
                       <img
                         src={prod.image}
@@ -701,9 +725,9 @@ export const PosPage = () => {
       </div>
 
       {/* 2. KHU VỰC PHẢI: GIỎ HÀNG POS & THANH TOÁN */}
-      <div className="w-80 xl:w-96 shrink-0 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between p-4 h-full overflow-hidden">
+      <div className="w-80 lg:w-[340px] xl:w-96 shrink-0 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between p-3.5 h-full overflow-hidden">
         {/* Header Giỏ Hàng + Nút Giữ Đơn */}
-        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
           <div className="flex items-center gap-2">
             <ShoppingCart className="w-5 h-5 text-blue-600" />
             <h2 className="text-sm font-extrabold text-slate-900">Giỏ Hàng POS</h2>
@@ -735,7 +759,7 @@ export const PosPage = () => {
         </div>
 
         {/* Danh Sách Món Trong Giỏ Kèm Ảnh Thu Nhỏ */}
-        <div className="flex-1 overflow-y-auto py-3 divide-y divide-slate-100 space-y-2">
+        <div className="flex-1 overflow-y-auto py-2 divide-y divide-slate-100 space-y-1.5">
           {cart.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-slate-400 space-y-2 py-8">
               <ShoppingCart className="w-12 h-12 stroke-1" />
@@ -745,7 +769,7 @@ export const PosPage = () => {
           ) : (
             cart.map((item) => (
               <div key={item.productUnitId} className="pt-2 flex items-center justify-between text-xs gap-2">
-                <div className="flex items-center gap-2 max-w-[170px]">
+                <div className="flex items-center gap-2 flex-1 min-w-0">
                   {item.image ? (
                     <img
                       src={item.image}
@@ -757,9 +781,9 @@ export const PosPage = () => {
                       <ImageIcon className="w-4 h-4" />
                     </div>
                   )}
-                  <div className="space-y-0.5 min-w-0">
+                  <div className="space-y-0.5 min-w-0 flex-1">
                     <p className="font-bold text-slate-800 truncate">{item.name}</p>
-                    <span className="text-[10px] text-slate-400 block">
+                    <span className="text-[10px] text-slate-400 block truncate">
                       {item.unitPrice.toLocaleString('vi-VN')} đ / {item.unitName}
                     </span>
                   </div>

@@ -278,9 +278,9 @@ export const AdminLayout = () => {
         )}
 
         <main
-          className={`app-main flex-1 p-4 sm:p-6 lg:p-8 transition-all duration-300 bg-transparent ${
-            isSidebarOpen ? 'ml-64' : 'ml-20'
-          }`}
+          className={`app-main flex-1 transition-all duration-300 bg-transparent ${
+            location.pathname === '/pos' ? 'p-2 sm:p-3 pb-2' : 'p-4 sm:p-6 lg:p-8'
+          } ${isSidebarOpen ? 'ml-64' : 'ml-20'}`}
         >
           <Outlet />
         </main>

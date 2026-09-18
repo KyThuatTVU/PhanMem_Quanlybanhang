@@ -63,7 +63,25 @@ export const ProductListPage = () => {
   const [products, setProducts] = useState(() => {
     try {
       const savedProducts = localStorage.getItem('product_catalog');
-      return savedProducts ? JSON.parse(savedProducts) : [
+      if (savedProducts) {
+        const parsed = JSON.parse(savedProducts);
+        const cleaned = parsed.map((p) => {
+          if (
+            p.image &&
+            (p.image.includes('photo-1622483767028-3f66f32aef97') ||
+              (p.name && p.name.toLowerCase().includes('coca') && !p.image.includes('1554866585')))
+          ) {
+            return {
+              ...p,
+              image: 'https://images.unsplash.com/photo-1554866585-cd94860890b7?w=400&auto=format&fit=crop&q=80',
+            };
+          }
+          return p;
+        });
+        localStorage.setItem('product_catalog', JSON.stringify(cleaned));
+        return cleaned;
+      }
+      return [
     {
       id: 1,
       sku: 'COCA-330',
