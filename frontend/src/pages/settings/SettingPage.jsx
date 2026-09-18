@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import apiClient from '../../api/apiClient';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
+import { ImageUpload } from '../../components/ui/ImageUpload';
 import { useStoreSettings } from '../../stores/useStoreSettings';
 import { Settings, Printer, Shield, Save, CheckCircle2 } from 'lucide-react';
 
@@ -12,6 +13,7 @@ export const SettingPage = () => {
     STORE_PHONE: '',
     STORE_ADDRESS: '',
     INVOICE_FOOTER: '',
+    OWNER_QR_IMAGE: '',
   });
   const [devices, setDevices] = useState([]);
   const [auditLogs, setAuditLogs] = useState([]);
@@ -27,6 +29,7 @@ export const SettingPage = () => {
     try {
       if (activeTab === 'STORE') {
         const res = await apiClient.get('/settings');
+        setSettings(res.data || {});
         setStoreSettings(res.data || {});
       } else if (activeTab === 'DEVICES') {
         const res = await apiClient.get('/settings/devices');
@@ -118,6 +121,24 @@ export const SettingPage = () => {
               value={settings.INVOICE_FOOTER || ''}
               onChange={(e) => setSettings({ ...settings, INVOICE_FOOTER: e.target.value })}
             />
+            <div className="border-t border-slate-200/70 pt-4 mt-4 space-y-3">
+              <div>
+                <h3 className="text-sm font-extrabold text-slate-900">Mã QR nhận thanh toán</h3>
+                <p className="text-[11px] text-slate-500 mt-1">Chỉ cần tải lên ảnh QR thẻ ngân hàng của chủ cửa hàng. Ảnh này sẽ được in trên mọi bill.</p>
+              </div>
+              <ImageUpload
+                label="Ảnh QR ngân hàng của chủ cửa hàng"
+                monochrome
+                value={settings.OWNER_QR_IMAGE || ''}
+                onChange={(image) => setSettings({ ...settings, OWNER_QR_IMAGE: image })}
+              />
+              <Input
+                label="Tên ngân hàng hiển thị trên bill (không bắt buộc)"
+                placeholder="Ví dụ: Vietcombank"
+                value={settings.BANK_NAME || ''}
+                onChange={(e) => setSettings({ ...settings, BANK_NAME: e.target.value })}
+              />
+            </div>
             <Button type="submit" variant="3d-solid" icon={Save} className="mt-2">
               Lưu Cấu Hình
             </Button>

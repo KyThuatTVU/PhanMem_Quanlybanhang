@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, BarChart3, Boxes, CheckCircle2, Clock3, ShoppingCart, Store } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
-import storeBanner from '../../assets/images/banner.png';
+import storeBanner from '../../assets/images/nen.png';
 import { useAuthStore } from '../../stores/useAuthStore';
 
 const getGreeting = (hour) => {
@@ -35,8 +35,8 @@ export const OverviewPage = () => {
   const adminName = user?.fullName || user?.name || 'Admin';
 
   return (
-    <div className="space-y-6">
-      <section className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4">
+    <div className="space-y-5">
+      <section className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-3">
         <div>
           <p className="text-sm font-bold text-sky-600 uppercase tracking-wide">Không gian làm việc KORA Retail</p>
           <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight mt-1">
@@ -56,11 +56,11 @@ export const OverviewPage = () => {
         </Link>
       </section>
 
-      <section className="w-full rounded-3xl overflow-hidden border border-slate-200/90 shadow-lg bg-white">
+      <section className="overview-banner w-full rounded-3xl overflow-hidden border border-slate-200/90 shadow-lg bg-white">
         <img
           src={storeBanner}
           alt="Không gian cửa hàng KORA Retail"
-          className="w-full h-auto object-contain block"
+          className="w-full h-full object-cover object-center block"
         />
       </section>
 

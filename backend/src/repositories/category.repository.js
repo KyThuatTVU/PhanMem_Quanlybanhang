@@ -26,6 +26,11 @@ class CategoryRepository {
     );
     return this.findById(id);
   }
+
+  async delete(id) {
+    await pool.query('UPDATE categories SET is_active = 0 WHERE id = ?', [id]);
+    return true;
+  }
 }
 
 module.exports = new CategoryRepository();

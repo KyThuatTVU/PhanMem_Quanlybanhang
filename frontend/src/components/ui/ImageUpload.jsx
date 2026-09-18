@@ -1,14 +1,51 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Upload, X, Image as ImageIcon, Link as LinkIcon } from 'lucide-react';
 
-export const ImageUpload = ({ value, onChange, label = 'Hình Ảnh Sản Phẩm' }) => {
+export const ImageUpload = ({ value, onChange, label = 'Hình Ảnh Sản Phẩm', monochrome = false }) => {
   const [isUrlMode, setIsUrlMode] = useState(false);
   const [urlInput, setUrlInput] = useState('');
   const [error, setError] = useState('');
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef(null);
+  const processedValueRef = useRef('');
 
-  const processFile = (file) => {
+  const convertToMonochrome = (dataUrl) => new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = image.naturalWidth;
+      canvas.height = image.naturalHeight;
+      const context = canvas.getContext('2d');
+      context.drawImage(image, 0, 0);
+      const pixels = context.getImageData(0, 0, canvas.width, canvas.height);
+
+      for (let index = 0; index < pixels.data.length; index += 4) {
+        const luminance = 0.299 * pixels.data[index] + 0.587 * pixels.data[index + 1] + 0.114 * pixels.data[index + 2];
+        const value = luminance < 180 ? 0 : 255;
+        pixels.data[index] = value;
+        pixels.data[index + 1] = value;
+        pixels.data[index + 2] = value;
+      }
+
+      context.putImageData(pixels, 0, 0);
+      resolve(canvas.toDataURL('image/png'));
+    };
+    image.onerror = reject;
+    image.src = dataUrl;
+  });
+
+  useEffect(() => {
+    if (!monochrome || !value || value === processedValueRef.current) return;
+
+    convertToMonochrome(value)
+      .then((imageData) => {
+        processedValueRef.current = imageData;
+        if (imageData !== value) onChange(imageData);
+      })
+      .catch(() => setError('Không thể chuyển ảnh QR sang đen trắng.'));
+  }, [value, monochrome]);
+
+  const processFile = async (file) => {
     setError('');
 
     if (!file) return;
@@ -22,7 +59,14 @@ export const ImageUpload = ({ value, onChange, label = 'Hình Ảnh Sản Phẩm
     }
 
     const reader = new FileReader();
-    reader.onload = () => onChange(reader.result);
+    reader.onload = async () => {
+      try {
+        const imageData = monochrome ? await convertToMonochrome(reader.result) : reader.result;
+        onChange(imageData);
+      } catch {
+        setError('Không thể xử lý ảnh QR. Vui lòng thử ảnh khác.');
+      }
+    };
     reader.onerror = () => setError('Không thể đọc ảnh. Vui lòng thử lại.');
     reader.readAsDataURL(file);
   };
@@ -38,11 +82,17 @@ export const ImageUpload = ({ value, onChange, label = 'Hình Ảnh Sản Phẩm
     processFile(e.dataTransfer.files?.[0]);
   };
 
-  const handleApplyUrl = () => {
-    if (urlInput.trim()) {
-      onChange(urlInput.trim());
+  const handleApplyUrl = async () => {
+    if (!urlInput.trim()) return;
+
+    try {
+      const imageData = monochrome ? await convertToMonochrome(urlInput.trim()) : urlInput.trim();
+      onChange(imageData);
       setUrlInput('');
       setIsUrlMode(false);
+      setError('');
+    } catch {
+      setError('Không thể tải hoặc chuyển đổi ảnh từ URL này.');
     }
   };
 
@@ -93,7 +143,7 @@ export const ImageUpload = ({ value, onChange, label = 'Hình Ảnh Sản Phẩm
           <img
             src={value}
             alt="Preview"
-            className="w-full h-full object-contain p-2"
+            className={`w-full h-full object-contain p-2 ${monochrome ? 'grayscale contrast-150' : ''}`}
           />
           <button
             type="button"

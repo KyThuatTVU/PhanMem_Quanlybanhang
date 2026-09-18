@@ -11,12 +11,21 @@ const startServer = async () => {
     await testConnection();
 
     // 2. Lắng nghe cổng HTTP
-    app.listen(PORT, () => {
+    const server = app.listen(PORT, () => {
       logger.info(`=======================================================`);
       logger.info(`🚀 Grocery Store Backend API running on port ${PORT}`);
       logger.info(`🌐 Environment: ${process.env.NODE_ENV || 'development'}`);
       logger.info(`🔗 Base API: http://localhost:${PORT}/api/v1`);
       logger.info(`=======================================================`);
+    });
+
+    server.on('error', (error) => {
+      if (error.code === 'EADDRINUSE') {
+        logger.error(`Cổng ${PORT} đang được sử dụng. Hãy dừng server cũ hoặc đổi PORT.`);
+        process.exit(1);
+      }
+      logger.error('Không thể khởi động HTTP server:', error);
+      process.exit(1);
     });
   } catch (error) {
     logger.error('Failed to start server:', error);

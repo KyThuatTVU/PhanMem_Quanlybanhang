@@ -63,6 +63,35 @@ class ProductController {
     }
   }
 
+  async createCategory(req, res, next) {
+    try {
+      const { code, name, description, parentId } = req.body;
+      const categoryCode = code || `CAT_${Date.now().toString().slice(-4)}`;
+      const result = await categoryRepository.create({ code: categoryCode, name, description, parentId });
+      return sendSuccess(res, result, 'Thêm ngành hàng mới thành công', 201);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async updateCategory(req, res, next) {
+    try {
+      const result = await categoryRepository.update(req.params.id, req.body);
+      return sendSuccess(res, result, 'Cập nhật ngành hàng thành công');
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteCategory(req, res, next) {
+    try {
+      await categoryRepository.delete(req.params.id);
+      return sendSuccess(res, null, 'Xóa ngành hàng thành công');
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getBrands(req, res, next) {
     try {
       const rows = await brandRepository.findAll();
@@ -72,10 +101,49 @@ class ProductController {
     }
   }
 
+  async createBrand(req, res, next) {
+    try {
+      const { code, name } = req.body;
+      const brandCode = code || `BR_${Date.now().toString().slice(-4)}`;
+      const result = await brandRepository.create({ code: brandCode, name });
+      return sendSuccess(res, result, 'Thêm thương hiệu mới thành công', 201);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteBrand(req, res, next) {
+    try {
+      await brandRepository.delete(req.params.id);
+      return sendSuccess(res, null, 'Xóa thương hiệu thành công');
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async getUnits(req, res, next) {
     try {
       const rows = await unitRepository.findAll();
       return sendSuccess(res, rows);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async createUnit(req, res, next) {
+    try {
+      const { name } = req.body;
+      const result = await unitRepository.create({ name });
+      return sendSuccess(res, result, 'Thêm đơn vị tính mới thành công', 201);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteUnit(req, res, next) {
+    try {
+      await unitRepository.delete(req.params.id);
+      return sendSuccess(res, null, 'Xóa đơn vị tính thành công');
     } catch (error) {
       next(error);
     }

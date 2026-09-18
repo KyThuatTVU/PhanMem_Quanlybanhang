@@ -92,7 +92,7 @@ export const DashboardPage = () => {
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white/95 backdrop-blur-md p-3.5 rounded-2xl shadow-xl border border-slate-100 text-xs space-y-1.5 min-w-[170px]">
+        <div className="statistics-tooltip bg-white/95 backdrop-blur-md p-3.5 rounded-2xl shadow-xl border border-slate-100 text-xs space-y-1.5 min-w-[170px]">
           <p className="font-extrabold text-slate-900 border-b border-slate-100 pb-1 flex items-center gap-1">
             <Calendar className="w-3 h-3 text-sky-600" /> {label}
           </p>
@@ -114,7 +114,7 @@ export const DashboardPage = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="statistics-page space-y-6">
       {/* 1. BANNER HÌNH ẢNH CỬA HÀNG TẠP HÓA AN KHANG (FULL GÓC ẢNH) */}
       <div className="space-y-3">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">

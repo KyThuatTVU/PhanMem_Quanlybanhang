@@ -5,6 +5,11 @@ const defaultSettings = {
   STORE_PHONE: '',
   STORE_ADDRESS: '',
   INVOICE_FOOTER: '',
+  BANK_NAME: '',
+  BANK_ACCOUNT: '',
+  BANK_ACCOUNT_NAME: '',
+  OWNER_QR_CONTENT: '',
+  OWNER_QR_IMAGE: '',
 };
 
 const savedSettings = JSON.parse(localStorage.getItem('store_settings') || 'null');

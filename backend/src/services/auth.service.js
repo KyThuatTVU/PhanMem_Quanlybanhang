@@ -148,7 +148,7 @@ class AuthService {
     Nghiệp vụ Đổi mật khẩu
    */
   async changePassword(userId, { oldPassword, newPassword }) {
-    const user = await userRepository.findByUsernameOrEmail(userId);
+    const user = await userRepository.findById(userId);
     if (!user) {
       throw new AppError(ERROR_CODES.USER_NOT_FOUND);
     }

@@ -23,6 +23,7 @@ import { EmployeeListPage } from '../pages/employees/EmployeeListPage';
 import { ReportPage } from '../pages/reports/ReportPage';
 import { DevicePage } from '../pages/devices/DevicePage';
 import { SettingPage } from '../pages/settings/SettingPage';
+import { CashbookPage } from '../pages/cashbook/CashbookPage';
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuthStore();
@@ -65,6 +66,7 @@ export const AppRoutes = () => {
         <Route path="promotions" element={<PromotionListPage />} />
         <Route path="employees" element={<EmployeeListPage />} />
         <Route path="reports" element={<ReportPage />} />
+        <Route path="cashbook" element={<CashbookPage />} />
         <Route path="devices" element={<DevicePage />} />
         <Route path="settings" element={<SettingPage />} />
         <Route path="profile" element={<ProfilePage />} />

@@ -15,6 +15,16 @@ class UnitRepository {
     const [result] = await pool.query('INSERT INTO units (name) VALUES (?)', [name]);
     return this.findById(result.insertId);
   }
+
+  async update(id, { name }) {
+    await pool.query('UPDATE units SET name = ? WHERE id = ?', [name, id]);
+    return this.findById(id);
+  }
+
+  async delete(id) {
+    await pool.query('DELETE FROM units WHERE id = ?', [id]);
+    return true;
+  }
 }
 
 module.exports = new UnitRepository();

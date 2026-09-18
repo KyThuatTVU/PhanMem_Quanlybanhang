@@ -27,7 +27,8 @@ import {
   Barcode,
   Cpu,
   User,
-  Sparkles
+  Sparkles,
+  WalletCards
 } from 'lucide-react';
 import brandLogo from '../assets/images/logo.png';
 
@@ -76,6 +77,12 @@ export const AdminLayout = () => {
         { title: 'Nhà Cung Cấp', path: '/suppliers', icon: Truck },
         { title: 'Khách Hàng', path: '/customers', icon: Users },
         { title: 'Sổ Nợ (Công Nợ)', path: '/debts', icon: CreditCard },
+      ],
+    },
+    {
+      label: 'Tài Chính & Thu Chi',
+      items: [
+        { title: 'Sổ Thu Chi Trong Ngày', path: '/cashbook', icon: WalletCards, highlight: true },
       ],
     },
     {

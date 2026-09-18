@@ -19,7 +19,7 @@ const errorHandler = (err, req, res, next) => {
     message,
     errorCode,
     details,
-    ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+    ...(process.env.NODE_ENV === 'development' && process.env.EXPOSE_ERROR_STACK === 'true' && { stack: err.stack }),
   });
 };
 

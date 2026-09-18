@@ -15,6 +15,16 @@ class BrandRepository {
     const [result] = await pool.query('INSERT INTO brands (code, name) VALUES (?, ?)', [code, name]);
     return this.findById(result.insertId);
   }
+
+  async update(id, { name }) {
+    await pool.query('UPDATE brands SET name = ? WHERE id = ?', [name, id]);
+    return this.findById(id);
+  }
+
+  async delete(id) {
+    await pool.query('UPDATE brands SET is_active = 0 WHERE id = ?', [id]);
+    return true;
+  }
 }
 
 module.exports = new BrandRepository();

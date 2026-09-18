@@ -37,6 +37,31 @@ class PosService {
   }
 
   async processCheckout(cashierId, checkoutData) {
+    const {
+      cartItems,
+      subtotalAmount,
+      discountAmount = 0,
+      grandTotal,
+      paidAmount,
+      changeAmount = 0,
+      debtAmount = 0,
+      customerId,
+    } = checkoutData;
+    const calculatedSubtotal = cartItems.reduce(
+      (total, item) => total + (item.quantity * item.unitPrice) - (item.discountAmount || 0),
+      0
+    );
+    const calculatedGrandTotal = calculatedSubtotal - discountAmount;
+    const settlementTotal = paidAmount - changeAmount + debtAmount;
+    const amountsMatch = (left, right) => Math.abs(Number(left) - Number(right)) < 0.01;
+
+    if (discountAmount > calculatedSubtotal || !amountsMatch(subtotalAmount, calculatedSubtotal) || !amountsMatch(grandTotal, calculatedGrandTotal) || !amountsMatch(settlementTotal, grandTotal)) {
+      throw new AppError(ERROR_CODES.BAD_REQUEST, 'Tổng tiền, chiết khấu và số tiền thanh toán không hợp lệ');
+    }
+    if (debtAmount > 0 && !customerId) {
+      throw new AppError(ERROR_CODES.BAD_REQUEST, 'Giao dịch ghi nợ phải có khách hàng');
+    }
+
     // 1. Sinh Mã đơn tự động HD-YYYYMMDD-XXXX
     const dateStr = new Date().toISOString().slice(0, 10).replace(/-/g, '');
     const orderCode = `HD-${dateStr}-${Math.floor(1000 + Math.random() * 9000)}`;
