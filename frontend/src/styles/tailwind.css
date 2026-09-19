@@ -3,10 +3,38 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    font-size: 17px !important;
+  }
+
   html, body {
     font-family: 'Baloo 2', system-ui, sans-serif;
     font-synthesis: none;
     @apply bg-background text-slate-800 antialiased selection:bg-sky-500 selection:text-white;
+  }
+
+  /* GLOBAL FONT ACCESSIBILITY OVERRIDES - Tăng cỡ chữ siêu nhỏ 10px/11px giúp nhìn cực kỳ rõ nét */
+  [class*="text-[9px]"],
+  [class*="text-[10px]"],
+  [class*="text-[11px]"] {
+    font-size: 0.8125rem !important; /* ~13.8px */
+    line-height: 1.25rem !important;
+  }
+
+  [class*="text-[12px]"],
+  .text-xs {
+    font-size: 0.875rem !important; /* ~15px */
+    line-height: 1.35rem !important;
+  }
+
+  .text-sm {
+    font-size: 0.95rem !important; /* ~16.2px */
+    line-height: 1.45rem !important;
+  }
+
+  .text-base {
+    font-size: 1.0625rem !important; /* ~18px */
+    line-height: 1.6rem !important;
   }
 
   input, button, select, textarea, table, th, td {
