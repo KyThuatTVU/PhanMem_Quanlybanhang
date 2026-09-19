@@ -13,7 +13,10 @@ import {
   Pencil,
   Trash2,
   RotateCcw,
-  AlertCircle
+  AlertCircle,
+  Mail,
+  User,
+  Phone
 } from 'lucide-react';
 
 export const EmployeeListPage = () => {
@@ -39,6 +42,7 @@ export const EmployeeListPage = () => {
         id: 1,
         fullName: 'Nguyễn Văn Chủ Quán',
         username: 'owner_ankhang',
+        email: 'owner@ankhang.com',
         role: 'OWNER',
         password: '123',
         phone: '0903 111 222',
@@ -51,6 +55,7 @@ export const EmployeeListPage = () => {
         id: 2,
         fullName: 'Trần Thị Quản Lý',
         username: 'manager_lan',
+        email: 'manager.lan@gmail.com',
         role: 'MANAGER',
         password: '123',
         phone: '0908 333 444',
@@ -63,6 +68,7 @@ export const EmployeeListPage = () => {
         id: 3,
         fullName: 'Lê Văn Thu Ngân 1',
         username: 'cashier_minh',
+        email: 'cashier.minh@gmail.com',
         role: 'CASHIER',
         password: '123',
         phone: '0912 555 666',
@@ -75,6 +81,7 @@ export const EmployeeListPage = () => {
         id: 4,
         fullName: 'Phạm Văn Thủ Kho',
         username: 'warehouse_tuan',
+        email: 'warehouse.tuan@gmail.com',
         role: 'WAREHOUSE',
         password: '123',
         phone: '0933 777 888',
@@ -89,7 +96,6 @@ export const EmployeeListPage = () => {
   // Đồng bộ danh sách nhân viên vào localStorage cho máy POS
   useEffect(() => {
     try {
-      localStorage.getItem('employee_catalog');
       localStorage.setItem('employee_catalog', JSON.stringify(employees));
     } catch (e) {
       console.error('Không thể lưu danh mục nhân viên:', e);
@@ -146,6 +152,7 @@ export const EmployeeListPage = () => {
   const [formData, setFormData] = useState({
     fullName: '',
     username: '',
+    email: '',
     phone: '',
     role: 'CASHIER',
     password: '',
@@ -154,8 +161,10 @@ export const EmployeeListPage = () => {
   const handleCreateEmployee = (e) => {
     e.preventDefault();
     const cleanUser = formData.username.trim().toLowerCase();
+    const cleanEmail = formData.email.trim().toLowerCase();
+
     if (employees.some((emp) => emp.username.toLowerCase() === cleanUser)) {
-      alert('Tên đăng nhập (username) này đã tồn tại! Vui lòng chọn tên khác.');
+      alert('Tên đăng nhập (username) này đã tồn tại! Vui lòng chọn tên đăng nhập khác.');
       return;
     }
 
@@ -163,6 +172,7 @@ export const EmployeeListPage = () => {
       id: Date.now(),
       fullName: formData.fullName.trim(),
       username: cleanUser,
+      email: cleanEmail,
       phone: formData.phone.trim(),
       role: formData.role,
       password: formData.password.trim() || '123',
@@ -176,23 +186,40 @@ export const EmployeeListPage = () => {
     setFormData({
       fullName: '',
       username: '',
+      email: '',
       phone: '',
       role: 'CASHIER',
       password: '',
     });
   };
 
-  // Form Sửa Nhân Viên
+  // Form Sửa Nhân Viên (Cho phép sửa Username & Email & Họ tên & SĐT & Role)
   const handleSaveEditEmployee = (e) => {
     e.preventDefault();
     if (!editingEmp) return;
+
+    const cleanUser = editingEmp.username.trim().toLowerCase();
+    const cleanEmail = (editingEmp.email || '').trim().toLowerCase();
+
+    // Kiểm tra xem username có bị trùng với nhân viên khác không
+    const isDuplicateUser = employees.some(
+      (emp) => emp.id !== editingEmp.id && emp.username.toLowerCase() === cleanUser
+    );
+
+    if (isDuplicateUser) {
+      alert('Tên đăng nhập (username) này đã trùng với nhân viên khác!');
+      return;
+    }
+
     setEmployees(
       employees.map((emp) =>
         emp.id === editingEmp.id
           ? {
               ...emp,
-              fullName: editingEmp.fullName,
-              phone: editingEmp.phone,
+              fullName: editingEmp.fullName.trim(),
+              username: cleanUser,
+              email: cleanEmail,
+              phone: (editingEmp.phone || '').trim(),
               role: editingEmp.role,
             }
           : emp
@@ -213,7 +240,7 @@ export const EmployeeListPage = () => {
           : emp
       )
     );
-    alert(`Đã đặt lại mật khẩu thành công cho tài khoản @${resetPassEmp.username}!`);
+    alert(`Đã cập nhật mật khẩu thành công cho tài khoản @${resetPassEmp.username}!`);
     setResetPassEmp(null);
     setNewPasswordInput('');
   };
@@ -251,7 +278,7 @@ export const EmployeeListPage = () => {
             Nhân Viên & Ma Trận Phân Quyền (RBAC)
           </h1>
           <p className="text-xs text-slate-500 font-medium">
-            Tạo tài khoản, cấp mật khẩu đăng nhập Máy POS, khóa/mở khóa và tùy chỉnh quyền hạn chi tiết cho từng vai trò
+            Tùy chỉnh Tên Đăng Nhập, Email, Cấp Mật Khẩu Đăng Nhập POS và phân quyền từng vai trò
           </p>
         </div>
 
@@ -274,7 +301,7 @@ export const EmployeeListPage = () => {
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
-          1. Danh Sách Nhân Viên & Đổi Mật Khẩu
+          1. Danh Sách Nhân Viên & Cài Đặt Tài Khoản
         </button>
 
         <button
@@ -297,7 +324,7 @@ export const EmployeeListPage = () => {
               <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-2.5" />
               <input
                 type="text"
-                placeholder="Tìm theo họ tên, username hoặc số điện thoại..."
+                placeholder="Tìm theo tên đăng nhập, email, họ tên, số điện thoại..."
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
                 className="w-full bg-slate-100 border border-transparent focus:border-blue-500 rounded-xl pl-10 pr-4 py-2 text-xs text-slate-800 focus:outline-none transition"
@@ -314,7 +341,8 @@ export const EmployeeListPage = () => {
                 <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
                   <tr>
                     <th className="p-4">Họ & Tên</th>
-                    <th className="p-4">Tài Khoản (Username)</th>
+                    <th className="p-4">Tên Đăng Nhập (Tên Login)</th>
+                    <th className="p-4">Email</th>
                     <th className="p-4">Vai Trò (Role)</th>
                     <th className="p-4">Số Điện Thoại</th>
                     <th className="p-4 text-center">Mật Khẩu Ca POS</th>
@@ -327,13 +355,25 @@ export const EmployeeListPage = () => {
                     .filter(
                       (e) =>
                         e.fullName.toLowerCase().includes(keyword.toLowerCase()) ||
-                        e.username.toLowerCase().includes(keyword.toLowerCase())
+                        e.username.toLowerCase().includes(keyword.toLowerCase()) ||
+                        (e.email && e.email.toLowerCase().includes(keyword.toLowerCase())) ||
+                        (e.phone && e.phone.includes(keyword))
                     )
                     .map((emp) => (
                       <tr key={emp.id} className="hover:bg-slate-50/80 transition">
-                        <td className="p-4 font-bold text-slate-900">{emp.fullName}</td>
+                        <td className="p-4 font-extrabold text-slate-900">{emp.fullName}</td>
                         <td className="p-4 font-mono text-blue-700 font-bold">
                           @{emp.username}
+                        </td>
+                        <td className="p-4 text-slate-600 font-medium">
+                          {emp.email ? (
+                            <span className="flex items-center gap-1.5">
+                              <Mail className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                              <span>{emp.email}</span>
+                            </span>
+                          ) : (
+                            <span className="text-slate-300 font-semibold">—</span>
+                          )}
                         </td>
                         <td className="p-4">
                           <span
@@ -358,7 +398,7 @@ export const EmployeeListPage = () => {
                         </td>
                         <td className="p-4 text-slate-600 font-medium">{emp.phone || '—'}</td>
                         <td className="p-4 text-center">
-                          <span className="font-mono bg-slate-100 px-2 py-1 rounded text-slate-700 font-bold">
+                          <span className="font-mono bg-slate-100 px-2.5 py-1 rounded text-slate-800 font-bold border border-slate-200/80">
                             {emp.password || '123'}
                           </span>
                         </td>
@@ -386,11 +426,11 @@ export const EmployeeListPage = () => {
                             <KeyRound className="w-4 h-4 text-blue-600" />
                           </button>
 
-                          {/* Sửa thông tin */}
+                          {/* Sửa thông tin & Email */}
                           <button
                             onClick={() => setEditingEmp({ ...emp })}
                             className="btn-3d-icon-edit"
-                            title="Chỉnh sửa thông tin nhân viên"
+                            title="Sửa tên login, email, họ tên, vai trò"
                           >
                             <Pencil className="w-4 h-4 text-amber-600" />
                           </button>
@@ -513,16 +553,16 @@ export const EmployeeListPage = () => {
         </div>
       )}
 
-      {/* Modal 1: Thêm Nhân Viên */}
+      {/* Modal 1: Thêm Nhân Viên Mới */}
       {isAddModalOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
             <h2 className="text-base font-extrabold text-slate-900 mb-1 flex items-center gap-2">
               <Plus className="w-5 h-5 text-blue-600" />
-              Thêm Nhân Viên & Cấp Mật Khẩu POS
+              Thêm Nhân Viên & Cấp Tên Đăng Nhập / Email
             </h2>
             <p className="text-xs text-slate-500 mb-4">
-              Khởi tạo tài khoản đăng nhập ca làm máy POS và gán vai trò quyền hạn
+              Khởi tạo thông tin nhân viên, cài đặt tên đăng nhập (login) và email cá nhân
             </p>
 
             <form onSubmit={handleCreateEmployee} className="space-y-4">
@@ -543,18 +583,33 @@ export const EmployeeListPage = () => {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Tên Đăng Nhập (Username) *
+                    Tên Đăng Nhập (Tên Login) *
                   </label>
                   <input
                     type="text"
                     required
                     value={formData.username}
                     onChange={(e) => setFormData({ ...formData, username: e.target.value })}
-                    placeholder="cashier_mai"
+                    placeholder="VD: cashier_mai"
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono font-bold text-slate-800 focus:outline-none focus:border-blue-500"
                   />
                 </div>
 
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Email Cá Nhân
+                  </label>
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    placeholder="VD: mai.tran@gmail.com"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-3 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
                     Mật Khẩu Máy POS *
@@ -564,13 +619,11 @@ export const EmployeeListPage = () => {
                     required
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    placeholder="Mật khẩu đăng nhập..."
+                    placeholder="123..."
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500"
                   />
                 </div>
-              </div>
 
-              <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
                     Số Điện Thoại
@@ -618,16 +671,16 @@ export const EmployeeListPage = () => {
         </div>
       )}
 
-      {/* Modal 2: Sửa Nhân Viên */}
+      {/* Modal 2: Sửa Nhân Viên & Email & Username */}
       {editingEmp && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
             <h2 className="text-base font-extrabold text-slate-900 mb-1 flex items-center gap-2">
               <Pencil className="w-5 h-5 text-amber-600" />
-              Chỉnh Sửa Thông Tin Nhân Viên
+              Chỉnh Sửa Thông Tin & Email Nhân Viên
             </h2>
             <p className="text-xs text-slate-500 mb-4">
-              Cập nhật thông tin và vai trò cho tài khoản <span className="font-mono text-blue-600 font-bold">@{editingEmp.username}</span>
+              Cập nhật Tên Đăng Nhập, Email, Họ Tên và Vai trò cho nhân viên
             </p>
 
             <form onSubmit={handleSaveEditEmployee} className="space-y-4">
@@ -642,6 +695,34 @@ export const EmployeeListPage = () => {
                   onChange={(e) => setEditingEmp({ ...editingEmp, fullName: e.target.value })}
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500"
                 />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Tên Đăng Nhập (Tên Login) *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={editingEmp.username}
+                    onChange={(e) => setEditingEmp({ ...editingEmp, username: e.target.value })}
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono font-bold text-slate-800 focus:outline-none focus:border-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-slate-700 mb-1">
+                    Email Cá Nhân
+                  </label>
+                  <input
+                    type="email"
+                    value={editingEmp.email || ''}
+                    onChange={(e) => setEditingEmp({ ...editingEmp, email: e.target.value })}
+                    placeholder="email@example.com"
+                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-blue-500"
+                  />
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">

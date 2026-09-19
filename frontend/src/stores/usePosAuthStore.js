@@ -50,6 +50,7 @@ export const getAvailableStaff = () => {
           id: e.id,
           fullName: e.fullName,
           username: e.username,
+          email: e.email || '',
           password: e.password || '123',
           role: e.role || (e.roleCodes && e.roleCodes[0]) || 'CASHIER',
           roleName:
@@ -95,12 +96,14 @@ export const usePosAuthStore = create((set, get) => ({
     const cleanPass = (password || '').trim();
 
     const staff = staffList.find(
-      (s) => s.username.toLowerCase() === cleanUser
+      (s) =>
+        s.username.toLowerCase() === cleanUser ||
+        (s.email && s.email.toLowerCase() === cleanUser)
     );
 
     if (!staff) {
-      set({ isLoading: false, error: 'Tên đăng nhập không tồn tại trong hệ thống!' });
-      throw new Error('Tên đăng nhập không tồn tại trong hệ thống!');
+      set({ isLoading: false, error: 'Tên đăng nhập hoặc Email không tồn tại trong hệ thống!' });
+      throw new Error('Tên đăng nhập hoặc Email không tồn tại trong hệ thống!');
     }
 
     const expectedPassword = staff.password || '123';
