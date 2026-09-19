@@ -96,8 +96,8 @@ export const EmployeeListPage = () => {
         if (rows.length > 0) {
           const mapped = rows.map((u) => ({
             id: u.id,
-            fullName: u.full_name || u.fullName,
-            username: u.username,
+            fullName: u.full_name || u.fullName || '',
+            username: u.username || '',
             role: (u.role_codes && u.role_codes.split(',')[0]) || u.role || 'CASHIER',
             password: '123',
             phone: u.phone || '',
@@ -371,7 +371,7 @@ export const EmployeeListPage = () => {
               <input
                 type="text"
                 placeholder="Tìm theo họ tên, username hoặc số điện thoại..."
-                value={keyword}
+                value={keyword || ''}
                 onChange={(e) => setKeyword(e.target.value)}
                 className="w-full bg-slate-100 border border-transparent focus:border-blue-500 rounded-xl pl-10 pr-4 py-2 text-xs text-slate-800 focus:outline-none transition"
               />
@@ -617,7 +617,7 @@ export const EmployeeListPage = () => {
                 <input
                   type="text"
                   required
-                  value={formData.fullName}
+                  value={formData.fullName || ''}
                   onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                   placeholder="VD: Trần Thị Mai"
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500"
@@ -632,7 +632,7 @@ export const EmployeeListPage = () => {
                   <input
                     type="text"
                     required
-                    value={formData.username}
+                    value={formData.username || ''}
                     onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                     placeholder="VD: cashier_mai"
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono font-bold text-slate-800 focus:outline-none focus:border-blue-500"
@@ -646,7 +646,7 @@ export const EmployeeListPage = () => {
                   <input
                     type="text"
                     required
-                    value={formData.password}
+                    value={formData.password || ''}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                     placeholder="VD: 123"
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500"
@@ -661,7 +661,7 @@ export const EmployeeListPage = () => {
                   </label>
                   <input
                     type="text"
-                    value={formData.phone}
+                    value={formData.phone || ''}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     placeholder="09xx xxx xxx"
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-blue-500"
@@ -673,7 +673,7 @@ export const EmployeeListPage = () => {
                     Vai Trò (Role)
                   </label>
                   <select
-                    value={formData.role}
+                    value={formData.role || 'CASHIER'}
                     onChange={(e) => setFormData({ ...formData, role: e.target.value })}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 font-bold focus:outline-none focus:border-blue-500"
                   >
@@ -722,7 +722,7 @@ export const EmployeeListPage = () => {
                 <input
                   type="text"
                   required
-                  value={editingEmp.fullName}
+                  value={editingEmp.fullName || ''}
                   onChange={(e) => setEditingEmp({ ...editingEmp, fullName: e.target.value })}
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500"
                 />
@@ -735,7 +735,7 @@ export const EmployeeListPage = () => {
                 <input
                   type="text"
                   required
-                  value={editingEmp.username}
+                  value={editingEmp.username || ''}
                   onChange={(e) => setEditingEmp({ ...editingEmp, username: e.target.value })}
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono font-bold text-slate-800 focus:outline-none focus:border-blue-500"
                 />
@@ -759,7 +759,7 @@ export const EmployeeListPage = () => {
                     Vai Trò (Role)
                   </label>
                   <select
-                    value={editingEmp.role}
+                    value={editingEmp.role || 'CASHIER'}
                     onChange={(e) => setEditingEmp({ ...editingEmp, role: e.target.value })}
                     disabled={editingEmp.role === 'OWNER'}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 font-bold focus:outline-none focus:border-blue-500 disabled:opacity-60"
@@ -809,7 +809,7 @@ export const EmployeeListPage = () => {
                 <input
                   type="text"
                   required
-                  value={newPasswordInput}
+                  value={newPasswordInput || ''}
                   onChange={(e) => setNewPasswordInput(e.target.value)}
                   placeholder="Nhập mật khẩu mới..."
                   className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm font-bold text-slate-800 focus:outline-none focus:border-blue-500"
