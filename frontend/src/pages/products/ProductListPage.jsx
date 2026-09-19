@@ -473,16 +473,16 @@ export const ProductListPage = () => {
           <table className="product-table table-3d-glass text-left text-xs">
             <thead>
               <tr>
-                <th className="w-20 text-center">Hình Ảnh</th>
-                <th>Mã SKU / Barcode</th>
-                <th>Tên Hàng Hóa</th>
-                <th>Ngành Hàng</th>
-                <th>Đơn Vị Cơ Sở</th>
-                <th>Quy Đổi Đơn Vị (ĐVT Phụ)</th>
-                <th className="text-right">Giá Bán Lẻ</th>
-                <th className="text-right">Giá Sỉ</th>
-                <th className="text-right">Tồn Kho</th>
-                <th className="text-right">Thao Tác</th>
+                <th className="w-20 text-center whitespace-nowrap">Hình Ảnh</th>
+                <th className="whitespace-nowrap">Mã SKU / Barcode</th>
+                <th className="whitespace-nowrap">Tên Hàng Hóa</th>
+                <th className="whitespace-nowrap">Ngành Hàng</th>
+                <th className="whitespace-nowrap">Đơn Vị Cơ Sở</th>
+                <th className="whitespace-nowrap">Quy Đổi Đơn Vị (ĐVT Phụ)</th>
+                <th className="text-right whitespace-nowrap">Giá Bán Lẻ</th>
+                <th className="text-right whitespace-nowrap">Giá Sỉ</th>
+                <th className="text-right whitespace-nowrap">Tồn Kho</th>
+                <th className="text-right whitespace-nowrap">Thao Tác</th>
               </tr>
             </thead>
             <tbody>

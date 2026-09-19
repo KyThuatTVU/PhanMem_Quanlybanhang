@@ -838,16 +838,20 @@
 
   .table-3d-glass thead th,
   .table-glass-container table thead th,
-  .soft-card:has(table) table thead th {
-    padding: 1.05rem 1rem;
+  .soft-card:has(table) table thead th,
+  .app-main table thead th,
+  table thead th {
+    padding: 0.85rem 1rem !important;
     font-weight: 800 !important;
     text-transform: uppercase;
-    font-size: 0.72rem;
-    letter-spacing: 0.05em;
+    font-size: 0.8125rem !important;
+    letter-spacing: 0.02em;
     color: #0369a1 !important;
     border-right: 1.5px solid #93c5fd !important;
     border-bottom: 2.5px solid #0284c7 !important;
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(224, 242, 254, 0.2) 100%);
+    white-space: nowrap !important;
+    vertical-align: middle !important;
   }
 
   .table-3d-glass thead th:nth-child(even),
