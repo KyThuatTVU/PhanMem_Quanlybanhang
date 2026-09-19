@@ -44,8 +44,15 @@ export const ProductListPage = () => {
     { id: 8, name: 'Hóa mỹ phẩm & Tẩy rửa' },
   ]);
 
+  // Danh mục Đơn vị tính đồng bộ chuẩn
+  const DEFAULT_UNITS = [
+    'Lon', 'Chai', 'Gói', 'Hộp', 'Thùng', 'Lốc', 'Kg', 'Bịch', 'Can', 'Hũ', 'Dây', 'Bao', 'Tuýp', 'Cái', 'Chục'
+  ];
+  const [units, setUnits] = useState(DEFAULT_UNITS);
+
   useEffect(() => {
     fetchCategories();
+    fetchUnits();
   }, []);
 
   const fetchCategories = async () => {
@@ -56,6 +63,19 @@ export const ProductListPage = () => {
       }
     } catch (err) {
       console.error('Lỗi khi tải danh mục từ API:', err);
+    }
+  };
+
+  const fetchUnits = async () => {
+    try {
+      const res = await apiClient.get('/products/units');
+      if (res.data && res.data.length > 0) {
+        const apiUnitNames = res.data.map((u) => (typeof u === 'string' ? u : u.name)).filter(Boolean);
+        const merged = Array.from(new Set([...DEFAULT_UNITS, ...apiUnitNames]));
+        setUnits(merged);
+      }
+    } catch (err) {
+      console.error('Lỗi khi tải danh sách đơn vị tính từ API:', err);
     }
   };
 
@@ -741,15 +761,40 @@ export const ProductListPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">Đơn Vị Cơ Bản</label>
-                  <input
-                    type="text"
+                  <div className="flex items-center justify-between mb-1">
+                    <label className="block text-xs font-bold text-slate-700">Đơn Vị Cơ Bản *</label>
+                    <Link
+                      to="/categories"
+                      target="_blank"
+                      className="text-[10px] font-bold text-sky-600 hover:text-sky-700 hover:underline"
+                    >
+                      + Quản lý ĐVT
+                    </Link>
+                  </div>
+                  <select
                     required
                     value={formData.baseUnit}
-                    onChange={(e) => setFormData({ ...formData, baseUnit: e.target.value })}
-                    placeholder="Lon / Chai / Gói / Cái"
+                    onChange={(e) => {
+                      if (e.target.value === '__ADD_NEW__') {
+                        const newU = prompt('Nhập tên Đơn vị tính mới (VD: Lon, Chai, Gói):');
+                        if (newU && newU.trim()) {
+                          const trimmed = newU.trim();
+                          if (!units.includes(trimmed)) setUnits([...units, trimmed]);
+                          setFormData({ ...formData, baseUnit: trimmed });
+                        }
+                      } else {
+                        setFormData({ ...formData, baseUnit: e.target.value });
+                      }
+                    }}
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500"
-                  />
+                  >
+                    {units.map((u) => (
+                      <option key={u} value={u}>
+                        {u}
+                      </option>
+                    ))}
+                    <option value="__ADD_NEW__">+ Thêm ĐVT mới...</option>
+                  </select>
                 </div>
 
                 <div>
@@ -803,81 +848,144 @@ export const ProductListPage = () => {
               </div>
 
               {/* Bảng Quy Đổi Đơn Vị Phụ */}
-              <div className="border border-slate-200 rounded-xl p-3 space-y-3">
+              <div className="border border-slate-200 rounded-xl p-3 space-y-3 bg-slate-50/50">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <ArrowRightLeft className="w-3.5 h-3.5 text-blue-600" />
-                    Đơn Vị Quy Đổi Bán Sỉ (Thùng / Lốc / Hộp lớn)
-                  </h3>
+                  <div>
+                    <h3 className="text-xs font-extrabold text-slate-800 flex items-center gap-1.5">
+                      <ArrowRightLeft className="w-4 h-4 text-blue-600" />
+                      Đơn Vị Quy Đổi Bán Sỉ (Thùng / Lốc / Dây...)
+                    </h3>
+                    <p className="text-[10px] text-slate-500 mt-0.5">
+                      Cho phép bán sỉ theo lốc/thùng và quét mã vạch riêng, tự động quy đổi trừ kho đơn vị cơ bản.
+                    </p>
+                  </div>
                   <button
                     type="button"
                     onClick={handleAddConversion}
-                    className="text-xs text-blue-600 font-bold hover:underline"
+                    className="px-2.5 py-1 bg-blue-50 text-blue-700 text-xs font-extrabold rounded-lg hover:bg-blue-100 transition flex items-center gap-1 border border-blue-200 shrink-0"
                   >
                     + Thêm quy đổi
                   </button>
                 </div>
 
-                {formData.conversions.map((conv, idx) => (
-                  <div key={idx} className="grid grid-cols-4 gap-2 items-center bg-slate-50 p-2 rounded-lg text-xs">
-                    <input
-                      type="text"
-                      placeholder="Tên ĐVT (VD: Thùng)"
-                      value={conv.unit}
-                      onChange={(e) => {
-                        const updated = [...formData.conversions];
-                        updated[idx].unit = e.target.value;
-                        setFormData({ ...formData, conversions: updated });
-                      }}
-                      className="bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-bold"
-                    />
-
-                    <input
-                      type="number"
-                      placeholder="Quy đổi (VD: 24)"
-                      value={conv.factor}
-                      onChange={(e) => {
-                        const updated = [...formData.conversions];
-                        updated[idx].factor = Number(e.target.value);
-                        setFormData({ ...formData, conversions: updated });
-                      }}
-                      className="bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-bold text-center"
-                    />
-
-                    <input
-                      type="number"
-                      placeholder="Giá lẻ (230.000)"
-                      value={conv.retailPrice}
-                      onChange={(e) => {
-                        const updated = [...formData.conversions];
-                        updated[idx].retailPrice = e.target.value;
-                        setFormData({ ...formData, conversions: updated });
-                      }}
-                      className="bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-bold"
-                    />
-
-                    <div className="flex items-center gap-1">
-                      <input
-                        type="text"
-                        placeholder="Mã vạch riêng"
-                        value={conv.barcode}
-                        onChange={(e) => {
-                          const updated = [...formData.conversions];
-                          updated[idx].barcode = e.target.value;
-                          setFormData({ ...formData, conversions: updated });
-                        }}
-                        className="bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-mono w-full"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveConversion(idx)}
-                        className="p-1 text-slate-400 hover:text-rose-600"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
+                {formData.conversions.length === 0 ? (
+                  <p className="text-xs text-slate-400 italic text-center py-2">
+                    Chưa có đơn vị quy đổi (Sản phẩm này chỉ bán lẻ theo {formData.baseUnit || 'đơn vị cơ bản'}).
+                  </p>
+                ) : (
+                  <div className="space-y-2.5">
+                    <div className="grid grid-cols-12 gap-2 text-[10px] font-bold text-slate-500 uppercase px-1">
+                      <div className="col-span-3">Tên ĐVT Quy Đổi</div>
+                      <div className="col-span-2 text-center">Tỷ Lệ (Hệ Số)</div>
+                      <div className="col-span-3">Giá Bán Quy Đổi (đ)</div>
+                      <div className="col-span-4">Mã Vạch Quy Đổi (Barcode)</div>
                     </div>
+
+                    {formData.conversions.map((conv, idx) => (
+                      <div key={idx} className="bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm space-y-2">
+                        <div className="grid grid-cols-12 gap-2 items-center text-xs">
+                          {/* Chọn ĐVT Quy Đổi */}
+                          <div className="col-span-3">
+                            <select
+                              value={conv.unit}
+                              onChange={(e) => {
+                                if (e.target.value === '__ADD_NEW__') {
+                                  const newU = prompt('Nhập tên Đơn vị quy đổi mới (VD: Lốc, Thùng, Khay):');
+                                  if (newU && newU.trim()) {
+                                    const trimmed = newU.trim();
+                                    if (!units.includes(trimmed)) setUnits([...units, trimmed]);
+                                    const updated = [...formData.conversions];
+                                    updated[idx].unit = trimmed;
+                                    setFormData({ ...formData, conversions: updated });
+                                  }
+                                } else {
+                                  const updated = [...formData.conversions];
+                                  updated[idx].unit = e.target.value;
+                                  setFormData({ ...formData, conversions: updated });
+                                }
+                              }}
+                              className="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500"
+                            >
+                              <option value="">-- Chọn ĐVT --</option>
+                              {units.map((u) => (
+                                <option key={u} value={u}>
+                                  {u}
+                                </option>
+                              ))}
+                              <option value="__ADD_NEW__">+ Thêm ĐVT mới...</option>
+                            </select>
+                          </div>
+
+                          {/* Tỷ lệ quy đổi */}
+                          <div className="col-span-2">
+                            <input
+                              type="number"
+                              min="2"
+                              placeholder="VD: 24"
+                              value={conv.factor}
+                              onChange={(e) => {
+                                const updated = [...formData.conversions];
+                                updated[idx].factor = Number(e.target.value);
+                                setFormData({ ...formData, conversions: updated });
+                              }}
+                              className="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-bold text-center text-blue-700 focus:outline-none focus:border-blue-500"
+                            />
+                          </div>
+
+                          {/* Giá bán quy đổi */}
+                          <div className="col-span-3">
+                            <input
+                              type="number"
+                              placeholder="Giá bán (đ)"
+                              value={conv.retailPrice}
+                              onChange={(e) => {
+                                const updated = [...formData.conversions];
+                                updated[idx].retailPrice = e.target.value;
+                                setFormData({ ...formData, conversions: updated });
+                              }}
+                              className="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-bold text-slate-900 focus:outline-none focus:border-blue-500"
+                            />
+                          </div>
+
+                          {/* Mã vạch quy đổi */}
+                          <div className="col-span-4 flex items-center gap-1">
+                            <input
+                              type="text"
+                              placeholder="Mã vạch riêng"
+                              value={conv.barcode}
+                              onChange={(e) => {
+                                const updated = [...formData.conversions];
+                                updated[idx].barcode = e.target.value;
+                                setFormData({ ...formData, conversions: updated });
+                              }}
+                              className="w-full bg-slate-50 border border-slate-200 rounded-lg px-2 py-1.5 text-xs font-mono font-bold text-slate-800 focus:outline-none focus:border-blue-500"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveConversion(idx)}
+                              className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition shrink-0"
+                              title="Xóa quy đổi này"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Visual Formula Badge Helper */}
+                        <div className="px-2.5 py-1 bg-emerald-50 border border-emerald-200/70 rounded-lg text-[11px] font-extrabold text-emerald-800 flex items-center justify-between">
+                          <span>
+                            💡 Công thức quy đổi: 1 <span className="text-blue-700">{conv.unit || '...'}</span> = <span className="text-rose-600 font-black">{conv.factor || 1}</span> {formData.baseUnit || 'đơn vị cơ bản'}
+                          </span>
+                          {conv.retailPrice ? (
+                            <span className="text-slate-600 font-medium">
+                              (Giá {conv.unit || 'quy đổi'}: <strong className="text-emerald-700 font-bold">{Number(conv.retailPrice).toLocaleString('vi-VN')} đ</strong>)
+                            </span>
+                          ) : null}
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                ))}
+                )}
               </div>
 
               <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
