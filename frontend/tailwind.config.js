@@ -14,10 +14,9 @@ export default {
         '3xl': ['2rem', { lineHeight: '2.35rem' }],
       },
       fontFamily: {
-        sans: ['"Baloo 2"', 'system-ui', 'sans-serif'],
-        mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', '"Liberation Mono"', '"Courier New"', 'monospace'],
-        rounded: ['"Baloo 2"', 'system-ui', 'sans-serif'],
-      },
+  sans: ['"Nunito Sans"', 'system-ui', 'sans-serif'],
+  rounded: ['"Nunito Sans"', 'system-ui', 'sans-serif'],
+},
       colors: {
         background: '#F0F9F4', // Xanh lá nhẹ sáng chuyên nghiệp (Soft Sage Mint)
         card: '#FFFFFF',
