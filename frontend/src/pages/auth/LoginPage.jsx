@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/useAuthStore';
 import { useStoreSettings } from '../../stores/useStoreSettings';
-import { ShieldCheck, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { AlertCircle, ShieldCheck } from 'lucide-react';
 import brandLogo from '../../assets/images/logo.png';
 import storeBanner from '../../assets/images/nenlogin.png';
 
@@ -13,14 +13,14 @@ export const LoginPage = () => {
 
   const [localError, setLocalError] = useState('');
 
-  // Xử lý Đăng nhập duy nhất qua Google OAuth 2.0
+  // Xử lý Đăng nhập qua Google
   const handleGoogleLogin = async () => {
     setLocalError('');
     try {
       await loginWithGoogle('google_oauth_token_hoangthuclinh64');
       navigate('/dashboard');
     } catch (err) {
-      setLocalError(err.message || 'Đăng nhập Google OAuth 2.0 thất bại');
+      setLocalError(err.message || 'Đăng nhập Google thất bại');
     }
   };
 
@@ -47,21 +47,6 @@ export const LoginPage = () => {
             </p>
           </div>
 
-          {/* Badge Chế độ Bảo Mật Google OAuth */}
-          <div className="p-3.5 bg-sky-50/80 border border-sky-200/80 rounded-2xl text-xs space-y-1.5">
-            <div className="flex items-center gap-1.5 font-bold text-sky-800">
-              <ShieldCheck className="w-4 h-4 text-sky-600" />
-              <span>Bảo mật tuyệt đối qua Google OAuth 2.0</span>
-            </div>
-            <p className="text-[11px] text-slate-600 font-medium">
-              Chỉ tài khoản Google được ủy quyền quản trị mới có thể đăng nhập vào hệ thống Admin.
-            </p>
-            <div className="pt-1 text-[11px] font-bold text-slate-800 flex items-center gap-1">
-              <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-              <span>Tài khoản Admin: <strong>hoangthuclinh64@gmail.com</strong> (Hoàng Thục Linh)</span>
-            </div>
-          </div>
-
           {/* Thông báo Lỗi nếu có */}
           {(localError || error) && (
             <div className="flex items-center gap-2 p-3.5 bg-rose-50 border border-rose-200 text-rose-600 rounded-xl text-xs font-medium animate-fadeIn">
@@ -70,13 +55,13 @@ export const LoginPage = () => {
             </div>
           )}
 
-          {/* Nút Đăng nhập duy nhất bằng Google OAuth 2.0 */}
+          {/* Nút Đăng nhập bằng Google */}
           <div className="pt-2 space-y-3">
             <button
               type="button"
               onClick={handleGoogleLogin}
               disabled={isLoading}
-              className="w-full flex items-center justify-center gap-3.5 px-6 py-4 bg-white/90 hover:bg-white text-slate-800 text-sm font-extrabold rounded-2xl shadow-lg hover:shadow-xl border border-white transition-all transform hover:-translate-y-0.5 active:scale-[0.98] disabled:opacity-50"
+              className="w-full flex items-center justify-center gap-3.5 px-6 py-4 bg-white/90 hover:bg-white text-slate-800 text-sm font-extrabold rounded-2xl shadow-lg hover:shadow-xl border border-white transition-all transform hover:-translate-y-0.5 active:scale-[0.98] disabled:opacity-50 cursor-pointer"
             >
               <svg className="w-6 h-6 shrink-0" viewBox="0 0 24 24">
                 <path
@@ -100,18 +85,16 @@ export const LoginPage = () => {
             </button>
           </div>
 
-          {/* Ghi chú Cấu hình .env cho Người Mua Dự Án */}
-          <div className="pt-3 border-t border-slate-300/60 text-center">
-            <p className="text-[11px] text-slate-500 font-medium leading-relaxed">
-              💡 Cấu hình Google Client ID, Client Secret & Email Admin được kết nối động qua file <code className="bg-slate-200/80 px-1.5 py-0.5 rounded font-mono font-bold text-slate-700">.env</code> (Sẵn sàng bàn giao dự án cho khách hàng).
-            </p>
+          <div className="flex items-center justify-center gap-1.5 text-[11px] font-medium text-slate-500 pt-2">
+            <ShieldCheck className="w-3.5 h-3.5 text-sky-600" />
+            <span>Đăng nhập an toàn & bảo mật với Google</span>
           </div>
 
         </div>
 
         {/* Footer bản quyền */}
         <p className="text-center text-xs text-white/90 mt-6 font-medium drop-shadow-sm">
-          &copy; 2026 {settings.STORE_NAME}. Google OAuth Single Sign-On Protected.
+          &copy; 2026 {settings.STORE_NAME}. Tất cả quyền được bảo lưu.
         </p>
       </div>
     </div>
