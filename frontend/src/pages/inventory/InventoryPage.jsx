@@ -20,7 +20,8 @@ import {
   Trash2,
   Edit,
   Check,
-  RotateCcw
+  RotateCcw,
+  Calendar
 } from 'lucide-react';
 
 const DEFAULT_STOCKS = [
@@ -95,6 +96,12 @@ export const InventoryPage = () => {
   const [activeTab, setActiveTab] = useState('stocks'); // 'stocks', 'history', 'checks'
   const [keyword, setKeyword] = useState('');
   const [toastMessage, setToastMessage] = useState('');
+
+  // State bộ lọc phiếu kiểm kê theo ngày & trạng thái
+  const [checkStartDate, setCheckStartDate] = useState('');
+  const [checkEndDate, setCheckEndDate] = useState('');
+  const [checkStatusFilter, setCheckStatusFilter] = useState('ALL');
+  const [checkSearchKw, setCheckSearchKw] = useState('');
 
   // 1. Danh sách sản phẩm & tồn kho
   const [stocks, setStocks] = useState(() => {
@@ -185,11 +192,12 @@ export const InventoryPage = () => {
     },
   ]);
 
-  // 3. Danh sách Phiếu kiểm kê kho
+  // 3. Danh sách Phiếu kiểm kê kho theo ngày
   const [stockChecks, setStockChecks] = useState([
     {
       id: 'KK-20260918-001',
       date: '18/09/2026 14:30',
+      rawDate: '2026-09-18',
       creator: 'Lê Văn C (Quản lý)',
       note: 'Kiểm kê định kỳ tháng 9 nhóm Nước giải khát & Mì gói',
       status: 'ĐÃ CÂN BẰNG', // 'ĐÃ CÂN BẰNG' | 'NHÁP' | 'ĐÃ HỦY'
@@ -259,6 +267,7 @@ export const InventoryPage = () => {
 
   // Form Tạo Phiếu Kiểm Kê Mới
   const [newCheckForm, setNewCheckForm] = useState({
+    checkDate: new Date().toISOString().slice(0, 10),
     creator: 'Quản lý cửa hàng',
     note: 'Kiểm kê kho hàng ngày',
     searchKeyword: '',
@@ -282,6 +291,7 @@ export const InventoryPage = () => {
     }));
 
     setNewCheckForm({
+      checkDate: new Date().toISOString().slice(0, 10),
       creator: 'Quản lý cửa hàng',
       note: 'Kiểm kê định kỳ cửa hàng',
       searchKeyword: '',
@@ -314,7 +324,11 @@ export const InventoryPage = () => {
     }
 
     const checkId = `KK-${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, '0')}${String(new Date().getDate()).padStart(2, '0')}-${Math.floor(100 + Math.random() * 900)}`;
-    const nowStr = new Date().toLocaleString('vi-VN');
+    
+    // Định dạng ngày kiểm đếm
+    const chosenDateStr = newCheckForm.checkDate
+      ? newCheckForm.checkDate.split('-').reverse().join('/') + ' ' + new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })
+      : new Date().toLocaleString('vi-VN');
 
     const matchedCount = newCheckForm.items.filter((i) => i.discrepancy === 0).length;
     const discCount = newCheckForm.items.filter((i) => i.discrepancy !== 0).length;
@@ -323,7 +337,8 @@ export const InventoryPage = () => {
 
     const newCheckRecord = {
       id: checkId,
-      date: nowStr,
+      date: chosenDateStr,
+      rawDate: newCheckForm.checkDate || new Date().toISOString().slice(0, 10),
       creator: newCheckForm.creator || 'Quản lý cửa hàng',
       note: newCheckForm.note,
       status: shouldBalance ? 'ĐÃ CÂN BẰNG' : 'NHÁP',
@@ -344,7 +359,7 @@ export const InventoryPage = () => {
         if (audited && audited.discrepancy !== 0) {
           newMovements.push({
             id: Date.now() + Math.random(),
-            time: nowStr,
+            time: chosenDateStr,
             productName: s.name,
             type: 'KIỂM KÊ CÂN BẰNG (ADJUSTMENT)',
             quantity: audited.discrepancy,
@@ -362,7 +377,7 @@ export const InventoryPage = () => {
       if (newMovements.length > 0) {
         setHistoryMovements([...newMovements, ...historyMovements]);
       }
-      showToast(`Đã lưu & CÂN BẰNG TỒN KHO thành công cho phiếu ${checkId}!`);
+      showToast(`Đã lưu & CÂN BẰNG TỒN KHO thành công ngày ${chosenDateStr} cho phiếu ${checkId}!`);
     } else {
       showToast(`Đã lưu NHÁP phiếu kiểm kê ${checkId}!`);
     }
@@ -410,6 +425,28 @@ export const InventoryPage = () => {
     showToast(`Đã cân bằng kho thành công cho phiếu ${checkObj.id}!`);
   };
 
+  // Lọc phiếu kiểm kê theo Ngày & Trạng thái
+  const filteredStockChecks = stockChecks.filter((c) => {
+    // 1. Tìm từ khóa
+    const matchKw =
+      c.id.toLowerCase().includes(checkSearchKw.toLowerCase()) ||
+      c.creator.toLowerCase().includes(checkSearchKw.toLowerCase()) ||
+      (c.note && c.note.toLowerCase().includes(checkSearchKw.toLowerCase()));
+
+    // 2. Lọc trạng thái
+    const matchStatus = checkStatusFilter === 'ALL' || c.status === checkStatusFilter;
+
+    // 3. Lọc khoảng ngày
+    let matchDate = true;
+    if (checkStartDate || checkEndDate) {
+      const checkDateFormatted = c.rawDate || (c.date ? c.date.split(' ')[0].split('/').reverse().join('-') : '');
+      if (checkStartDate && checkDateFormatted < checkStartDate) matchDate = false;
+      if (checkEndDate && checkDateFormatted > checkEndDate) matchDate = false;
+    }
+
+    return matchKw && matchStatus && matchDate;
+  });
+
   // Xuất Bảng Tồn Kho Ra Excel
   const handleExportStocks = () => {
     const filteredStocks = stocks.filter(
@@ -438,10 +475,10 @@ export const InventoryPage = () => {
     showToast(`Đã xuất ${filteredStocks.length} sản phẩm tồn kho ra Excel.`);
   };
 
-  // Xuất Danh Sách / Báo Cáo Phiếu Kiểm Kê Ra Excel
+  // Xuất Danh Sách / Báo Cáo Phiếu Kiểm Kê Ra Excel (Theo ngày đã lọc)
   const handleExportStockChecks = () => {
     const rowsExport = [];
-    stockChecks.forEach((check) => {
+    filteredStockChecks.forEach((check) => {
       check.items.forEach((item) => {
         rowsExport.push({
           'Mã phiếu kiểm': check.id,
@@ -462,8 +499,9 @@ export const InventoryPage = () => {
       });
     });
 
-    exportToExcel(rowsExport, 'BaoCaoKiemKeKho', 'Phiếu Kiểm Kê');
-    showToast(`Đã xuất báo cáo kiểm kê kho ra file Excel thành công!`);
+    const dateSuffix = checkStartDate || checkEndDate ? `_${checkStartDate}_den_${checkEndDate}` : '';
+    exportToExcel(rowsExport, `BaoCaoKiemKeKho${dateSuffix}`, 'Phiếu Kiểm Kê Theo Ngày');
+    showToast(`Đã xuất báo cáo ${filteredStockChecks.length} phiếu kiểm kê ra file Excel thành công!`);
   };
 
   // Xuất Excel cho riêng 1 phiếu kiểm kê
@@ -536,10 +574,10 @@ export const InventoryPage = () => {
         <div>
           <h1 className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2">
             <Boxes className="w-6 h-6 text-blue-600" />
-            Quản Lý Tồn Kho & Kiểm Kê Hàng Hóa
+            Quản Lý Tồn Kho & Kiểm Kê Hàng Hóa Theo Ngày
           </h1>
           <p className="text-xs text-slate-500 font-medium">
-            Kiểm kê hình ảnh thực tế, theo dõi chênh lệch tồn, cân bằng kho tự động và xuất báo cáo Excel
+            Lập phiếu kiểm kê theo ngày, theo dõi chênh lệch tồn, cân bằng kho tự động và xuất báo cáo Excel
           </p>
         </div>
 
@@ -581,7 +619,7 @@ export const InventoryPage = () => {
         </div>
 
         <div className="soft-card p-4">
-          <p className="text-xs text-slate-500 font-semibold">Tổng phiếu kiểm kê đã lập</p>
+          <p className="text-xs text-slate-500 font-semibold">Phiếu kiểm kê đã lập</p>
           <p className="text-xl font-black text-emerald-600 mt-1">{stockChecks.length} Phiếu</p>
         </div>
       </div>
@@ -607,7 +645,7 @@ export const InventoryPage = () => {
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
-          2. Phiếu Kiểm Kê & Báo Cáo Cân Bằng Kho ({stockChecks.length})
+          2. Phiếu Kiểm Kê & Báo Cáo Theo Ngày ({filteredStockChecks.length})
         </button>
 
         <button
@@ -733,36 +771,144 @@ export const InventoryPage = () => {
         </div>
       )}
 
-      {/* TAB 2: Danh sách Phiếu Kiểm Kê & Báo Cáo */}
+      {/* TAB 2: Danh sách Phiếu Kiểm Kê & Báo Cáo Theo Ngày */}
       {activeTab === 'checks' && (
         <div className="space-y-4">
-          <div className="soft-card p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div>
-              <h2 className="text-sm font-extrabold text-slate-900">Danh Sách Báo Cáo Phiếu Kiểm Kê Kho</h2>
-              <p className="text-xs text-slate-500">
-                So khớp kiểm đếm thực tế với tồn hệ thống, theo dõi chênh lệch và xuất Excel báo cáo
-              </p>
+          {/* Thanh Bộ Lọc Ngày Tháng & Tìm Kiếm Phiếu Kiểm Kê */}
+          <div className="soft-card p-4 space-y-3">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+              <div>
+                <h2 className="text-sm font-extrabold text-slate-900 flex items-center gap-2">
+                  <Calendar className="w-4 h-4 text-blue-600" />
+                  Lọc Phiếu Kiểm Kê Theo Ngày & Trạng Thái
+                </h2>
+                <p className="text-xs text-slate-500">
+                  Chọn khoảng thời gian kiểm đếm kho để xuất báo cáo Excel chuẩn xác
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="3d-secondary"
+                  size="sm"
+                  icon={FileSpreadsheet}
+                  onClick={handleExportStockChecks}
+                >
+                  Xuất Báo Cáo Excel
+                </Button>
+                <Button
+                  variant="3d-solid"
+                  size="sm"
+                  icon={Plus}
+                  onClick={handleOpenCreateCheckModal}
+                >
+                  Tạo Phiếu Kiểm Kê Mới
+                </Button>
+              </div>
             </div>
-            <div className="flex items-center gap-2">
-              <Button
-                variant="3d-secondary"
-                size="sm"
-                icon={FileSpreadsheet}
-                onClick={handleExportStockChecks}
+
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center pt-2 border-t border-slate-100">
+              {/* Ô Tìm kiếm */}
+              <div className="md:col-span-4 relative">
+                <Search className="w-4 h-4 text-slate-400 absolute left-3 top-2.5" />
+                <input
+                  type="text"
+                  placeholder="Tìm theo mã phiếu, người lập, ghi chú..."
+                  value={checkSearchKw}
+                  onChange={(e) => setCheckSearchKw(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-1.5 text-xs text-slate-800 focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
+              {/* Lọc Khoảng Ngày */}
+              <div className="md:col-span-5 flex items-center gap-2 bg-slate-50 p-1.5 rounded-xl border border-slate-200 text-xs">
+                <span className="text-[11px] font-bold text-slate-600 shrink-0">Từ ngày:</span>
+                <input
+                  type="date"
+                  value={checkStartDate}
+                  onChange={(e) => setCheckStartDate(e.target.value)}
+                  className="bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs text-slate-800 focus:outline-none w-full"
+                />
+                <span className="text-[11px] font-bold text-slate-600 shrink-0">Đến ngày:</span>
+                <input
+                  type="date"
+                  value={checkEndDate}
+                  onChange={(e) => setCheckEndDate(e.target.value)}
+                  className="bg-white border border-slate-200 rounded-lg px-2 py-1 text-xs text-slate-800 focus:outline-none w-full"
+                />
+              </div>
+
+              {/* Lọc Trạng Thái */}
+              <div className="md:col-span-3">
+                <select
+                  value={checkStatusFilter}
+                  onChange={(e) => setCheckStatusFilter(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-bold text-slate-700 focus:outline-none focus:border-blue-500"
+                >
+                  <option value="ALL">Tất cả trạng thái</option>
+                  <option value="ĐÃ CÂN BẰNG">Đã cân bằng</option>
+                  <option value="NHÁP">Lưu nháp</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Phím tắt chọn nhanh khoảng ngày */}
+            <div className="flex items-center gap-2 pt-2 text-xs border-t border-slate-100/80">
+              <span className="text-[11px] font-bold text-slate-500">Lọc nhanh ngày:</span>
+              <button
+                type="button"
+                onClick={() => {
+                  setCheckStartDate('');
+                  setCheckEndDate('');
+                }}
+                className={`px-2.5 py-1 rounded-lg font-bold text-[11px] transition ${
+                  !checkStartDate && !checkEndDate
+                    ? 'bg-blue-600 text-white shadow-sm'
+                    : 'bg-slate-100 hover:bg-slate-200 text-slate-700'
+                }`}
               >
-                Xuất Báo Cáo Excel
-              </Button>
-              <Button
-                variant="3d-solid"
-                size="sm"
-                icon={Plus}
-                onClick={handleOpenCreateCheckModal}
+                Tất cả
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const today = new Date().toISOString().slice(0, 10);
+                  setCheckStartDate(today);
+                  setCheckEndDate(today);
+                }}
+                className="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 font-bold text-blue-700 text-[11px] transition"
               >
-                Tạo Phiếu Kiểm Kê Mới
-              </Button>
+                Hôm nay
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const end = new Date();
+                  const start = new Date();
+                  start.setDate(start.getDate() - 7);
+                  setCheckStartDate(start.toISOString().slice(0, 10));
+                  setCheckEndDate(end.toISOString().slice(0, 10));
+                }}
+                className="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 font-bold text-blue-700 text-[11px] transition"
+              >
+                7 ngày qua
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const now = new Date();
+                  const start = new Date(now.getFullYear(), now.getMonth(), 1);
+                  setCheckStartDate(start.toISOString().slice(0, 10));
+                  setCheckEndDate(now.toISOString().slice(0, 10));
+                }}
+                className="px-2.5 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 font-bold text-blue-700 text-[11px] transition"
+              >
+                Tháng này
+              </button>
             </div>
           </div>
 
+          {/* Bảng phiếu kiểm kê đã lọc theo ngày */}
           <div className="table-glass-container">
             <div className="overflow-x-auto">
               <table className="table-3d-glass text-left text-xs">
@@ -780,92 +926,100 @@ export const InventoryPage = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {stockChecks.map((c) => (
-                    <tr key={c.id}>
-                      <td className="p-4 font-mono font-bold text-blue-700">{c.id}</td>
-                      <td className="p-4 text-slate-600 font-medium">{c.date}</td>
-                      <td className="p-4 text-slate-800 font-bold">{c.creator}</td>
-                      <td className="p-4 text-center font-bold text-slate-800">{c.totalItems} SP</td>
-                      <td className="p-4 text-center text-emerald-700 font-bold">{c.matchedItems} SP</td>
-                      <td className="p-4 text-right">
-                        <span
-                          className={`font-black text-xs ${
-                            c.totalDiscrepancyQty === 0
-                              ? 'text-slate-600'
-                              : c.totalDiscrepancyQty > 0
-                              ? 'text-emerald-600'
-                              : 'text-rose-600'
-                          }`}
-                        >
-                          {c.totalDiscrepancyQty > 0
-                            ? `+${c.totalDiscrepancyQty}`
-                            : c.totalDiscrepancyQty}{' '}
-                          SP
-                        </span>
-                      </td>
-                      <td className="p-4 text-right font-bold">
-                        <span
-                          className={
-                            c.totalDiscrepancyValue === 0
-                              ? 'text-slate-700'
-                              : c.totalDiscrepancyValue > 0
-                              ? 'text-emerald-700'
-                              : 'text-rose-600'
-                          }
-                        >
-                          {c.totalDiscrepancyValue > 0 ? '+' : ''}
-                          {c.totalDiscrepancyValue.toLocaleString('vi-VN')} đ
-                        </span>
-                      </td>
-                      <td className="p-4 text-center">
-                        {c.status === 'ĐÃ CÂN BẰNG' ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-50 text-emerald-800 font-bold text-[10px] rounded-lg border border-emerald-200">
-                            <CheckCircle2 className="w-3 h-3 text-emerald-600" /> ĐÃ CÂN BẰNG
-                          </span>
-                        ) : c.status === 'NHÁP' ? (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-amber-50 text-amber-800 font-bold text-[10px] rounded-lg border border-amber-200">
-                            <AlertTriangle className="w-3 h-3 text-amber-600" /> LƯU NHÁP
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 text-slate-600 font-bold text-[10px] rounded-lg">
-                            ĐÃ HỦY
-                          </span>
-                        )}
-                      </td>
-                      <td className="p-4 text-right">
-                        <div className="flex items-center justify-end gap-1.5">
-                          <button
-                            onClick={() => {
-                              setSelectedCheck(c);
-                              setIsDetailModalOpen(true);
-                            }}
-                            className="btn-3d-icon-view"
-                            title="Xem chi tiết phiếu kiểm"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </button>
-
-                          <button
-                            onClick={() => handleExportSingleCheck(c)}
-                            className="btn-3d-icon"
-                            title="Xuất Excel phiếu này"
-                          >
-                            <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
-                          </button>
-
-                          {c.status === 'NHÁP' && (
-                            <button
-                              onClick={() => handleBalanceExistingCheck(c)}
-                              className="px-2 py-1 bg-emerald-600 text-white font-bold text-[11px] rounded-lg hover:bg-emerald-700 transition"
-                              title="Cân bằng kho cho phiếu nháp này"
-                            >
-                              Cân Bằng Kho
-                            </button>
-                          )}
-                        </div>
+                  {filteredStockChecks.length === 0 ? (
+                    <tr>
+                      <td colSpan="9" className="text-center py-8 text-slate-400 text-xs italic">
+                        Không tìm thấy phiếu kiểm kê nào trong khoảng thời gian đã chọn.
                       </td>
                     </tr>
-                  ))}
+                  ) : (
+                    filteredStockChecks.map((c) => (
+                      <tr key={c.id}>
+                        <td className="p-4 font-mono font-bold text-blue-700">{c.id}</td>
+                        <td className="p-4 text-slate-600 font-medium">{c.date}</td>
+                        <td className="p-4 text-slate-800 font-bold">{c.creator}</td>
+                        <td className="p-4 text-center font-bold text-slate-800">{c.totalItems} SP</td>
+                        <td className="p-4 text-center text-emerald-700 font-bold">{c.matchedItems} SP</td>
+                        <td className="p-4 text-right">
+                          <span
+                            className={`font-black text-xs ${
+                              c.totalDiscrepancyQty === 0
+                                ? 'text-slate-600'
+                                : c.totalDiscrepancyQty > 0
+                                ? 'text-emerald-600'
+                                : 'text-rose-600'
+                            }`}
+                          >
+                            {c.totalDiscrepancyQty > 0
+                              ? `+${c.totalDiscrepancyQty}`
+                              : c.totalDiscrepancyQty}{' '}
+                            SP
+                          </span>
+                        </td>
+                        <td className="p-4 text-right font-bold">
+                          <span
+                            className={
+                              c.totalDiscrepancyValue === 0
+                                ? 'text-slate-700'
+                                : c.totalDiscrepancyValue > 0
+                                ? 'text-emerald-700'
+                                : 'text-rose-600'
+                            }
+                          >
+                            {c.totalDiscrepancyValue > 0 ? '+' : ''}
+                            {c.totalDiscrepancyValue.toLocaleString('vi-VN')} đ
+                          </span>
+                        </td>
+                        <td className="p-4 text-center">
+                          {c.status === 'ĐÃ CÂN BẰNG' ? (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-emerald-50 text-emerald-800 font-bold text-[10px] rounded-lg border border-emerald-200">
+                              <CheckCircle2 className="w-3 h-3 text-emerald-600" /> ĐÃ CÂN BẰNG
+                            </span>
+                          ) : c.status === 'NHÁP' ? (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-amber-50 text-amber-800 font-bold text-[10px] rounded-lg border border-amber-200">
+                              <AlertTriangle className="w-3 h-3 text-amber-600" /> LƯU NHÁP
+                            </span>
+                          ) : (
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 text-slate-600 font-bold text-[10px] rounded-lg">
+                              ĐÃ HỦY
+                            </span>
+                          )}
+                        </td>
+                        <td className="p-4 text-right">
+                          <div className="flex items-center justify-end gap-1.5">
+                            <button
+                              onClick={() => {
+                                setSelectedCheck(c);
+                                setIsDetailModalOpen(true);
+                              }}
+                              className="btn-3d-icon-view"
+                              title="Xem chi tiết phiếu kiểm"
+                            >
+                              <Eye className="w-4 h-4" />
+                            </button>
+
+                            <button
+                              onClick={() => handleExportSingleCheck(c)}
+                              className="btn-3d-icon"
+                              title="Xuất Excel phiếu này"
+                            >
+                              <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
+                            </button>
+
+                            {c.status === 'NHÁP' && (
+                              <button
+                                onClick={() => handleBalanceExistingCheck(c)}
+                                className="px-2 py-1 bg-emerald-600 text-white font-bold text-[11px] rounded-lg hover:bg-emerald-700 transition"
+                                title="Cân bằng kho cho phiếu nháp này"
+                              >
+                                Cân Bằng Kho
+                              </button>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
@@ -927,14 +1081,14 @@ export const InventoryPage = () => {
         </div>
       )}
 
-      {/* Modal Lập Phiếu Kiểm Kê Mới Kèm Hình Ảnh Thực Tế */}
+      {/* Modal Lập Phiếu Kiểm Kê Mới Kèm Ngày Kiểm Kê & Hình Ảnh */}
       {isCheckModalOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-4xl w-full p-6 shadow-2xl border border-slate-100 max-h-[90vh] flex flex-col">
             <div className="flex items-center justify-between mb-2">
               <h2 className="text-base font-extrabold text-slate-900 flex items-center gap-2">
                 <ClipboardCheck className="w-5 h-5 text-blue-600" />
-                Lập Phiếu Kiểm Kê Hàng Hóa Kèm Hình Ảnh
+                Lập Phiếu Kiểm Kê Hàng Hóa Theo Ngày
               </h2>
               <button
                 type="button"
@@ -945,10 +1099,20 @@ export const InventoryPage = () => {
               </button>
             </div>
             <p className="text-xs text-slate-500 mb-4">
-              Nhập tồn đếm thực tế của từng sản phẩm. Hệ thống sẽ tự tính chênh lệch tồn và giá trị chênh lệch.
+              Chọn ngày kiểm đếm và nhập tồn đếm thực tế của từng sản phẩm. Hệ thống sẽ tự tính chênh lệch tồn và giá trị chênh lệch.
             </p>
 
-            <div className="grid grid-cols-2 gap-3 mb-4 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
+            <div className="grid grid-cols-3 gap-3 mb-4 bg-slate-50 p-3 rounded-xl border border-slate-200 text-xs">
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">Ngày Kiểm Kê *</label>
+                <input
+                  type="date"
+                  value={newCheckForm.checkDate}
+                  onChange={(e) => setNewCheckForm({ ...newCheckForm, checkDate: e.target.value })}
+                  className="w-full bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs font-bold text-blue-700 focus:outline-none focus:border-blue-500"
+                />
+              </div>
+
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">Người Kiểm Kê *</label>
                 <input
@@ -1148,7 +1312,7 @@ export const InventoryPage = () => {
                   Báo Cáo Chi Tiết Phiếu Kiểm Kê: {selectedCheck.id}
                 </h2>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Ngày lập: {selectedCheck.date} · Người kiểm: {selectedCheck.creator}
+                  Ngày kiểm: {selectedCheck.date} · Người kiểm: {selectedCheck.creator}
                 </p>
               </div>
               <button
