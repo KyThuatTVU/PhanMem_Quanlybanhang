@@ -37,13 +37,25 @@ export const AdminLayout = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuthStore();
   const { settings, setSettings } = useStoreSettings();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
+    return typeof window !== 'undefined' ? window.innerWidth >= 768 : true;
+  });
 
   React.useEffect(() => {
     apiClient.get('/settings').then((response) => {
       if (response.data) setSettings(response.data);
     }).catch(() => {});
   }, [setSettings]);
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setIsSidebarOpen(false);
+      }
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const menuSections = [
     {
@@ -235,6 +247,9 @@ export const AdminLayout = () => {
                         target={item.openNewTab ? '_blank' : undefined}
                         rel={item.openNewTab ? 'noopener noreferrer' : undefined}
                         title={!isSidebarOpen ? item.title : undefined}
+                        onClick={() => {
+                          if (window.innerWidth < 768) setIsSidebarOpen(false);
+                        }}
                         className={`flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold transition-all duration-150 ${
                           isActive
                             ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md shadow-sky-500/25'
@@ -295,12 +310,12 @@ export const AdminLayout = () => {
         )}
 
         <main
-          className={`app-main transition-all duration-300 bg-transparent min-w-0 ${
-            location.pathname === '/pos' ? 'p-2 sm:p-3 pb-2' : 'p-4 sm:p-6 lg:p-8'
+          className={`app-main transition-all duration-300 bg-transparent min-w-0 w-full ml-0 ${
+            location.pathname === '/pos' ? 'p-2 sm:p-3 pb-2' : 'p-3 sm:p-6 lg:p-8'
           } ${
             isSidebarOpen
-              ? 'ml-64 w-[calc(100%-16rem)] max-w-[calc(100%-16rem)]'
-              : 'ml-20 w-[calc(100%-5rem)] max-w-[calc(100%-5rem)]'
+              ? 'md:ml-64 md:w-[calc(100%-16rem)] md:max-w-[calc(100%-16rem)]'
+              : 'md:ml-20 md:w-[calc(100%-5rem)] md:max-w-[calc(100%-5rem)]'
           }`}
         >
           <Outlet />

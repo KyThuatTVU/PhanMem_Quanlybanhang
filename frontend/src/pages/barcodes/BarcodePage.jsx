@@ -302,7 +302,7 @@ export const BarcodePage = () => {
 
       <div className="soft-card p-0 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
+          <table className="w-full text-left text-xs whitespace-nowrap">
             <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
               <tr>
                 <th className="p-4">Mã Vạch (Barcode)</th>

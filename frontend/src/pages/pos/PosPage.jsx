@@ -66,6 +66,7 @@ export const PosPage = () => {
   const [printMode, setPrintMode] = useState('THERMAL_80');
   const [printCopies, setPrintCopies] = useState(1);
   const [receiptStage, setReceiptStage] = useState('REVIEW');
+  const [mobileTab, setMobileTab] = useState('CATALOG'); // 'CATALOG' hoặc 'CART'
 
   useEffect(() => {
     try {
@@ -622,9 +623,42 @@ export const PosPage = () => {
   };
 
   return (
-    <div className="w-full max-w-full h-full flex flex-row gap-3 overflow-hidden">
+    <div className="w-full max-w-full h-full flex flex-col lg:flex-row gap-2.5 sm:gap-3 overflow-hidden relative">
+      {/* Mobile Selector Bar (Chỉ hiển thị trên Smartphone/Tablet < lg) */}
+      <div className="lg:hidden flex items-center bg-slate-200/70 p-1 rounded-2xl gap-1 shrink-0">
+        <button
+          type="button"
+          onClick={() => setMobileTab('CATALOG')}
+          className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+            mobileTab === 'CATALOG'
+              ? 'bg-white text-blue-600 shadow-sm'
+              : 'text-slate-600 hover:text-slate-900'
+          }`}
+        >
+          <Package className="w-4 h-4 text-blue-600" />
+          <span>Hàng Hóa ({products.length})</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => setMobileTab('CART')}
+          className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+            mobileTab === 'CART'
+              ? 'bg-white text-blue-600 shadow-sm'
+              : 'text-slate-600 hover:text-slate-900'
+          }`}
+        >
+          <ShoppingCart className="w-4 h-4 text-blue-600" />
+          <span>Giỏ Hàng ({cart.length})</span>
+          {cart.length > 0 && (
+            <span className="bg-blue-600 text-white font-extrabold text-[10px] px-1.5 py-0.2 rounded-full ml-1">
+              {cart.length}
+            </span>
+          )}
+        </button>
+      </div>
+
       {/* 1. KHU VỰC TRÁI: QUÉT MÃ VẠCH & GRID CHỌN SẢN PHẨM CÓ ẢNH */}
-      <div className="flex-1 min-w-0 flex flex-col gap-2.5 overflow-hidden">
+      <div className={`flex-1 min-w-0 flex-col gap-2.5 overflow-hidden ${mobileTab === 'CART' ? 'hidden lg:flex' : 'flex'}`}>
         {/* Thanh Nhập Mã Vạch */}
         <div className="soft-card p-3 flex flex-col sm:flex-row gap-2.5 items-center shrink-0">
           <form onSubmit={handleBarcodeScan} className="w-full sm:w-1/2 relative">
@@ -796,7 +830,7 @@ export const PosPage = () => {
       </div>
 
       {/* 2. KHU VỰC PHẢI: GIỎ HÀNG POS & THANH TOÁN */}
-      <div className="w-72 sm:w-80 lg:w-[330px] xl:w-[360px] 2xl:w-[380px] shrink-0 bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between p-3.5 h-full overflow-hidden">
+      <div className={`w-full lg:w-[330px] xl:w-[360px] 2xl:w-[380px] shrink-0 bg-white rounded-2xl border border-slate-200 shadow-sm flex-col justify-between p-3.5 h-full overflow-hidden ${mobileTab === 'CATALOG' ? 'hidden lg:flex' : 'flex'}`}>
         {/* Header Giỏ Hàng + Nút Giữ Đơn */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
           <div className="flex items-center gap-2">
@@ -860,29 +894,25 @@ export const PosPage = () => {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1.5">
-                  <div className="flex items-center border border-white/90 rounded-xl overflow-hidden bg-white/70 backdrop-blur-md shadow-sm">
-                    <button
-                      onClick={() => updateQuantity(item.productUnitId, -1)}
-                      className="p-1.5 hover:bg-white text-slate-700 active:scale-90 transition"
-                    >
-                      <Minus className="w-3 h-3" />
-                    </button>
-                    <span className="px-2 font-black text-slate-800 text-xs">{item.quantity}</span>
-                    <button
-                      onClick={() => updateQuantity(item.productUnitId, 1)}
-                      className="p-1.5 hover:bg-white text-slate-700 active:scale-90 transition"
-                    >
-                      <Plus className="w-3 h-3" />
-                    </button>
-                  </div>
-
+                <div className="flex items-center gap-1.5 shrink-0">
+                  <button
+                    onClick={() => updateQuantity(item.productUnitId, -1)}
+                    className="w-6 h-6 rounded-md bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition"
+                  >
+                    <Minus className="w-3 h-3" />
+                  </button>
+                  <span className="font-extrabold text-slate-800 w-5 text-center">{item.quantity}</span>
+                  <button
+                    onClick={() => updateQuantity(item.productUnitId, 1)}
+                    className="w-6 h-6 rounded-md bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition"
+                  >
+                    <Plus className="w-3 h-3" />
+                  </button>
                   <button
                     onClick={() => removeFromCart(item.productUnitId)}
-                    className="btn-3d-icon-delete"
-                    title="Xóa khỏi giỏ"
+                    className="w-6 h-6 rounded-md bg-slate-100 hover:bg-rose-50 text-slate-400 hover:text-rose-600 flex items-center justify-center transition ml-1"
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
+                    <Trash2 className="w-3 h-3" />
                   </button>
                 </div>
               </div>
@@ -891,53 +921,46 @@ export const PosPage = () => {
         </div>
 
         {/* Tổng Tiền & Nút Thanh Toán */}
-        <div className="border-t border-slate-100 pt-3 space-y-3">
-          <div className="space-y-1.5 text-xs">
+        <div className="border-t border-slate-100 pt-3 space-y-2.5">
+          <div className="space-y-1 text-xs">
             <div className="flex justify-between text-slate-500">
-              <span>Tạm tính:</span>
-              <span className="font-bold text-slate-800">{subtotal.toLocaleString('vi-VN')} đ</span>
+              <span>Tạm tính ({cart.reduce((s, i) => s + i.quantity, 0)} món)</span>
+              <span className="font-semibold">{subtotal.toLocaleString('vi-VN')} đ</span>
             </div>
-            <div className="flex justify-between text-slate-500">
-              <span>Chiết khấu:</span>
-              <span className="font-bold text-slate-800">0 đ</span>
-            </div>
-            <div className="flex justify-between text-base font-extrabold text-blue-600 border-t border-slate-200 pt-2">
-              <span>Khách phải trả:</span>
-              <span>{grandTotal.toLocaleString('vi-VN')} đ</span>
+            <div className="flex justify-between text-slate-900 font-extrabold text-sm pt-1 border-t border-slate-100">
+              <span>TỔNG KHÁCH TRẢ</span>
+              <span className="text-blue-600 font-mono text-base">{grandTotal.toLocaleString('vi-VN')} đ</span>
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-2 text-xs">
+          <div className="grid grid-cols-2 gap-2 pt-1">
             <button
-              onClick={() => {
-                setPaymentMethod('CASH');
-              }}
-              className={`py-2.5 px-3 rounded-full font-bold flex items-center justify-center gap-1.5 transition ${
+              onClick={() => setPaymentMethod('CASH')}
+              className={`py-2 px-3 rounded-xl text-xs font-bold border transition flex items-center justify-center gap-1.5 ${
                 paymentMethod === 'CASH'
-                  ? 'pos-payment-active'
-                  : 'btn-3d-secondary'
+                  ? 'bg-blue-50 border-blue-500 text-blue-700 shadow-sm'
+                  : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
               }`}
             >
-              <Banknote className="w-4 h-4" /> Tiền Mặt
+              <Banknote className="w-4 h-4" />
+              Tiền Mặt
             </button>
+
             <button
-              onClick={() => {
-                setPaymentMethod('BANK_TRANSFER');
-              }}
-              className={`py-2.5 px-3 rounded-full font-bold flex items-center justify-center gap-1.5 transition ${
-                paymentMethod === 'BANK_TRANSFER'
-                  ? 'pos-payment-active'
-                  : 'btn-3d-secondary'
+              onClick={() => setPaymentMethod('BANK')}
+              className={`py-2 px-3 rounded-xl text-xs font-bold border transition flex items-center justify-center gap-1.5 ${
+                paymentMethod === 'BANK'
+                  ? 'bg-blue-50 border-blue-500 text-blue-700 shadow-sm'
+                  : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
               }`}
             >
-              <CreditCard className="w-4 h-4" /> Chuyển Khoản QR
+              <CreditCard className="w-4 h-4" />
+              Chuyển Khoản
             </button>
           </div>
 
           <Button
-            variant="3d-solid"
-            size="lg"
-            isLoading={isProcessing}
+            variant="3d-primary"
             disabled={cart.length === 0}
             onClick={handleCheckout}
             className="w-full py-3.5 text-base font-extrabold shadow-glass-3d"
@@ -946,6 +969,27 @@ export const PosPage = () => {
           </Button>
         </div>
       </div>
+
+      {/* Floating Bottom Bar cho Mobile khi chọn Hàng Hóa */}
+      {mobileTab === 'CATALOG' && cart.length > 0 && (
+        <div className="lg:hidden fixed bottom-3 left-3 right-3 z-40">
+          <button
+            type="button"
+            onClick={() => setMobileTab('CART')}
+            className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-sky-600 text-white font-extrabold text-xs rounded-2xl shadow-xl shadow-blue-500/30 flex items-center justify-between border border-blue-400 active:scale-[0.98] transition"
+          >
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-xl bg-white/20 flex items-center justify-center">
+                <ShoppingCart className="w-4 h-4 text-white" />
+              </div>
+              <span>{cart.length} món trong giỏ</span>
+            </div>
+            <span className="bg-white text-blue-700 px-3 py-1 rounded-xl font-mono font-bold text-xs shadow-sm">
+              {grandTotal.toLocaleString('vi-VN')} đ ↗
+            </span>
+          </button>
+        </div>
+      )}
 
       {/* Modal Các Đơn Đang Giữ */}
       {isHeldModalOpen && (

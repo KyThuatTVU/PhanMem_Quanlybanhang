@@ -679,30 +679,24 @@
     }
 
     .app-main .overflow-x-auto {
-      width: 100%;
-      max-width: 100%;
-      overflow-x: hidden;
+      width: 100% !important;
+      max-width: 100% !important;
+      overflow-x: auto !important;
+      -webkit-overflow-scrolling: touch;
     }
 
     .app-main table {
-      width: 100% !important;
-      min-width: 0 !important;
-      table-layout: fixed;
-      font-size: 0.65rem;
+      width: 100%;
+      min-width: max-content !important;
+      table-layout: auto !important;
     }
 
     .app-main th,
     .app-main td {
-      max-width: 0;
-      padding: 0.55rem 0.35rem !important;
-      white-space: normal;
-      overflow-wrap: anywhere;
-      word-break: break-word;
-    }
-
-    .app-main th {
-      font-size: 0.6rem;
-      line-height: 1.25;
+      white-space: nowrap !important;
+      word-break: normal !important;
+      overflow-wrap: normal !important;
+      max-width: none !important;
     }
 
     .app-main input,
@@ -773,29 +767,10 @@
   }
 
   .product-table {
-    table-layout: fixed;
+    table-layout: auto;
+    width: 100%;
+    min-width: max-content;
   }
-
-  .product-table th:nth-child(1),
-  .product-table td:nth-child(1) { width: 7%; }
-  .product-table th:nth-child(2),
-  .product-table td:nth-child(2) { width: 11%; }
-  .product-table th:nth-child(3),
-  .product-table td:nth-child(3) { width: 15%; }
-  .product-table th:nth-child(4),
-  .product-table td:nth-child(4) { width: 10%; }
-  .product-table th:nth-child(5),
-  .product-table td:nth-child(5) { width: 8%; }
-  .product-table th:nth-child(6),
-  .product-table td:nth-child(6) { width: 15%; }
-  .product-table th:nth-child(7),
-  .product-table td:nth-child(7) { width: 8%; }
-  .product-table th:nth-child(8),
-  .product-table td:nth-child(8) { width: 7%; }
-  .product-table th:nth-child(9),
-  .product-table td:nth-child(9) { width: 7%; }
-  .product-table th:nth-child(10),
-  .product-table td:nth-child(10) { width: 12%; }
 
   .product-table td:nth-child(2),
   .product-table td:nth-child(5),
