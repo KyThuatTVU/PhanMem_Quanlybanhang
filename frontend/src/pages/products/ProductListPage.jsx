@@ -470,19 +470,17 @@ export const ProductListPage = () => {
       {/* 3. Bảng Sản Phẩm Kèm Hình Ảnh Thực Tế Dạng Lưới 3D Thủy Tinh */}
       <div className="hidden sm:block table-glass-container">
         <div className="overflow-x-auto">
-          <table className="product-table table-3d-glass text-left text-xs">
+          <table className="product-table table-3d-glass text-left text-xs whitespace-nowrap">
             <thead>
               <tr>
-                <th className="w-20 text-center whitespace-nowrap">Hình Ảnh</th>
-                <th className="whitespace-nowrap">Mã SKU / Barcode</th>
-                <th className="whitespace-nowrap">Tên Hàng Hóa</th>
-                <th className="whitespace-nowrap">Ngành Hàng</th>
-                <th className="whitespace-nowrap">Đơn Vị Cơ Sở</th>
-                <th className="whitespace-nowrap">Quy Đổi Đơn Vị (ĐVT Phụ)</th>
-                <th className="text-right whitespace-nowrap">Giá Bán Lẻ</th>
-                <th className="text-right whitespace-nowrap">Giá Sỉ</th>
-                <th className="text-right whitespace-nowrap">Tồn Kho</th>
-                <th className="text-right whitespace-nowrap">Thao Tác</th>
+                <th className="w-16 text-center">Hình Ảnh</th>
+                <th>Sản Phẩm & Mã Vạch</th>
+                <th>Ngành Hàng & ĐVT</th>
+                <th className="hidden xl:table-cell">ĐVT Phụ</th>
+                <th className="text-right">Giá Bán Lẻ</th>
+                <th className="text-right hidden md:table-cell">Giá Sỉ</th>
+                <th className="text-right">Tồn Kho</th>
+                <th className="text-right">Thao Tác</th>
               </tr>
             </thead>
             <tbody>
@@ -491,7 +489,7 @@ export const ProductListPage = () => {
                   {/* Cột Hình Ảnh Sản Phẩm */}
                   <td className="p-3 text-center">
                     {p.image ? (
-                      <div className="w-12 h-12 rounded-xl border border-slate-200 overflow-hidden bg-white shadow-sm mx-auto flex items-center justify-center p-0.5">
+                      <div className="w-11 h-11 rounded-xl border border-slate-200 overflow-hidden bg-white shadow-sm mx-auto flex items-center justify-center p-0.5">
                         <img
                           src={p.image}
                           alt={p.name}
@@ -503,32 +501,41 @@ export const ProductListPage = () => {
                         />
                       </div>
                     ) : (
-                      <div className="w-12 h-12 rounded-xl bg-slate-100 border border-slate-200 mx-auto flex items-center justify-center text-slate-400">
+                      <div className="w-11 h-11 rounded-xl bg-slate-100 border border-slate-200 mx-auto flex items-center justify-center text-slate-400">
                         <ImageIcon className="w-5 h-5" />
                       </div>
                     )}
                   </td>
 
-                  <td className="p-4">
-                    <span className="font-mono font-bold text-slate-800">{p.sku}</span>
-                    <p className="font-mono text-[10px] text-blue-600 flex items-center gap-1">
-                      <Barcode className="w-3 h-3" /> {p.baseBarcode}
-                    </p>
+                  {/* Cột Tên Hàng Hóa & Mã Vạch / SKU Gộp Gọn */}
+                  <td className="p-3">
+                    <p className="font-extrabold text-slate-900 leading-tight text-xs">{p.name}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="font-mono text-[10px] font-bold text-slate-500">SKU: {p.sku}</span>
+                      {p.baseBarcode && (
+                        <span className="font-mono text-[10px] text-blue-700 font-bold flex items-center gap-0.5 bg-blue-50 px-1.5 py-0.2 rounded border border-blue-100">
+                          <Barcode className="w-3 h-3 text-blue-600" /> {p.baseBarcode}
+                        </span>
+                      )}
+                    </div>
                   </td>
-                  <td className="p-4 font-extrabold text-slate-900">{p.name}</td>
-                  <td className="p-4 text-slate-600">{p.category}</td>
-                  <td className="p-4">
-                    <span className="px-2 py-0.5 bg-blue-50 text-blue-700 font-bold text-[11px] rounded-md border border-blue-200">
-                      {p.baseUnit}
+
+                  {/* Cột Ngành Hàng & Đơn Vị Cơ Sở Gộp Gọn */}
+                  <td className="p-3">
+                    <p className="font-bold text-slate-800 text-xs">{p.category}</p>
+                    <span className="inline-block px-2 py-0.5 bg-sky-50 text-sky-700 font-bold text-[10px] rounded-md border border-sky-200 mt-1">
+                      ĐVT: {p.baseUnit}
                     </span>
                   </td>
-                  <td className="p-4">
+
+                  {/* Cột Quy Đổi Đơn Vị Phụ (Ẩn trên màn hình vừa) */}
+                  <td className="p-3 hidden xl:table-cell">
                     {p.conversions && p.conversions.length > 0 ? (
                       <div className="flex flex-wrap gap-1">
                         {p.conversions.map((c, idx) => (
                           <span
                             key={idx}
-                            className="inline-flex items-center gap-1 px-2 py-0.5 bg-slate-100 text-slate-700 font-medium text-[10px] rounded-md"
+                            className="inline-flex items-center gap-1 px-2 py-0.5 bg-slate-100 text-slate-700 font-medium text-[10px] rounded-md border border-slate-200"
                           >
                             <ArrowRightLeft className="w-2.5 h-2.5 text-slate-400" />
                             {c.unit} (x{c.factor})
@@ -539,13 +546,19 @@ export const ProductListPage = () => {
                       <span className="text-slate-400 text-[11px]">Chỉ bán lẻ</span>
                     )}
                   </td>
-                  <td className="p-4 text-right font-bold text-slate-900">
+
+                  {/* Giá Bán Lẻ */}
+                  <td className="p-3 text-right font-extrabold text-slate-900 text-xs">
                     {p.retailPrice.toLocaleString('vi-VN')} đ
                   </td>
-                  <td className="p-4 text-right font-medium text-slate-600">
+
+                  {/* Giá Sỉ (Ẩn trên màn hình nhỏ) */}
+                  <td className="p-3 text-right font-medium text-slate-600 text-xs hidden md:table-cell">
                     {p.wholesalePrice.toLocaleString('vi-VN')} đ
                   </td>
-                  <td className="p-4 text-right">
+
+                  {/* Tồn Kho */}
+                  <td className="p-3 text-right">
                     <span
                       className={`font-black text-xs ${
                         p.stock <= p.minStock ? 'text-amber-600' : 'text-slate-800'
@@ -554,8 +567,10 @@ export const ProductListPage = () => {
                       {p.stock} {p.baseUnit}
                     </span>
                   </td>
-                  <td className="p-4 text-right">
-                    <div className="flex items-center justify-end gap-1.5">
+
+                  {/* Thao Tác */}
+                  <td className="p-3 text-right">
+                    <div className="flex items-center justify-end gap-1">
                       <button
                         onClick={() => {
                           setSelectedProduct(p);
@@ -564,21 +579,21 @@ export const ProductListPage = () => {
                         className="btn-3d-icon-view"
                         title="Xem ảnh & chi tiết"
                       >
-                        <Eye className="w-4 h-4" />
+                        <Eye className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => handleOpenEdit(p)}
                         className="btn-3d-icon-edit"
                         title="Chỉnh sửa sản phẩm"
                       >
-                        <Edit className="w-4 h-4" />
+                        <Edit className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => handleDeleteProduct(p.id, p.name)}
                         className="btn-3d-icon-delete"
                         title="Xóa sản phẩm"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-3.5 h-3.5" />
                       </button>
                     </div>
                   </td>

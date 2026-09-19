@@ -305,22 +305,24 @@ export const BarcodePage = () => {
           <table className="w-full text-left text-xs whitespace-nowrap">
             <thead className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-200">
               <tr>
-                <th className="p-4">Mã Vạch (Barcode)</th>
-                <th className="p-4">Chuẩn</th>
-                <th className="p-4">Sản Phẩm & Đơn Vị</th>
-                <th className="p-4">Giá Niêm Yết</th>
-                <th className="p-4">Trạng Thái</th>
-                <th className="p-4">Ngày Tạo</th>
-                <th className="p-4 text-right">In Tem / Thao Tác</th>
+                <th className="p-3">Mã Vạch & Chuẩn</th>
+                <th className="p-3">Sản Phẩm & Đơn Vị</th>
+                <th className="p-3">Giá Niêm Yết</th>
+                <th className="p-3">Trạng Thái</th>
+                <th className="p-3 hidden md:table-cell">Ngày Tạo</th>
+                <th className="p-3 text-right">In Tem / Thao Tác</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
               {filteredBarcodes.map((item) => (
                 <tr key={item.id} className="hover:bg-slate-50/80 transition">
-                  <td className="p-4">
+                  <td className="p-3">
                     <div className="flex items-center gap-2">
-                      <span className="font-mono font-extrabold text-sm text-blue-700 tracking-wider bg-blue-50/80 px-2 py-1 rounded border border-blue-100">
+                      <span className="font-mono font-extrabold text-xs text-blue-700 tracking-wider bg-blue-50/80 px-2 py-0.5 rounded border border-blue-100">
                         {item.code}
+                      </span>
+                      <span className="text-[10px] font-bold text-slate-500 bg-slate-100 px-1.5 py-0.2 rounded border border-slate-200">
+                        {item.type}
                       </span>
                       <button
                         title="Copy mã vạch"
@@ -331,17 +333,16 @@ export const BarcodePage = () => {
                       </button>
                     </div>
                   </td>
-                  <td className="p-4 font-semibold text-slate-600">{item.type}</td>
-                  <td className="p-4">
-                    <p className="font-bold text-slate-900">{item.productName}</p>
-                    <span className="text-[11px] text-slate-500">{item.unitName}</span>
+                  <td className="p-3">
+                    <p className="font-extrabold text-slate-900 leading-tight">{item.productName}</p>
+                    <span className="text-[10.5px] text-slate-500">{item.unitName}</span>
                   </td>
-                  <td className="p-4 font-extrabold text-slate-800">
+                  <td className="p-3 font-extrabold text-slate-800">
                     {item.price > 0 ? item.price.toLocaleString('vi-VN') + ' đ' : '—'}
                   </td>
-                  <td className="p-4">{getStatusBadge(item.status)}</td>
-                  <td className="p-4 text-slate-500">{item.createdAt}</td>
-                  <td className="p-4 text-right">
+                  <td className="p-3">{getStatusBadge(item.status)}</td>
+                  <td className="p-3 text-slate-500 hidden md:table-cell">{item.createdAt}</td>
+                  <td className="p-3 text-right">
                     <Button
                       variant="3d-primary"
                       size="sm"
