@@ -38,6 +38,24 @@ class EmployeeController {
     }
   }
 
+  async resetPassword(req, res, next) {
+    try {
+      const user = await employeeService.resetPassword(req.params.id, req.body.password);
+      return sendSuccess(res, user, 'Đặt lại mật khẩu nhân viên thành công');
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async deleteEmployee(req, res, next) {
+    try {
+      await employeeService.deleteEmployee(req.params.id);
+      return sendSuccess(res, null, 'Xóa nhân viên thành công');
+    } catch (error) {
+      next(error);
+    }
+  }
+
   async toggleStatus(req, res, next) {
     try {
       const user = await employeeService.toggleStatus(req.params.id);

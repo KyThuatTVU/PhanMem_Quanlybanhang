@@ -11,6 +11,8 @@ router.get('/', authenticate, authorizeRoles('ADMIN', 'MANAGER'), employeeContro
 router.get('/:id', authenticate, authorizeRoles('ADMIN', 'MANAGER'), employeeController.getEmployeeById);
 router.post('/', authenticate, authorizeRoles('ADMIN'), employeeController.createEmployee);
 router.put('/:id', authenticate, authorizeRoles('ADMIN'), employeeController.updateEmployee);
+router.patch('/:id/reset-password', authenticate, authorizeRoles('ADMIN'), employeeController.resetPassword);
+router.delete('/:id', authenticate, authorizeRoles('ADMIN'), employeeController.deleteEmployee);
 router.patch('/:id/toggle-status', authenticate, authorizeRoles('ADMIN'), employeeController.toggleStatus);
 router.get('/:id/kpi', authenticate, authorizeRoles('ADMIN', 'MANAGER'), employeeController.getSalesKpi);
 

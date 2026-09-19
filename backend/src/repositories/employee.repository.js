@@ -62,8 +62,11 @@ class EmployeeRepository {
     return this.findById(userId);
   }
 
-  async update(id, { fullName, phone, roleCodes }) {
-    await pool.query('UPDATE users SET full_name = ?, phone = ? WHERE id = ?', [fullName, phone, id]);
+  async update(id, { username, fullName, email, phone, roleCodes }) {
+    await pool.query(
+      'UPDATE users SET username = ?, full_name = ?, email = ?, phone = ? WHERE id = ?',
+      [username, fullName, email || null, phone || null, id]
+    );
 
     if (roleCodes && Array.isArray(roleCodes)) {
       await pool.query('DELETE FROM user_roles WHERE user_id = ?', [id]);
@@ -75,6 +78,16 @@ class EmployeeRepository {
       }
     }
     return this.findById(id);
+  }
+
+  async resetPassword(id, passwordHash) {
+    await pool.query('UPDATE users SET password_hash = ? WHERE id = ?', [passwordHash, id]);
+    return this.findById(id);
+  }
+
+  async delete(id) {
+    await pool.query('UPDATE users SET deleted_at = CURRENT_TIMESTAMP WHERE id = ?', [id]);
+    return { success: true };
   }
 
   async toggleStatus(id) {

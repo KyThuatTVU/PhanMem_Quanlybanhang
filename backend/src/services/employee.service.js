@@ -34,6 +34,18 @@ class EmployeeService {
     return await employeeRepository.update(id, data);
   }
 
+  async resetPassword(id, newPassword) {
+    await this.getEmployeeById(id);
+    const salt = await bcrypt.genSalt(10);
+    const passwordHash = await bcrypt.hash(newPassword || '123456', salt);
+    return await employeeRepository.resetPassword(id, passwordHash);
+  }
+
+  async deleteEmployee(id) {
+    await this.getEmployeeById(id);
+    return await employeeRepository.delete(id);
+  }
+
   async toggleStatus(id) {
     await this.getEmployeeById(id);
     return await employeeRepository.toggleStatus(id);

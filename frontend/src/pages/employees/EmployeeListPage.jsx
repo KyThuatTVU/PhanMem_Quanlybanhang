@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '../../components/ui/Button';
+import { employeeApi } from '../../api/employee.api';
 import {
   UserCheck,
   Plus,
@@ -28,7 +29,7 @@ export const EmployeeListPage = () => {
   
   const [newPasswordInput, setNewPasswordInput] = useState('');
 
-  // 1. Danh sách Nhân viên (Chỉ giữ Họ Tên, Tên Đăng Nhập, Mật Khẩu, SĐT, Role)
+  // 1. Danh sách Nhân viên
   const [employees, setEmployees] = useState(() => {
     try {
       const saved = localStorage.getItem('employee_catalog');
@@ -85,6 +86,32 @@ export const EmployeeListPage = () => {
       },
     ];
   });
+
+  // Tải danh sách Nhân viên trực tiếp từ MySQL CSDL
+  useEffect(() => {
+    const fetchDbEmployees = async () => {
+      const res = await employeeApi.getEmployees();
+      if (res && (res.rows || Array.isArray(res))) {
+        const rows = res.rows || res;
+        if (rows.length > 0) {
+          const mapped = rows.map((u) => ({
+            id: u.id,
+            fullName: u.full_name || u.fullName,
+            username: u.username,
+            role: (u.role_codes && u.role_codes.split(',')[0]) || u.role || 'CASHIER',
+            password: '123',
+            phone: u.phone || '',
+            status: u.is_active === 0 ? 'LOCKED' : 'ACTIVE',
+            salesThisMonth: 0,
+            commission: 0,
+            createdAt: u.created_at ? new Date(u.created_at).toLocaleDateString('vi-VN') : '01/01/2026',
+          }));
+          setEmployees(mapped);
+        }
+      }
+    };
+    fetchDbEmployees();
+  }, []);
 
   // Đồng bộ danh sách nhân viên vào localStorage cho máy POS
   useEffect(() => {
@@ -150,7 +177,7 @@ export const EmployeeListPage = () => {
     password: '',
   });
 
-  const handleCreateEmployee = (e) => {
+  const handleCreateEmployee = async (e) => {
     e.preventDefault();
     const cleanUser = formData.username.trim().toLowerCase();
 
@@ -173,6 +200,16 @@ export const EmployeeListPage = () => {
     };
     setEmployees([newEmp, ...employees]);
     setIsAddModalOpen(false);
+
+    // Lưu vào MySQL CSDL qua API backend
+    await employeeApi.createEmployee({
+      username: cleanUser,
+      password: formData.password.trim() || '123',
+      fullName: formData.fullName.trim(),
+      phone: formData.phone.trim(),
+      roleCodes: [formData.role],
+    });
+
     setFormData({
       fullName: '',
       username: '',
@@ -183,7 +220,7 @@ export const EmployeeListPage = () => {
   };
 
   // Form Sửa Nhân Viên (Sửa Họ tên, Username, SĐT, Role)
-  const handleSaveEditEmployee = (e) => {
+  const handleSaveEditEmployee = async (e) => {
     e.preventDefault();
     if (!editingEmp) return;
 
@@ -212,11 +249,20 @@ export const EmployeeListPage = () => {
           : emp
       )
     );
+    const targetEmp = { ...editingEmp };
     setEditingEmp(null);
+
+    // Cập nhật vào MySQL CSDL qua API backend
+    await employeeApi.updateEmployee(targetEmp.id, {
+      username: cleanUser,
+      fullName: targetEmp.fullName.trim(),
+      phone: (targetEmp.phone || '').trim(),
+      roleCodes: [targetEmp.role],
+    });
   };
 
   // Đặt lại mật khẩu
-  const handleSaveResetPassword = (e) => {
+  const handleSaveResetPassword = async (e) => {
     e.preventDefault();
     if (!resetPassEmp || !newPasswordInput.trim()) return;
 
@@ -227,25 +273,35 @@ export const EmployeeListPage = () => {
           : emp
       )
     );
-    alert(`Đã cập nhật mật khẩu thành công cho tài khoản @${resetPassEmp.username}!`);
+    const targetEmp = { ...resetPassEmp };
+    const pass = newPasswordInput.trim();
     setResetPassEmp(null);
     setNewPasswordInput('');
+
+    alert(`Đã cập nhật mật khẩu thành công cho tài khoản @${targetEmp.username}!`);
+
+    // Đặt lại mật khẩu vào MySQL CSDL qua API backend
+    await employeeApi.resetPassword(targetEmp.id, pass);
   };
 
   // Xóa nhân viên
-  const handleConfirmDelete = () => {
+  const handleConfirmDelete = async () => {
     if (!deleteEmp) return;
     if (deleteEmp.role === 'OWNER') {
       alert('Không thể xóa tài khoản Chủ Quán (OWNER)!');
       setDeleteEmp(null);
       return;
     }
-    setEmployees(employees.filter((emp) => emp.id !== deleteEmp.id));
+    const targetId = deleteEmp.id;
+    setEmployees(employees.filter((emp) => emp.id !== targetId));
     setDeleteEmp(null);
+
+    // Xóa khỏi MySQL CSDL qua API backend
+    await employeeApi.deleteEmployee(targetId);
   };
 
   // Khóa / Mở khóa nhân viên
-  const handleToggleLock = (id) => {
+  const handleToggleLock = async (id) => {
     setEmployees(
       employees.map((emp) =>
         emp.id === id
@@ -253,6 +309,9 @@ export const EmployeeListPage = () => {
           : emp
       )
     );
+
+    // Cập nhật trạng thái vào MySQL CSDL qua API backend
+    await employeeApi.toggleStatus(id);
   };
 
   return (
