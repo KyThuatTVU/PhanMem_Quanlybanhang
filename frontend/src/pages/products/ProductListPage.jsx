@@ -474,11 +474,8 @@ export const ProductListPage = () => {
             <thead>
               <tr>
                 <th className="w-16 text-center">Hình Ảnh</th>
-                <th>Sản Phẩm & Mã Vạch</th>
+                <th>Sản Phẩm, Mã Vạch & Giá Lẻ</th>
                 <th>Ngành Hàng & ĐVT</th>
-                <th className="hidden xl:table-cell">ĐVT Phụ</th>
-                <th className="text-right">Giá Bán Lẻ</th>
-                <th className="text-right hidden md:table-cell">Giá Sỉ</th>
                 <th className="text-right">Tồn Kho</th>
                 <th className="text-right">Thao Tác</th>
               </tr>
@@ -507,7 +504,7 @@ export const ProductListPage = () => {
                     )}
                   </td>
 
-                  {/* Cột Tên Hàng Hóa & Mã Vạch / SKU Gộp Gọn */}
+                  {/* Cột Tên Hàng Hóa, Mã Vạch & Giá Lẻ Gộp Gọn */}
                   <td className="p-3">
                     <p className="font-extrabold text-slate-900 leading-tight text-xs">{p.name}</p>
                     <div className="flex items-center gap-2 mt-1">
@@ -517,6 +514,9 @@ export const ProductListPage = () => {
                           <Barcode className="w-3 h-3 text-blue-600" /> {p.baseBarcode}
                         </span>
                       )}
+                      <span className="font-extrabold text-blue-700 text-[10.5px] bg-blue-50/80 px-2 py-0.2 rounded border border-blue-100">
+                        {p.retailPrice.toLocaleString('vi-VN')} đ
+                      </span>
                     </div>
                   </td>
 
@@ -526,35 +526,6 @@ export const ProductListPage = () => {
                     <span className="inline-block px-2 py-0.5 bg-sky-50 text-sky-700 font-bold text-[10px] rounded-md border border-sky-200 mt-1">
                       ĐVT: {p.baseUnit}
                     </span>
-                  </td>
-
-                  {/* Cột Quy Đổi Đơn Vị Phụ (Ẩn trên màn hình vừa) */}
-                  <td className="p-3 hidden xl:table-cell">
-                    {p.conversions && p.conversions.length > 0 ? (
-                      <div className="flex flex-wrap gap-1">
-                        {p.conversions.map((c, idx) => (
-                          <span
-                            key={idx}
-                            className="inline-flex items-center gap-1 px-2 py-0.5 bg-slate-100 text-slate-700 font-medium text-[10px] rounded-md border border-slate-200"
-                          >
-                            <ArrowRightLeft className="w-2.5 h-2.5 text-slate-400" />
-                            {c.unit} (x{c.factor})
-                          </span>
-                        ))}
-                      </div>
-                    ) : (
-                      <span className="text-slate-400 text-[11px]">Chỉ bán lẻ</span>
-                    )}
-                  </td>
-
-                  {/* Giá Bán Lẻ */}
-                  <td className="p-3 text-right font-extrabold text-slate-900 text-xs">
-                    {p.retailPrice.toLocaleString('vi-VN')} đ
-                  </td>
-
-                  {/* Giá Sỉ (Ẩn trên màn hình nhỏ) */}
-                  <td className="p-3 text-right font-medium text-slate-600 text-xs hidden md:table-cell">
-                    {p.wholesalePrice.toLocaleString('vi-VN')} đ
                   </td>
 
                   {/* Tồn Kho */}
