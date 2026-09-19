@@ -14,9 +14,9 @@ export default {
         '3xl': ['2rem', { lineHeight: '2.35rem' }],
       },
       fontFamily: {
-  sans: ['"Nunito Sans"', 'system-ui', 'sans-serif'],
-  rounded: ['"Nunito Sans"', 'system-ui', 'sans-serif'],
-},
+        sans: ['"Be Vietnam Pro"', '"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
+        rounded: ['"Be Vietnam Pro"', '"Plus Jakarta Sans"', 'Inter', 'system-ui', 'sans-serif'],
+      },
       colors: {
         background: '#F0F9F4', // Xanh lá nhẹ sáng chuyên nghiệp (Soft Sage Mint)
         card: '#FFFFFF',

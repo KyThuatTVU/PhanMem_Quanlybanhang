@@ -8,7 +8,7 @@
   }
 
   html, body {
-    font-family: 'Baloo 2', system-ui, sans-serif;
+    font-family: 'Be Vietnam Pro', 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
     font-synthesis: none;
     @apply bg-background text-slate-800 antialiased selection:bg-sky-500 selection:text-white;
   }
@@ -41,9 +41,9 @@
     font-family: inherit;
   }
 
-  /* TIÊU ĐỀ CHÍNH CHUẨN ĐẬM NÉT, RÕ RÀNG, SANG TRỌNG (SANS-SERIF) */
+  /* TIÊU ĐỀ CHÍNH CHUẨN ĐẬM NÉT, RÕ RÀNG, SANG TRỌNG (SANS-SERIF MODERN) */
   h1, .page-title, .title-lg {
-    font-family: 'Baloo 2', system-ui, sans-serif !important;
+    font-family: 'Be Vietnam Pro', 'Plus Jakarta Sans', system-ui, sans-serif !important;
     font-weight: 800 !important;
     color: #0f172a;
     letter-spacing: -0.025em;
@@ -55,14 +55,14 @@
   }
 
   h2, h3 {
-    font-family: 'Baloo 2', system-ui, sans-serif !important;
+    font-family: 'Be Vietnam Pro', 'Plus Jakarta Sans', system-ui, sans-serif !important;
     font-weight: 700 !important;
     color: #0f172a;
     letter-spacing: -0.02em;
   }
 
   h4, h5, h6 {
-    font-family: 'Baloo 2', system-ui, sans-serif !important;
+    font-family: 'Be Vietnam Pro', 'Plus Jakarta Sans', system-ui, sans-serif !important;
     font-weight: 700 !important;
     color: #0f172a;
   }
@@ -80,7 +80,7 @@
   .recharts-wrapper text,
   .recharts-tooltip-wrapper,
   .recharts-legend-wrapper {
-    font-family: 'Baloo 2', system-ui, sans-serif !important;
+    font-family: 'Be Vietnam Pro', 'Plus Jakarta Sans', system-ui, sans-serif !important;
   }
 }
 
