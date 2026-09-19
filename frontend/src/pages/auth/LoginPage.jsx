@@ -31,39 +31,39 @@ export const LoginPage = () => {
     >
       <div className="absolute inset-0 pointer-events-none opacity-60 bg-[linear-gradient(120deg,rgba(14,165,233,0.08)_1px,transparent_1px),linear-gradient(30deg,rgba(16,185,129,0.06)_1px,transparent_1px)] bg-[size:42px_42px]" />
 
-      <div className="w-full max-w-md relative z-10">
-        <div className="login-glass-card p-8 rounded-[2.25rem] space-y-6 shadow-2xl backdrop-blur-2xl border border-white/80">
+      <div className="w-full max-w-md relative z-10 px-3 sm:px-0">
+        <div className="login-glass-card py-14 px-8 sm:py-20 sm:px-10 rounded-[2.5rem] space-y-10 shadow-2xl backdrop-blur-2xl border border-white/80 min-h-[560px] flex flex-col justify-between">
           
           {/* Header Tiêu đề & Logo */}
-          <div className="text-center space-y-3">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-white/95 p-2.5 border border-white shadow-xl shadow-cyan-950/20 mb-1">
+          <div className="text-center space-y-5 my-auto">
+            <div className="inline-flex items-center justify-center w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-white/95 p-3.5 border border-white shadow-xl shadow-cyan-950/20 mb-3">
               <img src={brandLogo} alt={settings.STORE_NAME} className="w-full h-full object-contain" />
             </div>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
               {settings.STORE_NAME}
             </h1>
-            <p className="text-xs font-semibold text-slate-600">
+            <p className="text-xs sm:text-sm font-semibold text-slate-600 max-w-xs mx-auto leading-relaxed">
               Hệ thống Quản Trị Cửa Hàng & Bán Hàng POS Chuyên Nghiệp
             </p>
           </div>
 
           {/* Thông báo Lỗi nếu có */}
           {(localError || error) && (
-            <div className="flex items-center gap-2 p-3.5 bg-rose-50 border border-rose-200 text-rose-600 rounded-xl text-xs font-medium animate-fadeIn">
-              <AlertCircle className="w-4 h-4 shrink-0" />
+            <div className="flex items-center gap-3 p-4 bg-rose-50 border border-rose-200 text-rose-600 rounded-2xl text-xs font-medium animate-fadeIn">
+              <AlertCircle className="w-5 h-5 shrink-0" />
               <span>{localError || error}</span>
             </div>
           )}
 
           {/* Nút Đăng nhập bằng Google */}
-          <div className="pt-2 space-y-3">
+          <div className="py-2 space-y-6 my-auto">
             <button
               type="button"
               onClick={handleGoogleLogin}
               disabled={isLoading}
-              className="w-full flex items-center justify-center gap-3.5 px-6 py-4 bg-white/90 hover:bg-white text-slate-800 text-sm font-extrabold rounded-2xl shadow-lg hover:shadow-xl border border-white transition-all transform hover:-translate-y-0.5 active:scale-[0.98] disabled:opacity-50 cursor-pointer"
+              className="w-full flex items-center justify-center gap-3.5 px-6 py-4.5 bg-white/95 hover:bg-white text-slate-800 text-sm sm:text-base font-extrabold rounded-2xl shadow-xl hover:shadow-2xl border border-white transition-all transform hover:-translate-y-0.5 active:scale-[0.98] disabled:opacity-50 cursor-pointer"
             >
-              <svg className="w-6 h-6 shrink-0" viewBox="0 0 24 24">
+              <svg className="w-6 h-6 sm:w-7 sm:h-7 shrink-0" viewBox="0 0 24 24">
                 <path
                   fill="#4285F4"
                   d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
@@ -83,17 +83,17 @@ export const LoginPage = () => {
               </svg>
               <span>{isLoading ? 'Đang xác thực Google...' : 'Đăng Nhập Quản Trị Bằng Google'}</span>
             </button>
-          </div>
 
-          <div className="flex items-center justify-center gap-1.5 text-[11px] font-medium text-slate-500 pt-2">
-            <ShieldCheck className="w-3.5 h-3.5 text-sky-600" />
-            <span>Đăng nhập an toàn & bảo mật với Google</span>
+            <div className="flex items-center justify-center gap-2 text-xs font-medium text-slate-500 pt-2">
+              <ShieldCheck className="w-4 h-4 text-sky-600" />
+              <span>Đăng nhập an toàn & bảo mật với Google</span>
+            </div>
           </div>
 
         </div>
 
         {/* Footer bản quyền */}
-        <p className="text-center text-xs text-white/90 mt-6 font-medium drop-shadow-sm">
+        <p className="text-center text-xs text-white/90 mt-8 font-medium drop-shadow-sm">
           &copy; 2026 {settings.STORE_NAME}. Tất cả quyền được bảo lưu.
         </p>
       </div>
