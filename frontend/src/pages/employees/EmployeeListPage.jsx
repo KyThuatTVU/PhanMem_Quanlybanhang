@@ -13,10 +13,7 @@ import {
   Pencil,
   Trash2,
   RotateCcw,
-  AlertCircle,
-  Mail,
-  User,
-  Phone
+  AlertCircle
 } from 'lucide-react';
 
 export const EmployeeListPage = () => {
@@ -31,7 +28,7 @@ export const EmployeeListPage = () => {
   
   const [newPasswordInput, setNewPasswordInput] = useState('');
 
-  // 1. Danh sách Nhân viên
+  // 1. Danh sách Nhân viên (Chỉ giữ Họ Tên, Tên Đăng Nhập, Mật Khẩu, SĐT, Role)
   const [employees, setEmployees] = useState(() => {
     try {
       const saved = localStorage.getItem('employee_catalog');
@@ -42,7 +39,6 @@ export const EmployeeListPage = () => {
         id: 1,
         fullName: 'Nguyễn Văn Chủ Quán',
         username: 'owner_ankhang',
-        email: 'owner@ankhang.com',
         role: 'OWNER',
         password: '123',
         phone: '0903 111 222',
@@ -55,7 +51,6 @@ export const EmployeeListPage = () => {
         id: 2,
         fullName: 'Trần Thị Quản Lý',
         username: 'manager_lan',
-        email: 'manager.lan@gmail.com',
         role: 'MANAGER',
         password: '123',
         phone: '0908 333 444',
@@ -68,7 +63,6 @@ export const EmployeeListPage = () => {
         id: 3,
         fullName: 'Lê Văn Thu Ngân 1',
         username: 'cashier_minh',
-        email: 'cashier.minh@gmail.com',
         role: 'CASHIER',
         password: '123',
         phone: '0912 555 666',
@@ -81,7 +75,6 @@ export const EmployeeListPage = () => {
         id: 4,
         fullName: 'Phạm Văn Thủ Kho',
         username: 'warehouse_tuan',
-        email: 'warehouse.tuan@gmail.com',
         role: 'WAREHOUSE',
         password: '123',
         phone: '0933 777 888',
@@ -148,11 +141,10 @@ export const EmployeeListPage = () => {
     }
   };
 
-  // Form Thêm Nhân Viên
+  // Form Thêm Nhân Viên (Họ tên, Username, Password, SĐT, Role)
   const [formData, setFormData] = useState({
     fullName: '',
     username: '',
-    email: '',
     phone: '',
     role: 'CASHIER',
     password: '',
@@ -161,10 +153,9 @@ export const EmployeeListPage = () => {
   const handleCreateEmployee = (e) => {
     e.preventDefault();
     const cleanUser = formData.username.trim().toLowerCase();
-    const cleanEmail = formData.email.trim().toLowerCase();
 
     if (employees.some((emp) => emp.username.toLowerCase() === cleanUser)) {
-      alert('Tên đăng nhập (username) này đã tồn tại! Vui lòng chọn tên đăng nhập khác.');
+      alert('Tên đăng nhập (username) này đã tồn tại! Vui lòng chọn tên khác.');
       return;
     }
 
@@ -172,7 +163,6 @@ export const EmployeeListPage = () => {
       id: Date.now(),
       fullName: formData.fullName.trim(),
       username: cleanUser,
-      email: cleanEmail,
       phone: formData.phone.trim(),
       role: formData.role,
       password: formData.password.trim() || '123',
@@ -186,22 +176,20 @@ export const EmployeeListPage = () => {
     setFormData({
       fullName: '',
       username: '',
-      email: '',
       phone: '',
       role: 'CASHIER',
       password: '',
     });
   };
 
-  // Form Sửa Nhân Viên (Cho phép sửa Username & Email & Họ tên & SĐT & Role)
+  // Form Sửa Nhân Viên (Sửa Họ tên, Username, SĐT, Role)
   const handleSaveEditEmployee = (e) => {
     e.preventDefault();
     if (!editingEmp) return;
 
     const cleanUser = editingEmp.username.trim().toLowerCase();
-    const cleanEmail = (editingEmp.email || '').trim().toLowerCase();
 
-    // Kiểm tra xem username có bị trùng với nhân viên khác không
+    // Kiểm tra trùng username với nhân viên khác
     const isDuplicateUser = employees.some(
       (emp) => emp.id !== editingEmp.id && emp.username.toLowerCase() === cleanUser
     );
@@ -218,7 +206,6 @@ export const EmployeeListPage = () => {
               ...emp,
               fullName: editingEmp.fullName.trim(),
               username: cleanUser,
-              email: cleanEmail,
               phone: (editingEmp.phone || '').trim(),
               role: editingEmp.role,
             }
@@ -278,7 +265,7 @@ export const EmployeeListPage = () => {
             Nhân Viên & Ma Trận Phân Quyền (RBAC)
           </h1>
           <p className="text-xs text-slate-500 font-medium">
-            Tùy chỉnh Tên Đăng Nhập, Email, Cấp Mật Khẩu Đăng Nhập POS và phân quyền từng vai trò
+            Tạo Tên Đăng Nhập, Cấp Mật Khẩu Đăng Nhập POS và phân quyền chức năng cho từng nhân viên
           </p>
         </div>
 
@@ -301,7 +288,7 @@ export const EmployeeListPage = () => {
               : 'border-transparent text-slate-500 hover:text-slate-800'
           }`}
         >
-          1. Danh Sách Nhân Viên & Cài Đặt Tài Khoản
+          1. Danh Sách Nhân Viên & Cài Đặt Mật Khẩu
         </button>
 
         <button
@@ -324,7 +311,7 @@ export const EmployeeListPage = () => {
               <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-2.5" />
               <input
                 type="text"
-                placeholder="Tìm theo tên đăng nhập, email, họ tên, số điện thoại..."
+                placeholder="Tìm theo họ tên, username hoặc số điện thoại..."
                 value={keyword}
                 onChange={(e) => setKeyword(e.target.value)}
                 className="w-full bg-slate-100 border border-transparent focus:border-blue-500 rounded-xl pl-10 pr-4 py-2 text-xs text-slate-800 focus:outline-none transition"
@@ -342,7 +329,6 @@ export const EmployeeListPage = () => {
                   <tr>
                     <th className="p-4 whitespace-nowrap">Họ & Tên</th>
                     <th className="p-4 whitespace-nowrap">Tên Đăng Nhập (Tên Login)</th>
-                    <th className="p-4 whitespace-nowrap">Email</th>
                     <th className="p-4 whitespace-nowrap">Vai Trò (Role)</th>
                     <th className="p-4 whitespace-nowrap">Số Điện Thoại</th>
                     <th className="p-4 text-center whitespace-nowrap">Mật Khẩu Ca POS</th>
@@ -356,26 +342,15 @@ export const EmployeeListPage = () => {
                       (e) =>
                         e.fullName.toLowerCase().includes(keyword.toLowerCase()) ||
                         e.username.toLowerCase().includes(keyword.toLowerCase()) ||
-                        (e.email && e.email.toLowerCase().includes(keyword.toLowerCase())) ||
                         (e.phone && e.phone.includes(keyword))
                     )
                     .map((emp) => (
                       <tr key={emp.id} className="hover:bg-slate-50/90 transition-colors">
                         <td className="p-4 font-extrabold text-slate-900 whitespace-nowrap">{emp.fullName}</td>
                         <td className="p-4 font-mono text-blue-700 font-bold whitespace-nowrap">
-                          <span className="bg-blue-50 px-2 py-0.5 rounded-md border border-blue-100">
+                          <span className="bg-blue-50 px-2.5 py-1 rounded-md border border-blue-100">
                             @{emp.username}
                           </span>
-                        </td>
-                        <td className="p-4 text-slate-600 font-medium whitespace-nowrap">
-                          {emp.email ? (
-                            <span className="inline-flex items-center gap-1.5">
-                              <Mail className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                              <span>{emp.email}</span>
-                            </span>
-                          ) : (
-                            <span className="text-slate-300 font-semibold">—</span>
-                          )}
                         </td>
                         <td className="p-4 whitespace-nowrap">
                           <span
@@ -429,11 +404,11 @@ export const EmployeeListPage = () => {
                               <KeyRound className="w-4 h-4" />
                             </button>
 
-                            {/* Sửa thông tin & Email */}
+                            {/* Sửa thông tin */}
                             <button
                               onClick={() => setEditingEmp({ ...emp })}
                               className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-amber-50 text-amber-600 border border-slate-200 hover:border-amber-200 flex items-center justify-center transition"
-                              title="Sửa tên login, email, họ tên, vai trò"
+                              title="Sửa tên login, họ tên, vai trò"
                             >
                               <Pencil className="w-4 h-4" />
                             </button>
@@ -501,62 +476,64 @@ export const EmployeeListPage = () => {
             </button>
           </div>
 
-          <div className="soft-card p-0 overflow-hidden">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-600 font-bold uppercase tracking-wider border-b border-slate-200">
-                <tr>
-                  <th className="p-4">Chức Năng Module Nghiệp Vụ</th>
-                  <th className="p-4 text-center">Chủ Quán (OWNER)</th>
-                  <th className="p-4 text-center">Quản Lý (MANAGER)</th>
-                  <th className="p-4 text-center">Thu Ngân (CASHIER)</th>
-                  <th className="p-4 text-center">Thủ Kho (WAREHOUSE)</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 font-medium">
-                {modulesList.map((m) => (
-                  <tr key={m.id} className="hover:bg-slate-50/80 transition">
-                    <td className="p-4 font-extrabold text-slate-800">{m.name}</td>
-                    
-                    {/* OWNER Always True */}
-                    <td className="p-4 text-center">
-                      <span className="inline-block w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700 font-black leading-6 text-center text-xs">
-                        ✓
-                      </span>
-                    </td>
-
-                    {/* MANAGER Toggle */}
-                    <td className="p-4 text-center">
-                      <input
-                        type="checkbox"
-                        checked={!!m.actions.MANAGER}
-                        onChange={() => handleTogglePermission(m.id, 'MANAGER')}
-                        className="w-5 h-5 text-blue-600 rounded-md border-slate-300 focus:ring-blue-500 cursor-pointer"
-                      />
-                    </td>
-
-                    {/* CASHIER Toggle */}
-                    <td className="p-4 text-center">
-                      <input
-                        type="checkbox"
-                        checked={!!m.actions.CASHIER}
-                        onChange={() => handleTogglePermission(m.id, 'CASHIER')}
-                        className="w-5 h-5 text-blue-600 rounded-md border-slate-300 focus:ring-blue-500 cursor-pointer"
-                      />
-                    </td>
-
-                    {/* WAREHOUSE Toggle */}
-                    <td className="p-4 text-center">
-                      <input
-                        type="checkbox"
-                        checked={!!m.actions.WAREHOUSE}
-                        onChange={() => handleTogglePermission(m.id, 'WAREHOUSE')}
-                        className="w-5 h-5 text-blue-600 rounded-md border-slate-300 focus:ring-blue-500 cursor-pointer"
-                      />
-                    </td>
+          <div className="soft-card p-0 overflow-hidden border border-slate-200/80 shadow-sm rounded-2xl">
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs whitespace-nowrap">
+                <thead className="bg-slate-50 text-slate-600 font-bold uppercase tracking-wider border-b border-slate-200">
+                  <tr>
+                    <th className="p-4">Chức Năng Module Nghiệp Vụ</th>
+                    <th className="p-4 text-center">Chủ Quán (OWNER)</th>
+                    <th className="p-4 text-center">Quản Lý (MANAGER)</th>
+                    <th className="p-4 text-center">Thu Ngân (CASHIER)</th>
+                    <th className="p-4 text-center">Thủ Kho (WAREHOUSE)</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-slate-100 font-medium">
+                  {modulesList.map((m) => (
+                    <tr key={m.id} className="hover:bg-slate-50/80 transition">
+                      <td className="p-4 font-extrabold text-slate-800">{m.name}</td>
+                      
+                      {/* OWNER Always True */}
+                      <td className="p-4 text-center">
+                        <span className="inline-block w-6 h-6 rounded-lg bg-emerald-100 text-emerald-700 font-black leading-6 text-center text-xs">
+                          ✓
+                        </span>
+                      </td>
+
+                      {/* MANAGER Toggle */}
+                      <td className="p-4 text-center">
+                        <input
+                          type="checkbox"
+                          checked={!!m.actions.MANAGER}
+                          onChange={() => handleTogglePermission(m.id, 'MANAGER')}
+                          className="w-5 h-5 text-blue-600 rounded-md border-slate-300 focus:ring-blue-500 cursor-pointer"
+                        />
+                      </td>
+
+                      {/* CASHIER Toggle */}
+                      <td className="p-4 text-center">
+                        <input
+                          type="checkbox"
+                          checked={!!m.actions.CASHIER}
+                          onChange={() => handleTogglePermission(m.id, 'CASHIER')}
+                          className="w-5 h-5 text-blue-600 rounded-md border-slate-300 focus:ring-blue-500 cursor-pointer"
+                        />
+                      </td>
+
+                      {/* WAREHOUSE Toggle */}
+                      <td className="p-4 text-center">
+                        <input
+                          type="checkbox"
+                          checked={!!m.actions.WAREHOUSE}
+                          onChange={() => handleTogglePermission(m.id, 'WAREHOUSE')}
+                          className="w-5 h-5 text-blue-600 rounded-md border-slate-300 focus:ring-blue-500 cursor-pointer"
+                        />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       )}
@@ -564,13 +541,13 @@ export const EmployeeListPage = () => {
       {/* Modal 1: Thêm Nhân Viên Mới */}
       {isAddModalOpen && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
             <h2 className="text-base font-extrabold text-slate-900 mb-1 flex items-center gap-2">
               <Plus className="w-5 h-5 text-blue-600" />
-              Thêm Nhân Viên & Cấp Tên Đăng Nhập / Email
+              Thêm Nhân Viên & Cấp Tài Khoản POS
             </h2>
             <p className="text-xs text-slate-500 mb-4">
-              Khởi tạo thông tin nhân viên, cài đặt tên đăng nhập (login) và email cá nhân
+              Cấp Tên Đăng Nhập, Mật Khẩu ca POS và phân vai trò làm việc
             </p>
 
             <form onSubmit={handleCreateEmployee} className="space-y-4">
@@ -605,21 +582,6 @@ export const EmployeeListPage = () => {
 
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Email Cá Nhân
-                  </label>
-                  <input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    placeholder="VD: mai.tran@gmail.com"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-blue-500"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-3 gap-3">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
                     Mật Khẩu Máy POS *
                   </label>
                   <input
@@ -627,11 +589,13 @@ export const EmployeeListPage = () => {
                     required
                     value={formData.password}
                     onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    placeholder="123..."
+                    placeholder="VD: 123"
                     className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold text-slate-800 focus:outline-none focus:border-blue-500"
                   />
                 </div>
+              </div>
 
+              <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">
                     Số Điện Thoại
@@ -679,16 +643,16 @@ export const EmployeeListPage = () => {
         </div>
       )}
 
-      {/* Modal 2: Sửa Nhân Viên & Email & Username */}
+      {/* Modal 2: Sửa Nhân Viên & Username */}
       {editingEmp && (
         <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-slate-100">
+          <div className="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border border-slate-100">
             <h2 className="text-base font-extrabold text-slate-900 mb-1 flex items-center gap-2">
               <Pencil className="w-5 h-5 text-amber-600" />
-              Chỉnh Sửa Thông Tin & Email Nhân Viên
+              Chỉnh Sửa Thông Tin Nhân Viên
             </h2>
             <p className="text-xs text-slate-500 mb-4">
-              Cập nhật Tên Đăng Nhập, Email, Họ Tên và Vai trò cho nhân viên
+              Cập nhật Tên Đăng Nhập, Họ Tên, Số điện thoại và Vai trò cho nhân viên
             </p>
 
             <form onSubmit={handleSaveEditEmployee} className="space-y-4">
@@ -705,32 +669,17 @@ export const EmployeeListPage = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Tên Đăng Nhập (Tên Login) *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={editingEmp.username}
-                    onChange={(e) => setEditingEmp({ ...editingEmp, username: e.target.value })}
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono font-bold text-slate-800 focus:outline-none focus:border-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-700 mb-1">
-                    Email Cá Nhân
-                  </label>
-                  <input
-                    type="email"
-                    value={editingEmp.email || ''}
-                    onChange={(e) => setEditingEmp({ ...editingEmp, email: e.target.value })}
-                    placeholder="email@example.com"
-                    className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs text-slate-800 focus:outline-none focus:border-blue-500"
-                  />
-                </div>
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1">
+                  Tên Đăng Nhập (Tên Login) *
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={editingEmp.username}
+                  onChange={(e) => setEditingEmp({ ...editingEmp, username: e.target.value })}
+                  className="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-mono font-bold text-slate-800 focus:outline-none focus:border-blue-500"
+                />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
