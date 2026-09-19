@@ -95,12 +95,18 @@ export const usePosAuthStore = create((set, get) => ({
     const cleanPass = (password || '').trim();
 
     const staff = staffList.find(
-      (s) => s.username.toLowerCase() === cleanUser && (s.password === cleanPass || cleanPass === '123')
+      (s) => s.username.toLowerCase() === cleanUser
     );
 
     if (!staff) {
-      set({ isLoading: false, error: 'Tên đăng nhập hoặc mật khẩu không chính xác!' });
-      throw new Error('Tên đăng nhập hoặc mật khẩu không chính xác!');
+      set({ isLoading: false, error: 'Tên đăng nhập không tồn tại trong hệ thống!' });
+      throw new Error('Tên đăng nhập không tồn tại trong hệ thống!');
+    }
+
+    const expectedPassword = staff.password || '123';
+    if (cleanPass !== expectedPassword) {
+      set({ isLoading: false, error: 'Mật khẩu ca làm việc không chính xác!' });
+      throw new Error('Mật khẩu ca làm việc không chính xác!');
     }
 
     if (staff.status === 'LOCKED') {
@@ -108,12 +114,30 @@ export const usePosAuthStore = create((set, get) => ({
       throw new Error('Tài khoản này đã bị Admin khóa quyền bán hàng!');
     }
 
-    // Kiểm tra quyền: Chỉ ADMIN, OWNER, MANAGER, CASHIER mới được vào máy POS
-    const allowedRoles = ['ADMIN', 'OWNER', 'MANAGER', 'CASHIER'];
+    // Kiểm tra Ma Trận Phân Quyền (RBAC Matrix) do Admin thiết lập
     const staffRole = (staff.role || '').toUpperCase();
-    if (!allowedRoles.includes(staffRole)) {
-      set({ isLoading: false, error: 'Tài khoản không có quyền thu ngân tại máy POS này!' });
-      throw new Error('Tài khoản không có quyền thu ngân tại máy POS này!');
+    let hasPosPermission = true;
+
+    try {
+      const savedMatrix = localStorage.getItem('rbac_matrix');
+      if (savedMatrix) {
+        const matrix = JSON.parse(savedMatrix);
+        const posModule = matrix.find((m) => m.id === 'pos');
+        if (posModule && posModule.actions && posModule.actions[staffRole] !== undefined) {
+          hasPosPermission = !!posModule.actions[staffRole];
+        }
+      } else {
+        const allowedRoles = ['ADMIN', 'OWNER', 'MANAGER', 'CASHIER'];
+        hasPosPermission = allowedRoles.includes(staffRole);
+      }
+    } catch (e) {
+      const allowedRoles = ['ADMIN', 'OWNER', 'MANAGER', 'CASHIER'];
+      hasPosPermission = allowedRoles.includes(staffRole);
+    }
+
+    if (!hasPosPermission) {
+      set({ isLoading: false, error: `Vai trò (${staffRole}) đã bị Admin rút quyền truy cập Máy POS!` });
+      throw new Error(`Vai trò (${staffRole}) đã bị Admin rút quyền truy cập Máy POS!`);
     }
 
     const sessionData = {
