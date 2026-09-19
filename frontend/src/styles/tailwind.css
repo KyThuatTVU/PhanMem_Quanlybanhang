@@ -950,3 +950,12 @@
     border-right: 0;
   }
 }
+
+/* Scrollbar ẩn sạch sẽ cho thanh danh mục ngành hàng */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

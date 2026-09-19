@@ -652,7 +652,7 @@ export const PosPage = () => {
         </div>
 
         {/* Thanh Chọn Danh Mục Ngành Hàng (Category Filter Tabs) */}
-        <div className="w-full min-w-0 flex items-center gap-1.5 overflow-x-auto pb-1 px-0.5 scrollbar-thin shrink-0">
+        <div className="w-full min-w-0 flex items-center gap-1.5 overflow-x-auto pb-1 px-0.5 no-scrollbar shrink-0">
           <button
             onClick={() => setSelectedCategory('ALL')}
             className={`px-3 py-1.5 rounded-xl text-xs font-bold whitespace-nowrap transition-all flex items-center gap-1.5 ${
@@ -727,7 +727,7 @@ export const PosPage = () => {
                 return prodCat.includes(selCat) || selCat.includes(prodCat);
               })
               .map((prod) => (
-                <button
+                <div
                   key={prod.id}
                   onClick={() =>
                     addToCartFromScan({
@@ -742,35 +742,54 @@ export const PosPage = () => {
                       stock: prod.stock,
                     })
                   }
-                  className="p-2.5 bg-white hover:bg-blue-50/40 border border-slate-200 hover:border-blue-400 rounded-2xl text-left transition flex flex-col justify-between shadow-sm hover:shadow-md group"
+                  className="p-2.5 bg-white hover:bg-blue-50/30 border border-slate-200 hover:border-blue-400 rounded-2xl text-left transition flex flex-col justify-between shadow-sm hover:shadow-md group relative cursor-pointer active:scale-[0.99]"
                 >
-                  {/* Ảnh Thumbnail Sản Phẩm */}
-                  <div className="w-full h-24 sm:h-28 rounded-xl overflow-hidden bg-slate-50 mb-2 flex items-center justify-center border border-slate-100">
+                  {/* Ảnh Thumbnail Sản Phẩm - object-contain giữ 100% trọn vẹn sản phẩm không bị cắt xén */}
+                  <div className="w-full h-28 sm:h-32 rounded-xl overflow-hidden bg-slate-50/80 mb-2 flex items-center justify-center border border-slate-100 p-1.5 relative group">
                     {prod.image ? (
                       <img
                         src={prod.image}
                         alt={prod.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition duration-200"
+                        className="w-full h-full object-contain group-hover:scale-105 transition duration-200"
                       />
                     ) : (
                       <Package className="w-8 h-8 text-slate-300" />
                     )}
+
+                    {/* Badge Tồn Kho */}
+                    {prod.stock !== null && (
+                      <span className={`absolute top-1.5 left-1.5 text-[9.5px] font-black px-1.5 py-0.5 rounded-md backdrop-blur-sm border shadow-xs ${
+                        prod.stock > 10
+                          ? 'bg-emerald-500/90 text-white border-emerald-400'
+                          : prod.stock > 0
+                          ? 'bg-amber-500/90 text-white border-amber-400'
+                          : 'bg-rose-500/90 text-white border-rose-400'
+                      }`}>
+                        {prod.stock > 0 ? `Tồn: ${prod.stock}` : 'Hết hàng'}
+                      </span>
+                    )}
+
+                    {/* Nút THÊM VÀO GIỎ 3D Nổi Bật */}
+                    <div className="absolute bottom-1.5 right-1.5 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white px-2.5 py-1 rounded-xl shadow-md shadow-blue-500/30 group-hover:scale-105 transition active:scale-90 flex items-center gap-1 font-black text-xs">
+                      <Plus className="w-3.5 h-3.5 stroke-[3]" />
+                      <span>Thêm</span>
+                    </div>
                   </div>
 
-                  <div className="space-y-1 w-full">
-                    <p className="text-xs font-bold text-slate-900 line-clamp-2 leading-tight">
+                  <div className="space-y-1 w-full pt-0.5">
+                    <p className="text-xs font-bold text-slate-900 line-clamp-2 leading-tight min-h-[2rem]">
                       {prod.name}
                     </p>
-                    <div className="flex items-center justify-between pt-1">
+                    <div className="flex items-center justify-between pt-1 border-t border-slate-100">
                       <span className="text-xs font-black text-blue-600">
                         {prod.retail_price.toLocaleString('vi-VN')} đ
                       </span>
-                      <span className="text-[10px] font-semibold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded-md">
+                      <span className="text-[10px] font-bold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded-md">
                         {prod.base_unit_name || 'Lon'}
                       </span>
                     </div>
                   </div>
-                </button>
+                </div>
               ))}
           </div>
         </div>
