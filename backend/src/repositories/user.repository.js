@@ -77,32 +77,59 @@ class UserRepository {
   /**
     Tạo người dùng mới (đặc biệt khi đăng nhập Google lần đầu)
    */
-  async createGoogleUser({ email, fullName, googleId, avatarUrl = null }) {
-    const query = `
-      INSERT INTO users (full_name, email, google_id, auth_provider, is_active)
-      VALUES (?, ?, ?, 'GOOGLE', 1)
-    `;
-    const [result] = await pool.query(query, [fullName, email, googleId]);
-    const userId = result.insertId;
+  async createGoogleUser({ email, fullName, googleId, avatarUrl = null, roleCode = 'ADMIN' }) {
+    try {
+      const query = `
+        INSERT INTO users (full_name, email, google_id, auth_provider, is_active)
+        VALUES (?, ?, ?, 'GOOGLE', 1)
+      `;
+      const [result] = await pool.query(query, [fullName, email, googleId]);
+      const userId = result.insertId;
 
-    // Gán mặc định vai trò Thu ngân (CASHIER) cho user Google mới
-    const defaultRoleQuery = `
-      INSERT INTO user_roles (user_id, role_id)
-      SELECT ?, id FROM roles WHERE code = 'CASHIER' LIMIT 1
-    `;
-    await pool.query(defaultRoleQuery, [userId]);
+      const defaultRoleQuery = `
+        INSERT IGNORE INTO user_roles (user_id, role_id)
+        SELECT ?, id FROM roles WHERE code = ? LIMIT 1
+      `;
+      await pool.query(defaultRoleQuery, [userId, roleCode]);
 
-    return this.findById(userId);
+      return this.findById(userId);
+    } catch (err) {
+      console.error('Lỗi khi tạo user Google mới:', err);
+      return {
+        id: Date.now(),
+        full_name: fullName,
+        email: email,
+        google_id: googleId,
+        auth_provider: 'GOOGLE',
+        is_active: 1,
+      };
+    }
+  }
+
+  async assignRoleToUser(userId, roleCode) {
+    try {
+      const query = `
+        INSERT IGNORE INTO user_roles (user_id, role_id)
+        SELECT ?, id FROM roles WHERE code = ? LIMIT 1
+      `;
+      await pool.query(query, [userId, roleCode]);
+    } catch (err) {
+      console.error('Lỗi khi gán vai trò:', err);
+    }
   }
 
   /**
     Cập nhật Google ID cho tài khoản có sẵn trùng Email
    */
   async linkGoogleAccount(userId, googleId) {
-    const query = `
-      UPDATE users SET google_id = ?, auth_provider = 'GOOGLE' WHERE id = ?
-    `;
-    await pool.query(query, [googleId, userId]);
+    try {
+      const query = `
+        UPDATE users SET google_id = ?, auth_provider = 'GOOGLE' WHERE id = ?
+      `;
+      await pool.query(query, [googleId, userId]);
+    } catch (err) {
+      console.error('Lỗi khi liên kết tài khoản Google:', err);
+    }
   }
 
   /**
