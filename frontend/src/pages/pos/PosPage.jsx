@@ -552,7 +552,37 @@ export const PosPage = () => {
         paymentMethod: completedOrder.paymentMethod,
       });
 
-      setCompletedOrder((order) => ({ ...order, code: response.data.orderCode }));
+      setCompletedOrder((order) => ({ ...order, code: response.data?.orderCode || order.code }));
+
+      // Cập nhật trừ tồn kho local để đồng bộ tức thì trên giao diện
+      try {
+        const savedProducts = localStorage.getItem('product_catalog');
+        if (savedProducts) {
+          const parsed = JSON.parse(savedProducts);
+          const updatedCatalog = parsed.map((prod) => {
+            const soldItem = completedOrder.cart.find((c) => (c.productId || c.product_id) === prod.id);
+            if (soldItem && Number.isFinite(Number(prod.stock))) {
+              const baseQty = soldItem.quantity * (soldItem.conversionRate || 1);
+              return { ...prod, stock: Math.max(0, Number(prod.stock) - baseQty) };
+            }
+            return prod;
+          });
+          localStorage.setItem('product_catalog', JSON.stringify(updatedCatalog));
+        }
+
+        setProducts((prev) =>
+          prev.map((prod) => {
+            const soldItem = completedOrder.cart.find((c) => (c.productId || c.product_id) === prod.id);
+            if (soldItem && Number.isFinite(Number(prod.stock))) {
+              const baseQty = soldItem.quantity * (soldItem.conversionRate || 1);
+              return { ...prod, stock: Math.max(0, Number(prod.stock) - baseQty) };
+            }
+            return prod;
+          })
+        );
+      } catch (e) {
+        console.error('Không thể cập nhật tồn kho local:', e);
+      }
     } catch (error) {
       console.error('Không thể lưu hóa đơn:', error);
       alert('Không thể lưu hóa đơn. Vui lòng kiểm tra kết nối rồi thử lại. Giỏ hàng vẫn được giữ nguyên.');
