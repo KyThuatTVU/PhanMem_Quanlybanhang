@@ -22,6 +22,11 @@ export const PosLoginPage = () => {
   const [localError, setLocalError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  useEffect(() => {
+    setUsername('');
+    setPassword('');
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLocalError('');
@@ -84,8 +89,8 @@ export const PosLoginPage = () => {
             </div>
           )}
 
-          {/* Form Đăng Nhập Đơn Giản & Trực Quan */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          {/* Form Đăng Nhập Đơn Giản & Trực Quan (Ngăn trình duyệt tự động điền mật khẩu) */}
+          <form onSubmit={handleSubmit} autoComplete="off" className="space-y-4">
             <div>
               <label className="block text-xs font-extrabold text-slate-700 mb-1.5 uppercase tracking-wider">
                 Tài khoản đăng nhập
@@ -94,6 +99,8 @@ export const PosLoginPage = () => {
                 <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                 <input
                   type="text"
+                  name="pos_user_identifier"
+                  autoComplete="off"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
                   placeholder="Nhập tên đăng nhập nhân viên..."
@@ -111,6 +118,8 @@ export const PosLoginPage = () => {
                 <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5" />
                 <input
                   type="password"
+                  name="pos_user_secret"
+                  autoComplete="new-password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="Nhập mật khẩu ca làm..."
