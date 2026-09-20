@@ -117,11 +117,16 @@ export const LoginPage = () => {
             </p>
           </div>
 
-          {/* Thông báo Đăng xuất do Không hoạt động */}
+          {/* Thông báo Đăng xuất do Phiên hết hạn / Không hoạt động */}
           {isInactiveLogout && (
-            <div className="w-full flex items-center gap-2.5 p-3.5 bg-amber-50 border border-amber-200 text-amber-800 rounded-2xl text-xs font-semibold animate-fadeIn">
-              <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0" />
-              <span>Phiên đăng nhập đã tự động ngắt sau 3 phút không hoạt động để bảo mật dữ liệu.</span>
+            <div className="w-full flex items-center gap-3 p-4 bg-amber-50 border border-amber-200 text-amber-900 rounded-2xl text-xs font-bold shadow-sm animate-fadeIn text-left">
+              <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0" />
+              <div>
+                <p className="font-extrabold text-amber-900 text-xs">Phiên làm việc của bạn đã hết hạn!</p>
+                <p className="text-[11px] text-amber-700 font-medium mt-0.5">
+                  Hệ thống đã tự động ngắt kết nối sau 3 phút không hoạt động để bảo mật dữ liệu. Vui lòng đăng nhập lại!
+                </p>
+              </div>
             </div>
           )}
 
