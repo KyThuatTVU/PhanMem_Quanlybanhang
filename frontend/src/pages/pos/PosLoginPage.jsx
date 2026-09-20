@@ -62,14 +62,7 @@ export const PosLoginPage = () => {
       <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm pointer-events-none" />
 
       {/* Header nút quay lại Admin */}
-      <div className="w-full max-w-md flex justify-end pt-2 relative z-10">
-        <Link
-          to="/dashboard"
-          className="text-xs font-bold text-white/90 hover:text-white bg-white/20 hover:bg-white/30 backdrop-blur-md px-4 py-2 rounded-xl border border-white/30 transition shadow-sm"
-        >
-          ← Cổng Quản Trị (Admin)
-        </Link>
-      </div>
+   
 
       {/* Khung Đăng Nhập Gọn Gàng, Chuẩn Máy POS */}
       <div className="w-full max-w-md my-auto relative z-10">
