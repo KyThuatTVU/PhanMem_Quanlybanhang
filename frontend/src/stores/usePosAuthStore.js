@@ -104,18 +104,46 @@ export const usePosAuthStore = create((set, get) => ({
     // Kiểm tra nhân viên hợp lệ trong hệ thống
     const staffList = getAvailableStaff();
     const rawInput = (username || '').trim();
-    const cleanInput = rawInput.toLowerCase().replace(/^@+/, '');
+    const cleanInput = rawInput.toLowerCase().replace(/[@_\-\s]/g, '');
     const cleanPass = (password || '').trim();
 
-    const staff = staffList.find((s) => {
+    if (!rawInput) {
+      set({ isLoading: false, error: 'Vui lòng nhập tên đăng nhập nhân viên!' });
+      throw new Error('Vui lòng nhập tên đăng nhập nhân viên!');
+    }
+
+    // 1. TÌM KHỚP CHÍNH XÁC THEO TÊN ĐĂNG NHẬP
+    let staff = staffList.find((s) => {
       const sUser = (s.username || '').trim().toLowerCase();
-      const cleanSUser = sUser.replace(/^@+/, '');
-      return (
-        sUser === rawInput.toLowerCase() ||
-        cleanSUser === cleanInput ||
-        (s.email && s.email.trim().toLowerCase() === cleanInput)
-      );
+      return sUser === rawInput.toLowerCase();
     });
+
+    // 2. TÌM KHỚP THEO CHUỖI ĐÃ LÀM SẠCH KÝ TỰ ĐẶC BIỆT (@, _, -, khoảng trắng)
+    if (!staff) {
+      staff = staffList.find((s) => {
+        const sUserClean = (s.username || '').toLowerCase().replace(/[@_\-\s]/g, '');
+        return sUserClean === cleanInput;
+      });
+    }
+
+    // 3. TÌM KHỚP THEO EMAIL
+    if (!staff) {
+      staff = staffList.find((s) => {
+        return s.email && s.email.trim().toLowerCase().replace(/[@_\-\s]/g, '') === cleanInput;
+      });
+    }
+
+    // 4. TÌM KHỚP THÔNG MINH THEO TỪ KHÓA TÊN NHÂN VIÊN / USERNAME (ví dụ "@loan123", "loan123", "loan" -> Trần Thùy Loan)
+    if (!staff) {
+      const coreKeyword = cleanInput.replace(/\d+/g, ''); // "loan123" -> "loan"
+      if (coreKeyword && coreKeyword.length >= 2) {
+        staff = staffList.find((s) => {
+          const sUser = (s.username || '').toLowerCase();
+          const sName = (s.fullName || '').toLowerCase();
+          return sUser.includes(coreKeyword) || sName.includes(coreKeyword);
+        });
+      }
+    }
 
     if (!staff) {
       set({ isLoading: false, error: 'Tên đăng nhập hoặc Email không tồn tại trong hệ thống!' });
