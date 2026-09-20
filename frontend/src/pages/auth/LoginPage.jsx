@@ -15,9 +15,13 @@ export const LoginPage = () => {
   const [localError, setLocalError] = useState('');
   const isInactiveLogout = location.search.includes('reason=inactivity');
 
+  const isValidGoogleClientId = (id) => {
+    return typeof id === 'string' && id.includes('.apps.googleusercontent.com') && !id.includes('mock_');
+  };
+
   React.useEffect(() => {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-    if (!clientId) return;
+    if (!isValidGoogleClientId(clientId)) return;
 
     const script = document.createElement('script');
     script.src = 'https://accounts.google.com/gsi/client';
@@ -57,7 +61,7 @@ export const LoginPage = () => {
     setLocalError('');
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
-    if (clientId && window.google?.accounts?.id) {
+    if (isValidGoogleClientId(clientId) && window.google?.accounts?.id) {
       try {
         window.google.accounts.id.prompt();
       } catch (e) {
