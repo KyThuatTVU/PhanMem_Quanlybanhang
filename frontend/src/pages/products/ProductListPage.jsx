@@ -474,7 +474,8 @@ export const ProductListPage = () => {
             <thead>
               <tr>
                 <th className="w-14 text-center">Hình Ảnh</th>
-                <th>Sản Phẩm & Mã Vạch</th>
+                <th>Sản Phẩm</th>
+                <th>Mã Vạch (Barcode)</th>
                 <th>Ngành Hàng & ĐVT</th>
                 <th className="text-right">Giá Lẻ & Tồn Kho</th>
                 <th className="text-right w-24">Thao Tác</th>
@@ -504,19 +505,23 @@ export const ProductListPage = () => {
                     )}
                   </td>
 
-                  {/* Cột Tên Hàng Hóa & Mã Vạch (Ghi bên dưới) */}
+                  {/* Cột Tên Sản Phẩm & SKU */}
                   <td className="p-2.5">
                     <p className="font-extrabold text-slate-900 leading-snug text-xs">{p.name}</p>
-                    <div className="flex items-center gap-1.5 mt-1 flex-wrap">
-                      <span className="font-mono text-[10px] font-semibold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">
-                        SKU: {p.sku}
+                    <span className="inline-block font-mono text-[10px] font-semibold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded mt-1">
+                      SKU: {p.sku}
+                    </span>
+                  </td>
+
+                  {/* Cột Mã Vạch Riêng Biệt */}
+                  <td className="p-2.5">
+                    {p.baseBarcode ? (
+                      <span className="font-mono text-[11px] text-blue-700 font-bold inline-flex items-center gap-1 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-100">
+                        <Barcode className="w-3.5 h-3.5 text-blue-600 shrink-0" /> {p.baseBarcode}
                       </span>
-                      {p.baseBarcode && (
-                        <span className="font-mono text-[10px] text-blue-700 font-bold flex items-center gap-1 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100">
-                          <Barcode className="w-3 h-3 text-blue-600" /> {p.baseBarcode}
-                        </span>
-                      )}
-                    </div>
+                    ) : (
+                      <span className="text-[10px] text-slate-400 italic">Chưa tạo mã</span>
+                    )}
                   </td>
 
                   {/* Cột Ngành Hàng & Đơn Vị Cơ Sở Gộp Gọn */}
