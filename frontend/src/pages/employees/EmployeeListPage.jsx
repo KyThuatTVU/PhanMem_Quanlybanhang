@@ -93,13 +93,13 @@ export const EmployeeListPage = () => {
     },
   ];
 
-  // Hàm tự động chuẩn hóa & dọn dẹp dữ liệu nhân viên (khắc phục lệch Tên/Username cũ)
+  // Hàm tự động chuẩn hóa & dọn dẹp dữ liệu nhân viên (đảm bảo đủ 5 tài khoản nhân viên chuẩn)
   const sanitizeEmployeeCatalog = (list) => {
     if (!Array.isArray(list) || list.length === 0) return defaultEmployeesList;
 
     // Loại bỏ chủ quán cũ mâu thuẫn 'owner_ankhang' hoặc 'Nguyễn Văn Chủ Quán'
     let cleaned = list.filter((emp) => {
-      if (emp.username === 'owner_ankhang' || emp.fullName === 'Nguyễn Văn Chủ Quán') {
+      if (emp.username === 'owner_ankhang' || (emp.fullName === 'Nguyễn Văn Chủ Quán' && emp.username !== 'hoangthuclinh')) {
         return false;
       }
       return true;
@@ -108,33 +108,45 @@ export const EmployeeListPage = () => {
     cleaned = cleaned.map((emp) => {
       let cleanUser = (emp.username || '').replace(/@/g, '').trim().toLowerCase();
       let cleanName = emp.fullName || '';
+      let phone = emp.phone || '';
 
       if (cleanName.includes('Hoàng Thục Linh') || emp.role === 'OWNER') {
         cleanName = 'Hoàng Thục Linh';
-        if (!cleanUser || cleanUser === 'warehouse_tuan' || cleanUser === 'owner_ankhang') {
-          cleanUser = 'hoangthuclinh';
-        }
-      }
-      if (cleanName.includes('Trần Thùy Loan') || cleanUser.includes('loan')) {
+        cleanUser = 'hoangthuclinh';
+        if (!phone || phone === '—') phone = '0933 777 888';
+      } else if (cleanName.includes('Trần Thùy Loan') || cleanUser.includes('loan')) {
+        if (!phone || phone === '—') phone = '0903 334 455';
         cleanUser = 'warehouse_loan';
-      }
-      if (cleanName.includes('Trần Thị Quản Lý')) {
-        cleanName = 'Trần Thị Lan';
-      }
-      if (cleanName.includes('Lê Văn Thu Ngân 1')) {
-        cleanName = 'Lê Văn Minh';
+      } else if (cleanName.includes('Trần Thị Lan') || cleanUser.includes('lan')) {
+        if (!phone || phone === '—') phone = '0908 333 444';
+        cleanUser = 'manager_lan';
+      } else if (cleanName.includes('Lê Văn Minh') || cleanUser.includes('minh')) {
+        if (!phone || phone === '—') phone = '0912 555 666';
+        cleanUser = 'cashier_minh';
+      } else if (cleanName.includes('Trần Thị Thu Ngân') || cleanUser.includes('thungan01')) {
+        if (!phone || phone === '—') phone = '0902 223 344';
+        cleanUser = 'thungan01';
       }
 
       return {
         ...emp,
         fullName: cleanName,
         username: cleanUser || `user_${emp.id}`,
+        phone: phone || '',
       };
     });
 
-    if (!cleaned.some((e) => e.fullName === 'Hoàng Thục Linh' || e.role === 'OWNER')) {
-      cleaned.unshift(defaultEmployeesList[0]);
-    }
+    // Đảm bảo đủ 5 tài khoản nhân viên chuẩn hóa của cửa hàng
+    defaultEmployeesList.forEach((def) => {
+      const exists = cleaned.some(
+        (c) =>
+          (c.username && c.username.toLowerCase() === def.username.toLowerCase()) ||
+          c.fullName === def.fullName
+      );
+      if (!exists) {
+        cleaned.push(def);
+      }
+    });
 
     return cleaned;
   };
@@ -181,8 +193,9 @@ export const EmployeeListPage = () => {
               let role = savedEmp?.role || (u.role_codes && u.role_codes.split(',')[0]) || u.role || 'CASHIER';
 
               if (isOwner) {
-                fullName = 'Hoàng Thục Linh';
+                fullName = savedEmp?.fullName || 'Hoàng Thục Linh';
                 username = 'hoangthuclinh';
+                if (!phone || phone === '—') phone = '0933 777 888';
               }
 
               return {
@@ -191,7 +204,7 @@ export const EmployeeListPage = () => {
                 username: (username || `emp_${u.id}`).replace(/@/g, ''),
                 role,
                 password: savedEmp?.password || '123',
-                phone,
+                phone: phone || '',
                 status: u.is_active === 0 ? 'LOCKED' : 'ACTIVE',
                 salesThisMonth: savedEmp?.salesThisMonth || 0,
                 commission: savedEmp?.commission || 0,
@@ -199,7 +212,7 @@ export const EmployeeListPage = () => {
               };
             });
 
-            // Giữ lại các nhân viên vừa chỉnh sửa hoặc vừa tạo local mà CSDL chưa kịp đồng bộ
+            // Giữ lại các nhân viên từ savedCatalog nếu DB chưa có
             const dbUsernames = new Set(mapped.map((m) => m.username.toLowerCase()));
             const localOnly = savedCatalog.filter((s) => s.username && !dbUsernames.has(s.username.toLowerCase()));
 
