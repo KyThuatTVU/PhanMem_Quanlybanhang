@@ -84,32 +84,6 @@ export const PosLoginPage = () => {
             </div>
           )}
 
-          {/* Thông báo nếu đã có ca bán hàng đang mở */}
-          {isPosAuthenticated && cashier && (
-            <div className="p-4 bg-emerald-50/90 border border-emerald-200/90 rounded-2xl text-xs space-y-2.5 text-left animate-fadeIn shadow-sm">
-              <div className="flex items-center justify-between">
-                <span className="font-extrabold text-emerald-950">Ca bán hàng đang mở:</span>
-                <span className="px-2.5 py-0.5 bg-emerald-100 text-emerald-800 rounded-full font-black text-[11px]">
-                  @{cashier.username || 'cashier'}
-                </span>
-              </div>
-              <p className="text-slate-800 font-extrabold">
-                {cashier.fullName} ({cashier.roleName || cashier.role})
-              </p>
-              <button
-                type="button"
-                onClick={() => navigate('/pos')}
-                className="w-full py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-black text-xs rounded-xl shadow-md transition flex items-center justify-center gap-1.5 cursor-pointer"
-              >
-                <span>Vào ca bán hàng của {cashier.fullName}</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </button>
-              <div className="text-[10.5px] text-slate-500 text-center font-bold pt-1.5 border-t border-emerald-200/60">
-                Hoặc nhập thông tin bên dưới để đăng nhập ca nhân viên khác:
-              </div>
-            </div>
-          )}
-
           {/* Form Đăng Nhập Đơn Giản & Trực Quan */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
