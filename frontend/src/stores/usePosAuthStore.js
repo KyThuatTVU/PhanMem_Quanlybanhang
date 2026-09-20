@@ -103,13 +103,13 @@ export const usePosAuthStore = create((set, get) => ({
 
     // Kiểm tra nhân viên hợp lệ trong hệ thống
     const staffList = getAvailableStaff();
-    const cleanUser = (username || '').trim().toLowerCase();
+    const cleanUser = (username || '').replace(/@/g, '').trim().toLowerCase();
     const cleanPass = (password || '').trim();
 
     const staff = staffList.find(
       (s) =>
-        s.username.toLowerCase() === cleanUser ||
-        (s.email && s.email.toLowerCase() === cleanUser)
+        (s.username || '').replace(/@/g, '').trim().toLowerCase() === cleanUser ||
+        (s.email && s.email.replace(/@/g, '').trim().toLowerCase() === cleanUser)
     );
 
     if (!staff) {
