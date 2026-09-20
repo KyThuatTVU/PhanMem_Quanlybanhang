@@ -193,12 +193,21 @@ export const AdminLayout = () => {
               to="/profile"
               className="flex items-center gap-3 text-right hover:opacity-90 transition hidden sm:flex bg-slate-50 hover:bg-slate-100 p-2 pr-4 rounded-2xl border border-slate-200 shadow-sm"
             >
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-blue-600 text-white font-black text-sm flex items-center justify-center shadow-md shadow-sky-500/20">
-                {user?.fullName ? user.fullName.charAt(0).toUpperCase() : 'U'}
-              </div>
+              {user?.avatarUrl || user?.picture ? (
+                <img
+                  src={user.avatarUrl || user.picture}
+                  alt={user?.fullName || user?.name || 'Avatar'}
+                  referrerPolicy="no-referrer"
+                  className="w-10 h-10 rounded-xl object-cover border border-slate-200 shadow-md shadow-sky-500/10 shrink-0"
+                />
+              ) : (
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-sky-500 to-blue-600 text-white font-black text-sm flex items-center justify-center shadow-md shadow-sky-500/20 shrink-0">
+                  {(user?.fullName || user?.name) ? (user.fullName || user.name).charAt(0).toUpperCase() : 'U'}
+                </div>
+              )}
               <div>
                 <p className="text-sm font-black text-slate-800 leading-tight">
-                  {user?.fullName || 'Nguyễn Văn Chủ Quán'}
+                  {user?.fullName || user?.name || 'Hoàng Thục Linh'}
                 </p>
                 <span className="inline-block px-2 py-0.5 bg-sky-100 text-sky-700 font-extrabold text-[10px] rounded-md tracking-wider mt-0.5">
                   {user?.roles?.[0] || 'ADMIN'}

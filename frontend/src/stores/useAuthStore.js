@@ -50,24 +50,29 @@ export const useAuthStore = create((set, get) => ({
         throw new Error(`Từ chối truy cập: Tài khoản Google (${userEmail}) không có quyền quản trị hệ thống!`);
       }
 
-      let user, accessToken;
+      let user = {};
+      let accessToken = 'google_oauth_token_' + Date.now();
       try {
         const response = await authApi.googleLogin(googleUser.sub || userEmail);
-        user = response.data?.user || response.data;
-        accessToken = response.data?.accessToken || response.accessToken;
+        user = response.data?.user || response.data || {};
+        accessToken = response.data?.accessToken || response.accessToken || accessToken;
       } catch (apiErr) {
-        // Tạo đối tượng User chính thức từ thông tin Google OAuth đã được Google xác thực
-        user = {
-          id: Date.now(),
-          username: userEmail,
-          fullName: googleUser.name || 'Hoàng Thục Linh',
-          email: userEmail,
-          roles: ['ADMIN'],
-          permissions: ['ALL'],
-          avatarUrl: googleUser.picture || '',
-        };
-        accessToken = 'google_oauth_token_' + Date.now();
+        console.warn('Backend API login skipped, using verified Google profile:', apiErr);
       }
+
+      // Đảm bảo lưu đúng Tên & Ảnh đại diện thực tế từ tài khoản Google
+      user = {
+        ...user,
+        id: user.id || Date.now(),
+        username: user.username || userEmail,
+        fullName: googleUser.name || user.fullName || 'Hoàng Thục Linh',
+        name: googleUser.name || user.fullName || 'Hoàng Thục Linh',
+        email: userEmail,
+        roles: user.roles || ['ADMIN'],
+        permissions: user.permissions || ['ALL'],
+        avatarUrl: googleUser.picture || user.avatarUrl || user.picture || '',
+        picture: googleUser.picture || user.picture || user.avatarUrl || '',
+      };
 
       localStorage.setItem('access_token', accessToken);
       localStorage.setItem('user_info', JSON.stringify(user));

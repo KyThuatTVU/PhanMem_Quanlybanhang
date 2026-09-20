@@ -66,22 +66,31 @@ export const ProfilePage = () => {
         {/* 2. Cột trái: Thông tin cá nhân & Thẻ nhân viên */}
         <div className="space-y-6">
           <div className="soft-card p-6 text-center space-y-4">
-            <div className="w-20 h-20 rounded-2xl bg-blue-600 text-white font-black text-2xl mx-auto flex items-center justify-center shadow-glass-3d">
-              {user?.fullName ? user.fullName.charAt(0).toUpperCase() : 'U'}
-            </div>
+            {user?.avatarUrl || user?.picture ? (
+              <img
+                src={user.avatarUrl || user.picture}
+                alt={user?.fullName || user?.name}
+                referrerPolicy="no-referrer"
+                className="w-20 h-20 rounded-2xl object-cover border-2 border-slate-200 shadow-md mx-auto"
+              />
+            ) : (
+              <div className="w-20 h-20 rounded-2xl bg-blue-600 text-white font-black text-2xl mx-auto flex items-center justify-center shadow-glass-3d">
+                {(user?.fullName || user?.name) ? (user.fullName || user.name).charAt(0).toUpperCase() : 'U'}
+              </div>
+            )}
             <div>
               <h2 className="text-base font-extrabold text-slate-900">
-                {user?.fullName || 'Nhân viên bán hàng'}
+                {user?.fullName || user?.name || 'Hoàng Thục Linh'}
               </h2>
               <span className="inline-block px-2.5 py-1 bg-blue-50 text-blue-700 font-bold text-xs rounded-lg border border-blue-200 mt-1">
-                {user?.roles?.[0] || 'CASHIER'}
+                {user?.roles?.[0] || 'ADMIN'}
               </span>
             </div>
 
             <div className="border-t border-slate-100 pt-4 text-left space-y-3 text-xs">
               <div className="flex items-center gap-2.5 text-slate-600">
                 <Mail className="w-4 h-4 text-slate-400" />
-                <span className="font-medium truncate">{user?.email || 'admin@ankhang.pos'}</span>
+                <span className="font-medium truncate">{user?.email || 'hoangthuclinh64@gmail.com'}</span>
               </div>
               <div className="flex items-center gap-2.5 text-slate-600">
                 <Phone className="w-4 h-4 text-slate-400" />
