@@ -29,106 +29,166 @@ export const EmployeeListPage = () => {
   
   const [newPasswordInput, setNewPasswordInput] = useState('');
 
-  // 1. Danh sách Nhân viên
+  // 1. Danh sách Nhân viên Mặc Định Chuẩn Đơn Vị
+  const defaultEmployeesList = [
+    {
+      id: 1,
+      fullName: 'Hoàng Thục Linh',
+      username: 'hoangthuclinh',
+      role: 'OWNER',
+      password: '123',
+      phone: '0933 777 888',
+      status: 'ACTIVE',
+      salesThisMonth: 120500000,
+      commission: 0,
+      createdAt: '01/01/2026',
+    },
+    {
+      id: 2,
+      fullName: 'Trần Thị Lan',
+      username: 'manager_lan',
+      role: 'MANAGER',
+      password: '123',
+      phone: '0908 333 444',
+      status: 'ACTIVE',
+      salesThisMonth: 45000000,
+      commission: 900000,
+      createdAt: '15/01/2026',
+    },
+    {
+      id: 3,
+      fullName: 'Lê Văn Minh',
+      username: 'cashier_minh',
+      role: 'CASHIER',
+      password: '123',
+      phone: '0912 555 666',
+      status: 'ACTIVE',
+      salesThisMonth: 28400000,
+      commission: 568000,
+      createdAt: '01/02/2026',
+    },
+    {
+      id: 4,
+      fullName: 'Trần Thùy Loan',
+      username: 'warehouse_loan',
+      role: 'WAREHOUSE',
+      password: '123',
+      phone: '0903 334 455',
+      status: 'ACTIVE',
+      salesThisMonth: 0,
+      commission: 0,
+      createdAt: '10/02/2026',
+    },
+    {
+      id: 5,
+      fullName: 'Trần Thị Thu Ngân',
+      username: 'thungan01',
+      role: 'CASHIER',
+      password: '123',
+      phone: '0902 223 344',
+      status: 'ACTIVE',
+      salesThisMonth: 18500000,
+      commission: 370000,
+      createdAt: '15/02/2026',
+    },
+  ];
+
+  // Hàm tự động chuẩn hóa & dọn dẹp dữ liệu nhân viên (khắc phục lệch Tên/Username cũ)
+  const sanitizeEmployeeCatalog = (list) => {
+    if (!Array.isArray(list) || list.length === 0) return defaultEmployeesList;
+
+    // Loại bỏ chủ quán cũ mâu thuẫn 'owner_ankhang' hoặc 'Nguyễn Văn Chủ Quán'
+    let cleaned = list.filter((emp) => {
+      if (emp.username === 'owner_ankhang' || emp.fullName === 'Nguyễn Văn Chủ Quán') {
+        return false;
+      }
+      return true;
+    });
+
+    cleaned = cleaned.map((emp) => {
+      let cleanUser = (emp.username || '').replace(/@/g, '').trim().toLowerCase();
+      let cleanName = emp.fullName || '';
+
+      if (cleanName.includes('Hoàng Thục Linh') || emp.role === 'OWNER') {
+        cleanName = 'Hoàng Thục Linh';
+        if (!cleanUser || cleanUser === 'warehouse_tuan' || cleanUser === 'owner_ankhang') {
+          cleanUser = 'hoangthuclinh';
+        }
+      }
+      if (cleanName.includes('Trần Thùy Loan') || cleanUser.includes('loan')) {
+        cleanUser = 'warehouse_loan';
+      }
+      if (cleanName.includes('Trần Thị Quản Lý')) {
+        cleanName = 'Trần Thị Lan';
+      }
+      if (cleanName.includes('Lê Văn Thu Ngân 1')) {
+        cleanName = 'Lê Văn Minh';
+      }
+
+      return {
+        ...emp,
+        fullName: cleanName,
+        username: cleanUser || `user_${emp.id}`,
+      };
+    });
+
+    if (!cleaned.some((e) => e.fullName === 'Hoàng Thục Linh' || e.role === 'OWNER')) {
+      cleaned.unshift(defaultEmployeesList[0]);
+    }
+
+    return cleaned;
+  };
+
   const [employees, setEmployees] = useState(() => {
     try {
       const saved = localStorage.getItem('employee_catalog');
-      if (saved) return JSON.parse(saved);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return sanitizeEmployeeCatalog(parsed);
+      }
     } catch {}
-    return [
-      {
-        id: 1,
-        fullName: 'Nguyễn Văn Chủ Quán',
-        username: 'owner_ankhang',
-        role: 'OWNER',
-        password: '123',
-        phone: '0903 111 222',
-        status: 'ACTIVE',
-        salesThisMonth: 120500000,
-        commission: 0,
-        createdAt: '01/01/2026',
-      },
-      {
-        id: 2,
-        fullName: 'Trần Thị Quản Lý',
-        username: 'manager_lan',
-        role: 'MANAGER',
-        password: '123',
-        phone: '0908 333 444',
-        status: 'ACTIVE',
-        salesThisMonth: 45000000,
-        commission: 900000,
-        createdAt: '15/01/2026',
-      },
-      {
-        id: 3,
-        fullName: 'Lê Văn Thu Ngân 1',
-        username: 'cashier_minh',
-        role: 'CASHIER',
-        password: '123',
-        phone: '0912 555 666',
-        status: 'ACTIVE',
-        salesThisMonth: 28400000,
-        commission: 568000,
-        createdAt: '01/02/2026',
-      },
-      {
-        id: 4,
-        fullName: 'Phạm Văn Thủ Kho',
-        username: 'warehouse_tuan',
-        role: 'WAREHOUSE',
-        password: '123',
-        phone: '0933 777 888',
-        status: 'ACTIVE',
-        salesThisMonth: 0,
-        commission: 0,
-        createdAt: '10/02/2026',
-      },
-    ];
+    return defaultEmployeesList;
   });
 
-  // Tải danh sách Nhân viên trực tiếp từ MySQL CSDL và hợp nhất với catalog local
+  // Tải danh sách Nhân viên trực tiếp từ MySQL CSDL và hợp nhất chuẩn hóa
   useEffect(() => {
     const fetchDbEmployees = async () => {
       try {
-        const savedCatalog = (() => {
-          try {
-            const saved = localStorage.getItem('employee_catalog');
-            return saved ? JSON.parse(saved) : [];
-          } catch {
-            return [];
-          }
-        })();
-
         const res = await employeeApi.getEmployees();
         if (res && (res.rows || Array.isArray(res))) {
           const rows = res.rows || res;
           if (rows.length > 0) {
             const mapped = rows.map((u) => {
-              const savedEmp = savedCatalog.find(
-                (s) => s.username?.toLowerCase() === u.username?.toLowerCase() || String(s.id) === String(u.id)
-              );
+              const uUser = (u.username || '').replace(/@/g, '').trim().toLowerCase();
+              const isOwner = u.full_name?.includes('Hoàng Thục Linh') || (u.role_codes && u.role_codes.includes('ADMIN'));
+
+              let fullName = u.full_name || u.fullName || '';
+              let username = uUser;
+
+              if (isOwner) {
+                fullName = 'Hoàng Thục Linh';
+                username = 'hoangthuclinh';
+              } else if (fullName.includes('Trần Thùy Loan') || username.includes('loan')) {
+                username = 'warehouse_loan';
+              }
+
               return {
                 id: u.id,
-                fullName: u.full_name || u.fullName || savedEmp?.fullName || '',
-                username: u.username || savedEmp?.username || '',
-                role: (u.role_codes && u.role_codes.split(',')[0]) || u.role || savedEmp?.role || 'CASHIER',
-                password: savedEmp?.password || '123',
-                phone: u.phone || savedEmp?.phone || '',
+                fullName,
+                username: username || `emp_${u.id}`,
+                role: (u.role_codes && u.role_codes.split(',')[0]) || u.role || 'CASHIER',
+                password: '123',
+                phone: u.phone || '',
                 status: u.is_active === 0 ? 'LOCKED' : 'ACTIVE',
-                salesThisMonth: savedEmp?.salesThisMonth || 0,
-                commission: savedEmp?.commission || 0,
-                createdAt: u.created_at ? new Date(u.created_at).toLocaleDateString('vi-VN') : (savedEmp?.createdAt || '01/01/2026'),
+                salesThisMonth: 0,
+                commission: 0,
+                createdAt: u.created_at ? new Date(u.created_at).toLocaleDateString('vi-VN') : '01/01/2026',
               };
             });
 
-            // Giữ lại các nhân viên vừa tạo local chưa kịp có trên DB nếu có
-            const dbUsernames = new Set(mapped.map((m) => m.username.toLowerCase()));
-            const localOnly = savedCatalog.filter((s) => s.username && !dbUsernames.has(s.username.toLowerCase()));
-            
-            const combined = [...mapped, ...localOnly];
-            setEmployees(combined);
-            localStorage.setItem('employee_catalog', JSON.stringify(combined));
+            const sanitizedCombined = sanitizeEmployeeCatalog(mapped);
+            setEmployees(sanitizedCombined);
+            localStorage.setItem('employee_catalog', JSON.stringify(sanitizedCombined));
           }
         }
       } catch (e) {
@@ -449,7 +509,7 @@ export const EmployeeListPage = () => {
                         <td className="p-4 font-extrabold text-slate-900 whitespace-nowrap">{emp.fullName}</td>
                         <td className="p-4 font-mono text-blue-700 font-bold whitespace-nowrap">
                           <span className="bg-blue-50 px-2.5 py-1 rounded-md border border-blue-100">
-                            @{emp.username}
+                            @{emp.username.replace(/^@+/, '')}
                           </span>
                         </td>
                         <td className="p-4 whitespace-nowrap">

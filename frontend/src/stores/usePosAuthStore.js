@@ -4,8 +4,8 @@ import { create } from 'zustand';
 const defaultStaffList = [
   {
     id: 1,
-    fullName: 'Nguyễn Văn Chủ Quán',
-    username: 'owner_ankhang',
+    fullName: 'Hoàng Thục Linh',
+    username: 'hoangthuclinh',
     password: '123',
     role: 'ADMIN',
     roleName: 'Chủ Cửa Hàng (Admin)',
@@ -13,7 +13,7 @@ const defaultStaffList = [
   },
   {
     id: 2,
-    fullName: 'Trần Thị Quản Lý',
+    fullName: 'Trần Thị Lan',
     username: 'manager_lan',
     password: '123',
     role: 'MANAGER',
@@ -22,7 +22,7 @@ const defaultStaffList = [
   },
   {
     id: 3,
-    fullName: 'Lê Văn Thu Ngân 1',
+    fullName: 'Lê Văn Minh',
     username: 'cashier_minh',
     password: '123',
     role: 'CASHIER',
@@ -31,8 +31,17 @@ const defaultStaffList = [
   },
   {
     id: 4,
-    fullName: 'Hoàng Thị Thu Ngân 2',
-    username: 'cashier_hoa',
+    fullName: 'Trần Thùy Loan',
+    username: 'warehouse_loan',
+    password: '123',
+    role: 'WAREHOUSE',
+    roleName: 'Thủ Kho',
+    status: 'ACTIVE',
+  },
+  {
+    id: 5,
+    fullName: 'Trần Thị Thu Ngân',
+    username: 'thungan01',
     password: '123',
     role: 'CASHIER',
     roleName: 'Thu Ngân Ca Chiều',
@@ -49,7 +58,7 @@ export const getAvailableStaff = () => {
         return parsed.map((e) => ({
           id: e.id,
           fullName: e.fullName,
-          username: e.username,
+          username: (e.username || '').replace(/@/g, '').trim().toLowerCase(),
           email: e.email || '',
           password: e.password || '123',
           role: e.role || (e.roleCodes && e.roleCodes[0]) || 'CASHIER',
@@ -58,6 +67,8 @@ export const getAvailableStaff = () => {
               ? 'Chủ Quán / Admin'
               : e.role === 'MANAGER'
               ? 'Quản Lý'
+              : e.role === 'WAREHOUSE'
+              ? 'Thủ Kho'
               : 'Thu Ngân',
           status: e.status || 'ACTIVE',
         }));
