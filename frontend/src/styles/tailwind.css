@@ -763,35 +763,11 @@
   .product-table {
     table-layout: auto;
     width: 100%;
-    min-width: max-content;
   }
 
-  .product-table td:nth-child(2),
-  .product-table td:nth-child(5),
-  .product-table td:nth-child(7),
-  .product-table td:nth-child(8),
-  .product-table td:nth-child(9),
-  .product-table td:nth-child(10) {
-    white-space: nowrap;
-  }
-
-  .product-table td:nth-child(3),
-  .product-table td:nth-child(4),
-  .product-table td:nth-child(6) {
-    overflow-wrap: anywhere;
-  }
-
-  .product-table th:nth-child(10),
-  .product-table td:nth-child(10) {
-    white-space: nowrap;
-  }
-
-  .product-table td:nth-child(10) > div {
-    gap: 0.25rem;
-  }
-
-  .product-table td:nth-child(10) .btn-3d-icon {
-    padding: 0.45rem;
+  .product-table th,
+  .product-table td {
+    vertical-align: middle;
   }
 
   /* Header bảng 3D Crystal xanh thiên thanh cao cấp, phân chia cột rõ nét */

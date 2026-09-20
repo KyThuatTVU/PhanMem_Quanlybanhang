@@ -470,23 +470,23 @@ export const ProductListPage = () => {
       {/* 3. Bảng Sản Phẩm Kèm Hình Ảnh Thực Tế Dạng Lưới 3D Thủy Tinh */}
       <div className="hidden sm:block table-glass-container">
         <div className="overflow-x-auto">
-          <table className="product-table table-3d-glass text-left text-xs whitespace-nowrap">
+          <table className="product-table table-3d-glass text-left text-xs">
             <thead>
               <tr>
-                <th className="w-16 text-center">Hình Ảnh</th>
-                <th>Sản Phẩm, Mã Vạch & Giá Lẻ</th>
+                <th className="w-14 text-center">Hình Ảnh</th>
+                <th>Sản Phẩm & Mã Vạch</th>
                 <th>Ngành Hàng & ĐVT</th>
-                <th className="text-right">Tồn Kho</th>
-                <th className="text-right">Thao Tác</th>
+                <th className="text-right">Giá Lẻ & Tồn Kho</th>
+                <th className="text-right w-24">Thao Tác</th>
               </tr>
             </thead>
             <tbody>
               {filteredProducts.map((p) => (
                 <tr key={p.id}>
                   {/* Cột Hình Ảnh Sản Phẩm */}
-                  <td className="p-3 text-center">
+                  <td className="p-2.5 text-center">
                     {p.image ? (
-                      <div className="w-11 h-11 rounded-xl border border-slate-200 overflow-hidden bg-white shadow-sm mx-auto flex items-center justify-center p-0.5">
+                      <div className="w-10 h-10 rounded-xl border border-slate-200 overflow-hidden bg-white shadow-sm mx-auto flex items-center justify-center p-0.5">
                         <img
                           src={p.image}
                           alt={p.name}
@@ -498,49 +498,45 @@ export const ProductListPage = () => {
                         />
                       </div>
                     ) : (
-                      <div className="w-11 h-11 rounded-xl bg-slate-100 border border-slate-200 mx-auto flex items-center justify-center text-slate-400">
-                        <ImageIcon className="w-5 h-5" />
+                      <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200 mx-auto flex items-center justify-center text-slate-400">
+                        <ImageIcon className="w-4 h-4" />
                       </div>
                     )}
                   </td>
 
-                  {/* Cột Tên Hàng Hóa, Mã Vạch & Giá Lẻ Gộp Gọn */}
-                  <td className="p-3">
-                    <p className="font-extrabold text-slate-900 leading-tight text-xs">{p.name}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="font-mono text-[10px] font-bold text-slate-500">SKU: {p.sku}</span>
+                  {/* Cột Tên Hàng Hóa & Mã Vạch (Ghi bên dưới) */}
+                  <td className="p-2.5">
+                    <p className="font-extrabold text-slate-900 leading-snug text-xs">{p.name}</p>
+                    <div className="flex items-center gap-1.5 mt-1 flex-wrap">
+                      <span className="font-mono text-[10px] font-semibold text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded">
+                        SKU: {p.sku}
+                      </span>
                       {p.baseBarcode && (
-                        <span className="font-mono text-[10px] text-blue-700 font-bold flex items-center gap-0.5 bg-blue-50 px-1.5 py-0.2 rounded border border-blue-100">
+                        <span className="font-mono text-[10px] text-blue-700 font-bold flex items-center gap-1 bg-blue-50 px-1.5 py-0.5 rounded border border-blue-100">
                           <Barcode className="w-3 h-3 text-blue-600" /> {p.baseBarcode}
                         </span>
                       )}
-                      <span className="font-extrabold text-blue-700 text-[10.5px] bg-blue-50/80 px-2 py-0.2 rounded border border-blue-100">
-                        {p.retailPrice.toLocaleString('vi-VN')} đ
-                      </span>
                     </div>
                   </td>
 
                   {/* Cột Ngành Hàng & Đơn Vị Cơ Sở Gộp Gọn */}
-                  <td className="p-3">
+                  <td className="p-2.5">
                     <p className="font-bold text-slate-800 text-xs">{p.category}</p>
-                    <span className="inline-block px-2 py-0.5 bg-sky-50 text-sky-700 font-bold text-[10px] rounded-md border border-sky-200 mt-1">
+                    <span className="inline-block px-1.5 py-0.5 bg-sky-50 text-sky-700 font-bold text-[10px] rounded border border-sky-200 mt-1">
                       ĐVT: {p.baseUnit}
                     </span>
                   </td>
 
-                  {/* Tồn Kho */}
-                  <td className="p-3 text-right">
-                    <span
-                      className={`font-black text-xs ${
-                        p.stock <= p.minStock ? 'text-amber-600' : 'text-slate-800'
-                      }`}
-                    >
-                      {p.stock} {p.baseUnit}
-                    </span>
+                  {/* Cột Giá Bán Lẻ & Tồn Kho (Ghi bên dưới) */}
+                  <td className="p-2.5 text-right">
+                    <p className="font-black text-emerald-700 text-xs">{p.retailPrice.toLocaleString('vi-VN')} đ</p>
+                    <p className={`font-extrabold text-[10.5px] mt-0.5 ${p.stock <= p.minStock ? 'text-amber-600' : 'text-slate-600'}`}>
+                      Tồn: {p.stock} {p.baseUnit}
+                    </p>
                   </td>
 
                   {/* Thao Tác */}
-                  <td className="p-3 text-right">
+                  <td className="p-2.5 text-right">
                     <div className="flex items-center justify-end gap-1">
                       <button
                         onClick={() => {
