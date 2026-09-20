@@ -3,6 +3,7 @@ import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import { useAuthStore } from '../stores/useAuthStore';
 import { useStoreSettings } from '../stores/useStoreSettings';
 import apiClient from '../api/apiClient';
+import { useInactivityLogout } from '../hooks/useInactivityLogout';
 import {
   LayoutDashboard,
   ShoppingCart,
@@ -28,7 +29,9 @@ import {
   Cpu,
   User,
   Sparkles,
-  WalletCards
+  WalletCards,
+  ShieldAlert,
+  Clock
 } from 'lucide-react';
 import brandLogo from '../assets/images/logo.png';
 
@@ -37,6 +40,7 @@ export const AdminLayout = () => {
   const navigate = useNavigate();
   const { user, logout } = useAuthStore();
   const { settings, setSettings } = useStoreSettings();
+  const { showWarning, remainingSeconds, resetTimer } = useInactivityLogout(180000, 30000);
   const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
     return typeof window !== 'undefined' ? window.innerWidth >= 768 : true;
   });
@@ -321,6 +325,43 @@ export const AdminLayout = () => {
           <Outlet />
         </main>
       </div>
+
+      {/* Modal Cảnh Báo Tự Động Đăng Xuất Bảo Mật 3 Phút */}
+      {showWarning && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-4 animate-fadeIn">
+          <div className="bg-white rounded-3xl max-w-md w-full p-6 shadow-2xl border border-slate-100 text-center space-y-4">
+            <div className="w-16 h-16 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mx-auto shadow-inner">
+              <ShieldAlert className="w-8 h-8 animate-pulse" />
+            </div>
+            
+            <div className="space-y-1">
+              <h3 className="text-lg font-black text-slate-900">
+                Phiên Đăng Nhập Sắp Hết Hạn!
+              </h3>
+              <p className="text-xs text-slate-500 leading-relaxed">
+                Bạn không có thao tác nào trong 2.5 phút vừa qua. Để đảm bảo an toàn bảo mật cho cửa hàng, hệ thống sẽ tự động đăng xuất sau:
+              </p>
+            </div>
+
+            <div className="py-3 bg-amber-50 rounded-2xl border border-amber-200/70 inline-flex items-center justify-center gap-2 w-full">
+              <Clock className="w-5 h-5 text-amber-600 animate-spin" style={{ animationDuration: '3s' }} />
+              <span className="font-mono text-2xl font-black text-amber-700">
+                {remainingSeconds}s
+              </span>
+            </div>
+
+            <div className="flex items-center justify-center gap-3 pt-2">
+              <button
+                type="button"
+                onClick={resetTimer}
+                className="w-full py-3.5 px-5 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-extrabold text-xs sm:text-sm rounded-2xl shadow-lg shadow-sky-500/25 transition active:scale-95 cursor-pointer"
+              >
+                Tôi Vẫn Đang Làm Việc (Ở Lại)
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

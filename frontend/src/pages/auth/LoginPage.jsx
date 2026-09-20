@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../stores/useAuthStore';
 import { useStoreSettings } from '../../stores/useStoreSettings';
-import { AlertCircle, ShieldCheck } from 'lucide-react';
+import { AlertCircle, ShieldCheck, ShieldAlert } from 'lucide-react';
 import brandLogo from '../../assets/images/logo.png';
 import storeBanner from '../../assets/images/nenlogin.png';
 
 export const LoginPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { loginWithGoogle, isLoading, error } = useAuthStore();
   const { settings } = useStoreSettings();
 
   const [localError, setLocalError] = useState('');
+  const isInactiveLogout = location.search.includes('reason=inactivity');
 
   // Xử lý Đăng nhập qua Google
   const handleGoogleLogin = async () => {
@@ -46,6 +48,14 @@ export const LoginPage = () => {
               Hệ thống Quản Trị Cửa Hàng & Bán Hàng POS Chuyên Nghiệp
             </p>
           </div>
+
+          {/* Thông báo Đăng xuất do Không hoạt động */}
+          {isInactiveLogout && (
+            <div className="w-full flex items-center gap-2.5 p-3.5 bg-amber-50 border border-amber-200 text-amber-800 rounded-2xl text-xs font-semibold animate-fadeIn">
+              <ShieldAlert className="w-4 h-4 text-amber-600 shrink-0" />
+              <span>Phiên đăng nhập đã tự động ngắt sau 3 phút không hoạt động để bảo mật dữ liệu.</span>
+            </div>
+          )}
 
           {/* Thông báo Lỗi nếu có */}
           {(localError || error) && (
