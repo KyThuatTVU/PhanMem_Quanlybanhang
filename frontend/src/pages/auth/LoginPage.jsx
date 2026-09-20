@@ -17,26 +17,39 @@ export const LoginPage = () => {
 
   React.useEffect(() => {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-    if (clientId && window.google?.accounts?.id) {
-      try {
-        window.google.accounts.id.initialize({
-          client_id: clientId,
-          callback: async (response) => {
-            if (response.credential) {
-              setLocalError('');
-              try {
-                await loginWithGoogle(response.credential);
-                navigate('/dashboard');
-              } catch (err) {
-                setLocalError(err.message || 'Đăng nhập Google thất bại');
+    if (!clientId) return;
+
+    const script = document.createElement('script');
+    script.src = 'https://accounts.google.com/gsi/client';
+    script.async = true;
+    script.defer = true;
+    script.onload = () => {
+      if (window.google?.accounts?.id) {
+        try {
+          window.google.accounts.id.initialize({
+            client_id: clientId,
+            callback: async (response) => {
+              if (response.credential) {
+                setLocalError('');
+                try {
+                  await loginWithGoogle(response.credential);
+                  navigate('/dashboard');
+                } catch (err) {
+                  setLocalError(err.message || 'Đăng nhập Google thất bại');
+                }
               }
-            }
-          },
-        });
-      } catch (err) {
-        console.warn('Không thể khởi tạo Google OAuth SDK:', err);
+            },
+          });
+        } catch (err) {
+          console.warn('Không thể khởi tạo Google OAuth SDK:', err);
+        }
       }
-    }
+    };
+    document.head.appendChild(script);
+
+    return () => {
+      if (script.parentNode) script.parentNode.removeChild(script);
+    };
   }, [loginWithGoogle, navigate]);
 
   // Xử lý Đăng nhập qua Google
