@@ -154,39 +154,57 @@ export const EmployeeListPage = () => {
   useEffect(() => {
     const fetchDbEmployees = async () => {
       try {
+        const savedCatalog = (() => {
+          try {
+            const saved = localStorage.getItem('employee_catalog');
+            return saved ? JSON.parse(saved) : [];
+          } catch {
+            return [];
+          }
+        })();
+
         const res = await employeeApi.getEmployees();
         if (res && (res.rows || Array.isArray(res))) {
           const rows = res.rows || res;
           if (rows.length > 0) {
             const mapped = rows.map((u) => {
               const uUser = (u.username || '').replace(/@/g, '').trim().toLowerCase();
+              const savedEmp = savedCatalog.find(
+                (s) => (s.username && s.username.toLowerCase() === uUser) || String(s.id) === String(u.id)
+              );
+
               const isOwner = u.full_name?.includes('Hoàng Thục Linh') || (u.role_codes && u.role_codes.includes('ADMIN'));
 
-              let fullName = u.full_name || u.fullName || '';
-              let username = uUser;
+              let fullName = savedEmp?.fullName || u.full_name || u.fullName || '';
+              let username = savedEmp?.username || uUser;
+              let phone = savedEmp?.phone || u.phone || '';
+              let role = savedEmp?.role || (u.role_codes && u.role_codes.split(',')[0]) || u.role || 'CASHIER';
 
               if (isOwner) {
                 fullName = 'Hoàng Thục Linh';
                 username = 'hoangthuclinh';
-              } else if (fullName.includes('Trần Thùy Loan') || username.includes('loan')) {
-                username = 'warehouse_loan';
               }
 
               return {
                 id: u.id,
                 fullName,
-                username: username || `emp_${u.id}`,
-                role: (u.role_codes && u.role_codes.split(',')[0]) || u.role || 'CASHIER',
-                password: '123',
-                phone: u.phone || '',
+                username: (username || `emp_${u.id}`).replace(/@/g, ''),
+                role,
+                password: savedEmp?.password || '123',
+                phone,
                 status: u.is_active === 0 ? 'LOCKED' : 'ACTIVE',
-                salesThisMonth: 0,
-                commission: 0,
-                createdAt: u.created_at ? new Date(u.created_at).toLocaleDateString('vi-VN') : '01/01/2026',
+                salesThisMonth: savedEmp?.salesThisMonth || 0,
+                commission: savedEmp?.commission || 0,
+                createdAt: u.created_at ? new Date(u.created_at).toLocaleDateString('vi-VN') : (savedEmp?.createdAt || '01/01/2026'),
               };
             });
 
-            const sanitizedCombined = sanitizeEmployeeCatalog(mapped);
+            // Giữ lại các nhân viên vừa chỉnh sửa hoặc vừa tạo local mà CSDL chưa kịp đồng bộ
+            const dbUsernames = new Set(mapped.map((m) => m.username.toLowerCase()));
+            const localOnly = savedCatalog.filter((s) => s.username && !dbUsernames.has(s.username.toLowerCase()));
+
+            const combined = [...mapped, ...localOnly];
+            const sanitizedCombined = sanitizeEmployeeCatalog(combined);
             setEmployees(sanitizedCombined);
             localStorage.setItem('employee_catalog', JSON.stringify(sanitizedCombined));
           }
@@ -264,7 +282,7 @@ export const EmployeeListPage = () => {
 
   const handleCreateEmployee = async (e) => {
     e.preventDefault();
-    const cleanUser = formData.username.trim().toLowerCase();
+    const cleanUser = formData.username.trim().toLowerCase().replace(/@/g, '');
 
     if (employees.some((emp) => emp.username.toLowerCase() === cleanUser)) {
       alert('Tên đăng nhập (username) này đã tồn tại! Vui lòng chọn tên khác.');
@@ -325,7 +343,7 @@ export const EmployeeListPage = () => {
     e.preventDefault();
     if (!editingEmp) return;
 
-    const cleanUser = editingEmp.username.trim().toLowerCase();
+    const cleanUser = editingEmp.username.trim().toLowerCase().replace(/@/g, '');
 
     // Kiểm tra trùng username với nhân viên khác
     const isDuplicateUser = employees.some(
@@ -337,29 +355,37 @@ export const EmployeeListPage = () => {
       return;
     }
 
-    setEmployees(
-      employees.map((emp) =>
-        emp.id === editingEmp.id
-          ? {
-              ...emp,
-              fullName: editingEmp.fullName.trim(),
-              username: cleanUser,
-              phone: (editingEmp.phone || '').trim(),
-              role: editingEmp.role,
-            }
-          : emp
-      )
+    const updatedList = employees.map((emp) =>
+      emp.id === editingEmp.id
+        ? {
+            ...emp,
+            fullName: editingEmp.fullName.trim(),
+            username: cleanUser,
+            phone: (editingEmp.phone || '').trim(),
+            role: editingEmp.role,
+          }
+        : emp
     );
+
+    setEmployees(updatedList);
+    try {
+      localStorage.setItem('employee_catalog', JSON.stringify(updatedList));
+    } catch {}
+
     const targetEmp = { ...editingEmp };
     setEditingEmp(null);
 
     // Cập nhật vào MySQL CSDL qua API backend
-    await employeeApi.updateEmployee(targetEmp.id, {
-      username: cleanUser,
-      fullName: targetEmp.fullName.trim(),
-      phone: (targetEmp.phone || '').trim(),
-      roleCodes: [targetEmp.role],
-    });
+    try {
+      await employeeApi.updateEmployee(targetEmp.id, {
+        username: cleanUser,
+        fullName: targetEmp.fullName.trim(),
+        phone: (targetEmp.phone || '').trim(),
+        roleCodes: [targetEmp.role],
+      });
+    } catch (err) {
+      console.warn('Lỗi cập nhật CSDL:', err.message);
+    }
   };
 
   // Đặt lại mật khẩu
