@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const GET_CACHE_TTL = 30 * 1000;
+// Cache GET trong 5 phút để giảm thiểu gọi HTTP thừa khi chuyển trang liên tục
+const GET_CACHE_TTL = 5 * 60 * 1000;
 const getCache = new Map();
 const pendingGets = new Map();
 
@@ -20,8 +21,21 @@ const getCacheKey = (url, config = {}) => {
   return query ? `${url}?${query}` : url;
 };
 
-const clearGetCache = () => {
-  getCache.clear();
+// Xóa cache thông minh theo module (ví dụ POST /orders chỉ xóa cache của /orders, không xóa /settings hay /categories)
+const clearGetCache = (targetUrl = '') => {
+  if (!targetUrl) {
+    getCache.clear();
+    return;
+  }
+  const cleanUrl = String(targetUrl).split('?')[0];
+  const parts = cleanUrl.split('/').filter(Boolean);
+  const modulePrefix = parts.length > 0 ? `/${parts[0]}` : cleanUrl;
+
+  for (const key of getCache.keys()) {
+    if (key.startsWith(modulePrefix) || key.startsWith(cleanUrl)) {
+      getCache.delete(key);
+    }
+  }
 };
 
 const apiClient = axios.create({
@@ -35,14 +49,17 @@ const apiClient = axios.create({
 const rawGet = apiClient.get.bind(apiClient);
 const rawRequest = apiClient.request.bind(apiClient);
 
-// Cache ngắn hạn và gộp request GET trùng nhau khi chuyển trang nhanh.
+// Cache thông minh và gộp request GET trùng nhau khi chuyển trang nhanh.
 apiClient.get = (url, config = {}) => {
   const cacheKey = getCacheKey(url, config);
   const now = Date.now();
   const cached = getCache.get(cacheKey);
 
-  if (cached && cached.expiresAt > now) return Promise.resolve(cached.data);
-  if (pendingGets.has(cacheKey)) return pendingGets.get(cacheKey);
+  // Cho phép bỏ qua cache nếu truyền { skipCache: true }
+  if (!config.skipCache) {
+    if (cached && cached.expiresAt > now) return Promise.resolve(cached.data);
+    if (pendingGets.has(cacheKey)) return pendingGets.get(cacheKey);
+  }
 
   const request = rawGet(url, config)
     .then((data) => {
@@ -57,14 +74,16 @@ apiClient.get = (url, config = {}) => {
 
 ['post', 'put', 'patch', 'delete'].forEach((method) => {
   const original = apiClient[method].bind(apiClient);
-  apiClient[method] = (...args) => {
-    clearGetCache();
-    return original(...args);
+  apiClient[method] = (url, ...args) => {
+    clearGetCache(url);
+    return original(url, ...args);
   };
 });
 
 apiClient.request = (config) => {
-  if ((config?.method || 'get').toLowerCase() !== 'get') clearGetCache();
+  if ((config?.method || 'get').toLowerCase() !== 'get') {
+    clearGetCache(config?.url);
+  }
   return rawRequest(config);
 };
 
