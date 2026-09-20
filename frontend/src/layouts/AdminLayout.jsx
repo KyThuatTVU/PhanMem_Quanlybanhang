@@ -76,7 +76,7 @@ export const AdminLayout = () => {
       items: [
         {
           title: 'Bán Hàng POS',
-          path: '/pos',
+          path: '/pos/login',
           icon: ShoppingCart,
           highlight: true,
           openNewTab: true,

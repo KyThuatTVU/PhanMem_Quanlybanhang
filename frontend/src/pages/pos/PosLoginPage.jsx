@@ -14,19 +14,13 @@ import {
 
 export const PosLoginPage = () => {
   const navigate = useNavigate();
-  const { loginPos, isPosAuthenticated, error: authError } = usePosAuthStore();
+  const { loginPos, isPosAuthenticated, cashier, error: authError } = usePosAuthStore();
   const { settings } = useStoreSettings();
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [localError, setLocalError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  useEffect(() => {
-    if (isPosAuthenticated) {
-      navigate('/pos', { replace: true });
-    }
-  }, [isPosAuthenticated, navigate]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -87,6 +81,32 @@ export const PosLoginPage = () => {
             <div className="p-3.5 bg-rose-50 border border-rose-200 text-rose-600 rounded-2xl text-xs font-medium flex items-center gap-2 animate-fadeIn">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{localError || authError}</span>
+            </div>
+          )}
+
+          {/* Thông báo nếu đã có ca bán hàng đang mở */}
+          {isPosAuthenticated && cashier && (
+            <div className="p-4 bg-emerald-50/90 border border-emerald-200/90 rounded-2xl text-xs space-y-2.5 text-left animate-fadeIn shadow-sm">
+              <div className="flex items-center justify-between">
+                <span className="font-extrabold text-emerald-950">Ca bán hàng đang mở:</span>
+                <span className="px-2.5 py-0.5 bg-emerald-100 text-emerald-800 rounded-full font-black text-[11px]">
+                  @{cashier.username || 'cashier'}
+                </span>
+              </div>
+              <p className="text-slate-800 font-extrabold">
+                {cashier.fullName} ({cashier.roleName || cashier.role})
+              </p>
+              <button
+                type="button"
+                onClick={() => navigate('/pos')}
+                className="w-full py-2.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-black text-xs rounded-xl shadow-md transition flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <span>Vào ca bán hàng của {cashier.fullName}</span>
+                <ArrowRight className="w-3.5 h-3.5" />
+              </button>
+              <div className="text-[10.5px] text-slate-500 text-center font-bold pt-1.5 border-t border-emerald-200/60">
+                Hoặc nhập thông tin bên dưới để đăng nhập ca nhân viên khác:
+              </div>
             </div>
           )}
 
