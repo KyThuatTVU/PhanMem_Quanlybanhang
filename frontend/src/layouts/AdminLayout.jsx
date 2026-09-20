@@ -221,11 +221,11 @@ export const AdminLayout = () => {
       <div className="flex pt-20 min-h-screen">
         <aside
           className={`fixed left-0 top-20 bottom-0 sidebar-glass transition-all duration-300 flex flex-col justify-between z-20 ${
-            isSidebarOpen ? 'w-64' : 'w-20'
+            isSidebarOpen ? 'w-[270px]' : 'w-20'
           } ${isSidebarOpen ? 'sidebar-open' : ''}`}
         >
           {/* Danh sách các nhóm chức năng */}
-          <div className="p-3 overflow-y-auto flex-1 space-y-3">
+          <div className="p-3 overflow-y-auto flex-1 space-y-3 custom-sidebar-scrollbar">
             {menuSections.map((section, sIdx) => (
               <div key={sIdx} className="space-y-1">
                 {/* Tiêu đề phân mục */}
@@ -254,7 +254,7 @@ export const AdminLayout = () => {
                         onClick={() => {
                           if (window.innerWidth < 768) setIsSidebarOpen(false);
                         }}
-                        className={`flex items-center gap-3 px-3 py-2 rounded-xl text-xs font-bold transition-all duration-150 ${
+                        className={`flex items-center gap-2.5 px-3 py-2 rounded-xl text-[12.5px] font-bold transition-all duration-150 ${
                           isActive
                             ? 'bg-gradient-to-r from-sky-500 to-blue-600 text-white shadow-md shadow-sky-500/25'
                             : item.highlight
@@ -272,8 +272,8 @@ export const AdminLayout = () => {
                           }`}
                         />
                         {isSidebarOpen && (
-                          <div className="flex items-center justify-between flex-1 min-w-0">
-                            <span className="truncate">{item.title}</span>
+                          <div className="flex items-center justify-between flex-1 min-w-0 gap-1.5">
+                            <span className="truncate leading-tight" title={item.title}>{item.title}</span>
                             {item.openNewTab && (
                               <span className="text-[9px] bg-emerald-600 text-white px-1.5 py-0.5 rounded-md font-black shrink-0 tracking-tight shadow-sm">
                                 TAB MỚI ↗
@@ -318,7 +318,7 @@ export const AdminLayout = () => {
             location.pathname === '/pos' ? 'p-2 sm:p-3 pb-2' : 'p-3 sm:p-6 lg:p-8'
           } ${
             isSidebarOpen
-              ? 'md:ml-64 md:w-[calc(100%-16rem)] md:max-w-[calc(100%-16rem)]'
+              ? 'md:ml-[270px] md:w-[calc(100%-270px)] md:max-w-[calc(100%-270px)]'
               : 'md:ml-20 md:w-[calc(100%-5rem)] md:max-w-[calc(100%-5rem)]'
           }`}
         >

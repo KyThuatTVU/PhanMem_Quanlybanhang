@@ -718,6 +718,24 @@
       1px 0 3px 0 rgba(0, 0, 0, 0.02);
   }
 
+  .custom-sidebar-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e1 transparent;
+  }
+  .custom-sidebar-scrollbar::-webkit-scrollbar {
+    width: 5px;
+  }
+  .custom-sidebar-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-sidebar-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 999px;
+  }
+  .custom-sidebar-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #94a3b8;
+  }
+
   /* 7. Khung Lưới Bảng Nhập Liệu 3D Độc Lập, Tách Rời Nền Trang Web (Không Bị Pha Trộn Nền) */
   .table-glass-container,
   .soft-card:has(table) {
