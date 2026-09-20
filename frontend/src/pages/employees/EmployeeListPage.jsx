@@ -87,27 +87,52 @@ export const EmployeeListPage = () => {
     ];
   });
 
-  // Tải danh sách Nhân viên trực tiếp từ MySQL CSDL
+  // Tải danh sách Nhân viên trực tiếp từ MySQL CSDL và hợp nhất với catalog local
   useEffect(() => {
     const fetchDbEmployees = async () => {
-      const res = await employeeApi.getEmployees();
-      if (res && (res.rows || Array.isArray(res))) {
-        const rows = res.rows || res;
-        if (rows.length > 0) {
-          const mapped = rows.map((u) => ({
-            id: u.id,
-            fullName: u.full_name || u.fullName || '',
-            username: u.username || '',
-            role: (u.role_codes && u.role_codes.split(',')[0]) || u.role || 'CASHIER',
-            password: '123',
-            phone: u.phone || '',
-            status: u.is_active === 0 ? 'LOCKED' : 'ACTIVE',
-            salesThisMonth: 0,
-            commission: 0,
-            createdAt: u.created_at ? new Date(u.created_at).toLocaleDateString('vi-VN') : '01/01/2026',
-          }));
-          setEmployees(mapped);
+      try {
+        const savedCatalog = (() => {
+          try {
+            const saved = localStorage.getItem('employee_catalog');
+            return saved ? JSON.parse(saved) : [];
+          } catch {
+            return [];
+          }
+        })();
+
+        const res = await employeeApi.getEmployees();
+        if (res && (res.rows || Array.isArray(res))) {
+          const rows = res.rows || res;
+          if (rows.length > 0) {
+            const mapped = rows.map((u) => {
+              const savedEmp = savedCatalog.find(
+                (s) => s.username?.toLowerCase() === u.username?.toLowerCase() || String(s.id) === String(u.id)
+              );
+              return {
+                id: u.id,
+                fullName: u.full_name || u.fullName || savedEmp?.fullName || '',
+                username: u.username || savedEmp?.username || '',
+                role: (u.role_codes && u.role_codes.split(',')[0]) || u.role || savedEmp?.role || 'CASHIER',
+                password: savedEmp?.password || '123',
+                phone: u.phone || savedEmp?.phone || '',
+                status: u.is_active === 0 ? 'LOCKED' : 'ACTIVE',
+                salesThisMonth: savedEmp?.salesThisMonth || 0,
+                commission: savedEmp?.commission || 0,
+                createdAt: u.created_at ? new Date(u.created_at).toLocaleDateString('vi-VN') : (savedEmp?.createdAt || '01/01/2026'),
+              };
+            });
+
+            // Giữ lại các nhân viên vừa tạo local chưa kịp có trên DB nếu có
+            const dbUsernames = new Set(mapped.map((m) => m.username.toLowerCase()));
+            const localOnly = savedCatalog.filter((s) => s.username && !dbUsernames.has(s.username.toLowerCase()));
+            
+            const combined = [...mapped, ...localOnly];
+            setEmployees(combined);
+            localStorage.setItem('employee_catalog', JSON.stringify(combined));
+          }
         }
+      } catch (e) {
+        console.error('Không thể tải nhân viên từ CSDL:', e);
       }
     };
     fetchDbEmployees();
@@ -186,29 +211,45 @@ export const EmployeeListPage = () => {
       return;
     }
 
+    const inputPassword = formData.password.trim() || '123';
+    let realId = Date.now();
+
+    try {
+      // Lưu vào MySQL CSDL qua API backend trước
+      const res = await employeeApi.createEmployee({
+        username: cleanUser,
+        password: inputPassword,
+        fullName: formData.fullName.trim(),
+        phone: formData.phone.trim(),
+        roleCodes: [formData.role],
+      });
+      if (res && res.data && res.data.id) {
+        realId = res.data.id;
+      }
+    } catch (err) {
+      console.warn('Lỗi lưu nhân viên vào MySQL backend:', err.message);
+    }
+
     const newEmp = {
-      id: Date.now(),
+      id: realId,
       fullName: formData.fullName.trim(),
       username: cleanUser,
       phone: formData.phone.trim(),
       role: formData.role,
-      password: formData.password.trim() || '123',
+      password: inputPassword,
       status: 'ACTIVE',
       salesThisMonth: 0,
       commission: 0,
       createdAt: new Date().toLocaleDateString('vi-VN'),
     };
-    setEmployees([newEmp, ...employees]);
-    setIsAddModalOpen(false);
 
-    // Lưu vào MySQL CSDL qua API backend
-    await employeeApi.createEmployee({
-      username: cleanUser,
-      password: formData.password.trim() || '123',
-      fullName: formData.fullName.trim(),
-      phone: formData.phone.trim(),
-      roleCodes: [formData.role],
-    });
+    const updatedList = [newEmp, ...employees];
+    setEmployees(updatedList);
+    try {
+      localStorage.setItem('employee_catalog', JSON.stringify(updatedList));
+    } catch {}
+
+    setIsAddModalOpen(false);
 
     setFormData({
       fullName: '',
