@@ -109,13 +109,11 @@ apiClient.interceptors.response.use(
     if (statusCode === 401) {
       const currentPath = window.location.pathname;
       if (currentPath.startsWith('/pos')) {
-        // Cổng POS độc lập: Nếu lỗi 401 thì chỉ xóa session POS và về /pos/login
-        localStorage.removeItem('pos_cashier_session');
-        if (currentPath !== '/pos/login') {
-          window.location.href = '/pos/login';
-        }
+        // Màn hình POS hoạt động độc lập & hỗ trợ offline catalog:
+        // Lỗi 401 từ backend API (do thiếu JWT token của Admin) sẽ KHÔNG xóa session ca làm việc POS hay tự động đá nhân viên ra ngoài.
+        console.warn('POS API 401 Unauthorized - Bỏ qua redirect để duy trì ca bán hàng POS.');
       } else {
-        // Cổng Admin độc lập: Xóa token Admin và về /login
+        // Cổng Admin độc lập: Xóa token Admin và về /login khi token hết hạn
         localStorage.removeItem('access_token');
         localStorage.removeItem('user_info');
         if (currentPath !== '/login') {
