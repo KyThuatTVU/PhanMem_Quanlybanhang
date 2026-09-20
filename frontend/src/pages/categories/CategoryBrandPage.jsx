@@ -276,17 +276,15 @@ export const CategoryBrandPage = () => {
 
           {/* Action Thêm mới */}
           <Button
+            variant="3d-solid"
+            icon={Plus}
             onClick={handleOpenAddModal}
-            className="flex items-center gap-1.5 bg-sky-600 hover:bg-sky-700 text-white font-bold text-xs px-4 py-2.5 rounded-xl shadow-md transition transform active:scale-95"
           >
-            <Plus className="w-4 h-4" />
-            <span>
-              {activeTab === 'CATEGORIES'
-                ? '+ Thêm Ngành Hàng'
-                : activeTab === 'BRANDS'
-                ? '+ Thêm Thương Hiệu'
-                : '+ Thêm Đơn Vị'}
-            </span>
+            {activeTab === 'CATEGORIES'
+              ? 'Thêm Ngành Hàng'
+              : activeTab === 'BRANDS'
+              ? 'Thêm Thương Hiệu'
+              : 'Thêm Đơn Vị'}
           </Button>
         </div>
       </div>

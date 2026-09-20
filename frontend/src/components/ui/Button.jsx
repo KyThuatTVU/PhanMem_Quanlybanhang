@@ -30,7 +30,7 @@ export const Button = ({
   return (
     <button
       disabled={disabled || isLoading}
-      className={`${sizeClasses[size]} ${variantClasses[variant]} ${className}`}
+      className={`${sizeClasses[size]} ${variantClasses[variant]} whitespace-nowrap shrink-0 ${className}`}
       {...props}
     >
       {isLoading ? (
