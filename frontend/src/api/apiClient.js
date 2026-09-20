@@ -107,10 +107,20 @@ apiClient.interceptors.response.use(
     const statusCode = error.response?.status;
 
     if (statusCode === 401) {
-      localStorage.removeItem('access_token');
-      localStorage.removeItem('user_info');
-      if (window.location.pathname !== '/login') {
-        window.location.href = '/login';
+      const currentPath = window.location.pathname;
+      if (currentPath.startsWith('/pos')) {
+        // Cổng POS độc lập: Nếu lỗi 401 thì chỉ xóa session POS và về /pos/login
+        localStorage.removeItem('pos_cashier_session');
+        if (currentPath !== '/pos/login') {
+          window.location.href = '/pos/login';
+        }
+      } else {
+        // Cổng Admin độc lập: Xóa token Admin và về /login
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user_info');
+        if (currentPath !== '/login') {
+          window.location.href = '/login';
+        }
       }
     }
 

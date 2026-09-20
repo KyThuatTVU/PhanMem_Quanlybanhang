@@ -30,6 +30,9 @@ export const useInactivityLogout = (timeoutMs = 180000, warningMs = 30000) => {
   }, []);
 
   const handleLogoutDueToInactivity = useCallback(() => {
+    // Không đăng xuất nếu đang ở giao diện máy POS
+    if (window.location.pathname.startsWith('/pos')) return;
+
     clearAllTimers();
     setShowWarning(false);
     logout();
@@ -37,7 +40,7 @@ export const useInactivityLogout = (timeoutMs = 180000, warningMs = 30000) => {
   }, [clearAllTimers, logout, navigate]);
 
   const resetTimer = useCallback(() => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated || window.location.pathname.startsWith('/pos')) return;
 
     clearAllTimers();
     setShowWarning(false);
@@ -71,7 +74,7 @@ export const useInactivityLogout = (timeoutMs = 180000, warningMs = 30000) => {
   // Lắng nghe sự kiện tương tác chủ động (mousedown, keydown, touchstart, click)
   // Loại bỏ mousemove để tránh nhiễu do di chuyển chuột vô tình
   useEffect(() => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated || window.location.pathname.startsWith('/pos')) return;
 
     const events = ['mousedown', 'keydown', 'touchstart', 'click'];
 
@@ -88,8 +91,9 @@ export const useInactivityLogout = (timeoutMs = 180000, warningMs = 30000) => {
     // Khởi chạy đếm ngược lần đầu
     resetTimer();
 
-    // Lắng nghe sự kiện đăng xuất giữa các Tab
+    // Lắng nghe sự kiện đăng xuất giữa các Tab Admin
     const handleStorageChange = (e) => {
+      if (window.location.pathname.startsWith('/pos')) return;
       if (e.key === 'access_token' && !e.newValue) {
         clearAllTimers();
         logout();
