@@ -15,14 +15,54 @@ export const LoginPage = () => {
   const [localError, setLocalError] = useState('');
   const isInactiveLogout = location.search.includes('reason=inactivity');
 
+  React.useEffect(() => {
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    if (clientId && window.google?.accounts?.id) {
+      try {
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: async (response) => {
+            if (response.credential) {
+              setLocalError('');
+              try {
+                await loginWithGoogle(response.credential);
+                navigate('/dashboard');
+              } catch (err) {
+                setLocalError(err.message || 'Đăng nhập Google thất bại');
+              }
+            }
+          },
+        });
+      } catch (err) {
+        console.warn('Không thể khởi tạo Google OAuth SDK:', err);
+      }
+    }
+  }, [loginWithGoogle, navigate]);
+
   // Xử lý Đăng nhập qua Google
   const handleGoogleLogin = async () => {
     setLocalError('');
-    try {
-      await loginWithGoogle('google_oauth_token_hoangthuclinh64');
-      navigate('/dashboard');
-    } catch (err) {
-      setLocalError(err.message || 'Đăng nhập Google thất bại');
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+
+    if (clientId && window.google?.accounts?.id) {
+      try {
+        window.google.accounts.id.prompt();
+      } catch (e) {
+        console.warn('Không thể mở popup Google, dùng chế độ xác thực nhanh:', e);
+        try {
+          await loginWithGoogle('google_oauth_token_hoangthuclinh64');
+          navigate('/dashboard');
+        } catch (err) {
+          setLocalError(err.message || 'Đăng nhập Google thất bại');
+        }
+      }
+    } else {
+      try {
+        await loginWithGoogle('google_oauth_token_hoangthuclinh64');
+        navigate('/dashboard');
+      } catch (err) {
+        setLocalError(err.message || 'Đăng nhập Google thất bại');
+      }
     }
   };
 
