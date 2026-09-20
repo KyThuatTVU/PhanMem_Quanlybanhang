@@ -234,7 +234,7 @@ export const EmployeeListPage = () => {
   // 2. Ma trận phân quyền RBAC
   const defaultMatrix = [
     { id: 'dashboard', name: 'Tổng Quan & Thống Kê (Dashboard)', actions: { OWNER: true, MANAGER: true, CASHIER: false, WAREHOUSE: false } },
-    { id: 'pos', name: 'Bán Hàng Máy POS (Bán Lẻ)', actions: { OWNER: true, MANAGER: true, CASHIER: true, WAREHOUSE: false } },
+    { id: 'pos', name: 'Bán Hàng Máy POS (Bán Lẻ)', actions: { OWNER: true, MANAGER: true, CASHIER: true, WAREHOUSE: true } },
     { id: 'products', name: 'Danh Mục Sản Phẩm & Giá Bán', actions: { OWNER: true, MANAGER: true, CASHIER: false, WAREHOUSE: false } },
     { id: 'inventory', name: 'Kho Hàng, Thẻ Kho & Kiểm Kê', actions: { OWNER: true, MANAGER: true, CASHIER: false, WAREHOUSE: true } },
     { id: 'purchases', name: 'Nhập Hàng (PO) & Nhà Cung Cấp', actions: { OWNER: true, MANAGER: true, CASHIER: false, WAREHOUSE: true } },

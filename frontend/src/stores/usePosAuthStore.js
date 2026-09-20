@@ -170,16 +170,18 @@ export const usePosAuthStore = create((set, get) => ({
       if (savedMatrix) {
         const matrix = JSON.parse(savedMatrix);
         const posModule = matrix.find((m) => m.id === 'pos');
-        if (posModule && posModule.actions && posModule.actions[staffRole] !== undefined) {
-          hasPosPermission = !!posModule.actions[staffRole];
+        if (posModule && posModule.actions) {
+          const actionVal =
+            posModule.actions[staffRole] !== undefined
+              ? posModule.actions[staffRole]
+              : posModule.actions[staffRole.toLowerCase()];
+          if (actionVal !== undefined) {
+            hasPosPermission = !!actionVal;
+          }
         }
-      } else {
-        const allowedRoles = ['ADMIN', 'OWNER', 'MANAGER', 'CASHIER'];
-        hasPosPermission = allowedRoles.includes(staffRole);
       }
     } catch (e) {
-      const allowedRoles = ['ADMIN', 'OWNER', 'MANAGER', 'CASHIER'];
-      hasPosPermission = allowedRoles.includes(staffRole);
+      hasPosPermission = true;
     }
 
     if (!hasPosPermission) {
