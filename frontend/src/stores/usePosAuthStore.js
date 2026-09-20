@@ -58,7 +58,7 @@ export const getAvailableStaff = () => {
         return parsed.map((e) => ({
           id: e.id,
           fullName: e.fullName,
-          username: (e.username || '').replace(/@/g, '').trim().toLowerCase(),
+          username: e.username ? String(e.username).trim() : '',
           email: e.email || '',
           password: e.password || '123',
           role: e.role || (e.roleCodes && e.roleCodes[0]) || 'CASHIER',
@@ -103,14 +103,19 @@ export const usePosAuthStore = create((set, get) => ({
 
     // Kiểm tra nhân viên hợp lệ trong hệ thống
     const staffList = getAvailableStaff();
-    const cleanUser = (username || '').replace(/@/g, '').trim().toLowerCase();
+    const rawInput = (username || '').trim();
+    const cleanInput = rawInput.toLowerCase().replace(/^@+/, '');
     const cleanPass = (password || '').trim();
 
-    const staff = staffList.find(
-      (s) =>
-        (s.username || '').replace(/@/g, '').trim().toLowerCase() === cleanUser ||
-        (s.email && s.email.replace(/@/g, '').trim().toLowerCase() === cleanUser)
-    );
+    const staff = staffList.find((s) => {
+      const sUser = (s.username || '').trim().toLowerCase();
+      const cleanSUser = sUser.replace(/^@+/, '');
+      return (
+        sUser === rawInput.toLowerCase() ||
+        cleanSUser === cleanInput ||
+        (s.email && s.email.trim().toLowerCase() === cleanInput)
+      );
+    });
 
     if (!staff) {
       set({ isLoading: false, error: 'Tên đăng nhập hoặc Email không tồn tại trong hệ thống!' });
