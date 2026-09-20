@@ -9,7 +9,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 
 -- 1. Cấu hình hệ thống
 INSERT INTO `system_settings` (`setting_key`, `setting_value`, `description`, `data_type`) VALUES
-('STORE_NAME', 'Tạp Hóa & Siêu Thị Mini An Khang', 'Tên cửa hàng in trên hóa đơn', 'STRING'),
+('STORE_NAME', 'Tạp Hóa Vũ An', 'Tên cửa hàng in trên hóa đơn', 'STRING'),
 ('STORE_PHONE', '0987654321', 'Hotline cửa hàng', 'STRING'),
 ('STORE_ADDRESS', 'Số 123 Đường Nguyễn Văn Linh, P. Tân Thuận, Quận 7, TP.HCM', 'Địa chỉ cửa hàng', 'STRING'),
 ('INVOICE_FOOTER', 'Cảm ơn quý khách và hẹn gặp lại! Hàng mua được đổi trả trong vòng 3 ngày.', 'Lời chào chân trang bill', 'STRING'),
