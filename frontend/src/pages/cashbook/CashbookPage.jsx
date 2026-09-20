@@ -126,10 +126,10 @@ export const CashbookPage = () => {
           </div>
 
           <div className="grid grid-cols-2 gap-2">
-            <button type="button" onClick={() => handleTypeChange('INCOME')} className={`rounded-xl px-3 py-2.5 text-xs font-extrabold border ${form.type === 'INCOME' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-white/50 text-slate-500 border-white'}`}>
+            <button type="button" onClick={() => handleTypeChange('INCOME')} className={`rounded-full px-3 py-2.5 text-xs font-extrabold border transition ${form.type === 'INCOME' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-white/50 text-slate-500 border-white'}`}>
               Khoản thu
             </button>
-            <button type="button" onClick={() => handleTypeChange('EXPENSE')} className={`rounded-xl px-3 py-2.5 text-xs font-extrabold border ${form.type === 'EXPENSE' ? 'bg-rose-50 text-rose-700 border-rose-200' : 'bg-white/50 text-slate-500 border-white'}`}>
+            <button type="button" onClick={() => handleTypeChange('EXPENSE')} className={`rounded-full px-3 py-2.5 text-xs font-extrabold border transition ${form.type === 'EXPENSE' ? 'bg-rose-50 text-rose-700 border-rose-200' : 'bg-white/50 text-slate-500 border-white'}`}>
               Khoản chi
             </button>
           </div>
@@ -161,7 +161,7 @@ export const CashbookPage = () => {
               <p className="text-xs text-slate-500 mt-1">Ngày {new Date(`${selectedDate}T00:00:00`).toLocaleDateString('vi-VN')}</p>
             </div>
             <div className="flex gap-1.5">
-              {[['ALL', 'Tất cả'], ['INCOME', 'Khoản thu'], ['EXPENSE', 'Khoản chi']].map(([value, label]) => <button key={value} type="button" onClick={() => setTypeFilter(value)} className={`px-2.5 py-1.5 rounded-lg text-[11px] font-bold ${typeFilter === value ? 'bg-sky-100 text-sky-700' : 'bg-white/60 text-slate-500'}`}>{label}</button>)}
+              {[['ALL', 'Tất cả'], ['INCOME', 'Khoản thu'], ['EXPENSE', 'Khoản chi']].map(([value, label]) => <button key={value} type="button" onClick={() => setTypeFilter(value)} className={`px-3 py-1.5 rounded-full text-[11px] font-bold transition ${typeFilter === value ? 'bg-sky-100 text-sky-700 border border-sky-200' : 'bg-white/60 text-slate-500'}`}>{label}</button>)}
             </div>
           </div>
 

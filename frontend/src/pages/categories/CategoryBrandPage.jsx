@@ -241,10 +241,10 @@ export const CategoryBrandPage = () => {
 
         <div className="flex flex-wrap items-center gap-3">
           {/* Tab Selector */}
-          <div className="flex p-1.5 bg-slate-100/90 rounded-2xl border border-slate-200 gap-1.5 shadow-inner">
+          <div className="flex p-1.5 bg-slate-100/90 rounded-full border border-slate-200 gap-1.5 shadow-inner">
             <button
               onClick={() => { setActiveTab('CATEGORIES'); setSearchTerm(''); }}
-              className={`px-3.5 py-1.5 rounded-xl font-bold text-xs transition-all ${
+              className={`px-3.5 py-1.5 rounded-full font-bold text-xs transition-all ${
                 activeTab === 'CATEGORIES'
                   ? 'bg-white text-sky-700 shadow-sm border border-slate-200'
                   : 'text-slate-600 hover:text-slate-900'
@@ -254,7 +254,7 @@ export const CategoryBrandPage = () => {
             </button>
             <button
               onClick={() => { setActiveTab('BRANDS'); setSearchTerm(''); }}
-              className={`px-3.5 py-1.5 rounded-xl font-bold text-xs transition-all ${
+              className={`px-3.5 py-1.5 rounded-full font-bold text-xs transition-all ${
                 activeTab === 'BRANDS'
                   ? 'bg-white text-sky-700 shadow-sm border border-slate-200'
                   : 'text-slate-600 hover:text-slate-900'
@@ -264,7 +264,7 @@ export const CategoryBrandPage = () => {
             </button>
             <button
               onClick={() => { setActiveTab('UNITS'); setSearchTerm(''); }}
-              className={`px-3.5 py-1.5 rounded-xl font-bold text-xs transition-all ${
+              className={`px-3.5 py-1.5 rounded-full font-bold text-xs transition-all ${
                 activeTab === 'UNITS'
                   ? 'bg-white text-sky-700 shadow-sm border border-slate-200'
                   : 'text-slate-600 hover:text-slate-900'
@@ -324,7 +324,7 @@ export const CategoryBrandPage = () => {
                   });
                   setIsModalOpen(true);
                 }}
-                className="px-3 py-1 bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 rounded-xl text-xs font-bold transition flex items-center gap-1"
+                className="px-3.5 py-1 bg-sky-50 hover:bg-sky-100 text-sky-800 border border-sky-200 rounded-full text-xs font-bold transition flex items-center gap-1 shadow-sm"
               >
                 <span>+ {tpl.name}</span>
               </button>
@@ -343,7 +343,7 @@ export const CategoryBrandPage = () => {
                   });
                   setIsModalOpen(true);
                 }}
-                className="px-3 py-1 bg-slate-50 hover:bg-slate-100 text-slate-800 border border-slate-200 rounded-xl text-xs font-bold transition flex items-center gap-1"
+                className="px-3.5 py-1 bg-slate-50 hover:bg-slate-100 text-slate-800 border border-slate-200 rounded-full text-xs font-bold transition flex items-center gap-1 shadow-sm"
               >
                 <span>+ {tpl.name}</span>
               </button>
@@ -362,7 +362,7 @@ export const CategoryBrandPage = () => {
                   });
                   setIsModalOpen(true);
                 }}
-                className="px-3 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-xl text-xs font-bold transition flex items-center gap-1"
+                className="px-3.5 py-1 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-full text-xs font-bold transition flex items-center gap-1 shadow-sm"
               >
                 <span>+ {unitName}</span>
               </button>

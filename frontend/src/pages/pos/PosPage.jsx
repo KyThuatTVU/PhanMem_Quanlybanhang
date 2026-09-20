@@ -625,11 +625,11 @@ export const PosPage = () => {
   return (
     <div className="w-full max-w-full h-full flex flex-col lg:flex-row gap-2.5 sm:gap-3 overflow-hidden relative">
       {/* Mobile Selector Bar (Chỉ hiển thị trên Smartphone/Tablet < lg) */}
-      <div className="lg:hidden flex items-center bg-slate-200/70 p-1 rounded-2xl gap-1 shrink-0">
+      <div className="lg:hidden flex items-center bg-slate-200/70 p-1 rounded-full gap-1 shrink-0">
         <button
           type="button"
           onClick={() => setMobileTab('CATALOG')}
-          className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+          className={`flex-1 py-2 px-3 rounded-full text-xs font-bold transition flex items-center justify-center gap-1.5 ${
             mobileTab === 'CATALOG'
               ? 'bg-white text-blue-600 shadow-sm'
               : 'text-slate-600 hover:text-slate-900'
@@ -641,7 +641,7 @@ export const PosPage = () => {
         <button
           type="button"
           onClick={() => setMobileTab('CART')}
-          className={`flex-1 py-2 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 ${
+          className={`flex-1 py-2 px-3 rounded-full text-xs font-bold transition flex items-center justify-center gap-1.5 ${
             mobileTab === 'CART'
               ? 'bg-white text-blue-600 shadow-sm'
               : 'text-slate-600 hover:text-slate-900'
@@ -936,7 +936,7 @@ export const PosPage = () => {
           <div className="grid grid-cols-2 gap-2 pt-1">
             <button
               onClick={() => setPaymentMethod('CASH')}
-              className={`py-2 px-3 rounded-xl text-xs font-bold border transition flex items-center justify-center gap-1.5 ${
+              className={`py-2 px-3 rounded-full text-xs font-bold border transition flex items-center justify-center gap-1.5 ${
                 paymentMethod === 'CASH'
                   ? 'bg-blue-50 border-blue-500 text-blue-700 shadow-sm'
                   : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
@@ -948,7 +948,7 @@ export const PosPage = () => {
 
             <button
               onClick={() => setPaymentMethod('BANK')}
-              className={`py-2 px-3 rounded-xl text-xs font-bold border transition flex items-center justify-center gap-1.5 ${
+              className={`py-2 px-3 rounded-full text-xs font-bold border transition flex items-center justify-center gap-1.5 ${
                 paymentMethod === 'BANK'
                   ? 'bg-blue-50 border-blue-500 text-blue-700 shadow-sm'
                   : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50'
@@ -976,7 +976,7 @@ export const PosPage = () => {
           <button
             type="button"
             onClick={() => setMobileTab('CART')}
-            className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-sky-600 text-white font-extrabold text-xs rounded-2xl shadow-xl shadow-blue-500/30 flex items-center justify-between border border-blue-400 active:scale-[0.98] transition"
+            className="w-full py-3 px-4 bg-gradient-to-r from-blue-600 to-sky-600 text-white font-extrabold text-xs rounded-full shadow-xl shadow-blue-500/30 flex items-center justify-between border border-blue-400 active:scale-[0.98] transition"
           >
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 rounded-xl bg-white/20 flex items-center justify-center">
@@ -1202,13 +1202,13 @@ export const PosPage = () => {
               <div>
                 <p className="text-xs font-extrabold text-slate-700 mb-2">Chọn chế độ in</p>
                 <div className="grid grid-cols-2 gap-2">
-                  <button type="button" onClick={() => setPrintMode('THERMAL_80')} className={`rounded-xl border p-3 text-left transition ${printMode === 'THERMAL_80' ? 'border-sky-400 bg-sky-50 text-sky-700 shadow-sm' : 'border-slate-200 bg-white text-slate-600'}`}>
-                    <span className="block text-sm font-extrabold">Khổ nhiệt 80mm</span>
-                    <span className="block text-[10px] mt-1">Máy in bill quầy</span>
+                  <button type="button" onClick={() => setPrintMode('THERMAL_80')} className={`rounded-full border p-3 text-left transition ${printMode === 'THERMAL_80' ? 'border-sky-400 bg-sky-50 text-sky-700 shadow-sm' : 'border-slate-200 bg-white text-slate-600'}`}>
+                    <p className="font-extrabold text-xs">Máy In Khổ K80 (80mm)</p>
+                    <p className="text-[10.5px] opacity-80 mt-0.5">Khổ cuộn nhiệt hóa đơn bán lẻ siêu thị.</p>
                   </button>
-                  <button type="button" onClick={() => setPrintMode('A4')} className={`rounded-xl border p-3 text-left transition ${printMode === 'A4' ? 'border-sky-400 bg-sky-50 text-sky-700 shadow-sm' : 'border-slate-200 bg-white text-slate-600'}`}>
-                    <span className="block text-sm font-extrabold">Khổ A4</span>
-                    <span className="block text-[10px] mt-1">Máy in văn phòng</span>
+                  <button type="button" onClick={() => setPrintMode('A4')} className={`rounded-full border p-3 text-left transition ${printMode === 'A4' ? 'border-sky-400 bg-sky-50 text-sky-700 shadow-sm' : 'border-slate-200 bg-white text-slate-600'}`}>
+                    <p className="font-extrabold text-xs">Máy In A4 / A5 Đứng</p>
+                    <p className="text-[10.5px] opacity-80 mt-0.5">Xuất hóa đơn giao dịch đại lý & giao hàng.</p>
                   </button>
                 </div>
               </div>

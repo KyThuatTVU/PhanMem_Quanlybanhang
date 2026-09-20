@@ -98,10 +98,10 @@ export const DebtListPage = () => {
         </div>
 
         {/* Tab chuyển đổi */}
-        <div className="flex p-1 bg-slate-200/80 rounded-xl">
+        <div className="flex p-1 bg-slate-200/80 rounded-full">
           <button
             onClick={() => setActiveTab('CUSTOMERS')}
-            className={`px-4 py-2 text-xs font-bold rounded-lg transition ${
+            className={`px-4 py-2 text-xs font-bold rounded-full transition ${
               activeTab === 'CUSTOMERS'
                 ? 'bg-white text-blue-600 shadow-sm'
                 : 'text-slate-600 hover:text-slate-900'
@@ -111,7 +111,7 @@ export const DebtListPage = () => {
           </button>
           <button
             onClick={() => setActiveTab('SUPPLIERS')}
-            className={`px-4 py-2 text-xs font-bold rounded-lg transition ${
+            className={`px-4 py-2 text-xs font-bold rounded-full transition ${
               activeTab === 'SUPPLIERS'
                 ? 'bg-white text-blue-600 shadow-sm'
                 : 'text-slate-600 hover:text-slate-900'

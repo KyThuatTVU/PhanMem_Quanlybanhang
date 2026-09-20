@@ -129,7 +129,7 @@ export const ImageUpload = ({ value, onChange, label = 'Hình Ảnh Sản Phẩm
           <button
             type="button"
             onClick={handleApplyUrl}
-            className="px-3 py-2 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 transition shadow-sm"
+            className="px-4 py-2 bg-blue-600 text-white rounded-full text-xs font-bold hover:bg-blue-700 transition shadow-sm"
           >
             Áp Dụng
           </button>
@@ -148,7 +148,7 @@ export const ImageUpload = ({ value, onChange, label = 'Hình Ảnh Sản Phẩm
           <button
             type="button"
             onClick={() => onChange('')}
-            className="absolute top-2 right-2 p-1.5 bg-rose-600 text-white rounded-lg shadow-md hover:bg-rose-700 transition opacity-90 group-hover:opacity-100"
+            className="absolute top-2 right-2 p-1.5 bg-rose-600 text-white rounded-full shadow-md hover:bg-rose-700 transition opacity-90 group-hover:opacity-100"
             title="Xóa ảnh"
           >
             <X className="w-4 h-4" />

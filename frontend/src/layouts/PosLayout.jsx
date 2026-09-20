@@ -107,7 +107,7 @@ export const PosLayout = () => {
           {isManagement && (
             <Link
               to="/dashboard"
-              className="hidden sm:flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 text-xs font-extrabold transition border border-slate-200"
+              className="hidden sm:flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 text-xs font-extrabold transition border border-slate-200"
               title="Quay lại trang quản trị cửa hàng"
             >
               <ArrowUpRight className="w-3.5 h-3.5 text-blue-600" />
@@ -116,8 +116,8 @@ export const PosLayout = () => {
           )}
 
           {/* Thông tin nhân viên trực ca */}
-          <div className="flex items-center gap-2 bg-slate-50 px-2.5 py-1 rounded-xl border border-slate-200/90 shadow-sm">
-            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-gradient-to-tr from-blue-600 to-sky-500 text-white font-black text-xs flex items-center justify-center shadow-sm">
+          <div className="flex items-center gap-2 bg-slate-50 px-2.5 py-1 rounded-full border border-slate-200/90 shadow-sm">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-tr from-blue-600 to-sky-500 text-white font-black text-xs flex items-center justify-center shadow-sm">
               {cashier?.fullName ? cashier.fullName.charAt(0).toUpperCase() : 'T'}
             </div>
             <div className="text-left">
@@ -140,7 +140,7 @@ export const PosLayout = () => {
           <button
             onClick={toggleFullscreen}
             title={isFullscreen ? 'Thoát toàn màn hình' : 'Mở toàn màn hình (F11)'}
-            className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition border border-slate-200"
+            className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-full transition border border-slate-200"
           >
             {isFullscreen ? <Minimize2 className="w-4 h-4" /> : <Maximize2 className="w-4 h-4" />}
           </button>
@@ -149,7 +149,7 @@ export const PosLayout = () => {
           <button
             onClick={handleLogout}
             title="Kết thúc ca trực & Đăng xuất"
-            className="flex items-center gap-1.5 px-3 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 font-extrabold text-xs rounded-xl border border-rose-200/80 transition active:scale-95"
+            className="flex items-center gap-1.5 px-3.5 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 font-extrabold text-xs rounded-full border border-rose-200/80 transition active:scale-95"
           >
             <LogOut className="w-4 h-4" />
             <span className="hidden sm:inline">Đổi Ca</span>

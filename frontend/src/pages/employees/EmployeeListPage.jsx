@@ -498,7 +498,7 @@ export const EmployeeListPage = () => {
                                 setResetPassEmp(emp);
                                 setNewPasswordInput(emp.password || '123');
                               }}
-                              className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-blue-50 text-blue-600 border border-slate-200 hover:border-blue-200 flex items-center justify-center transition"
+                              className="w-8 h-8 rounded-full bg-slate-100 hover:bg-blue-50 text-blue-600 border border-slate-200 hover:border-blue-200 flex items-center justify-center transition"
                               title="Đặt lại mật khẩu cho nhân viên"
                             >
                               <KeyRound className="w-4 h-4" />
@@ -507,7 +507,7 @@ export const EmployeeListPage = () => {
                             {/* Sửa thông tin */}
                             <button
                               onClick={() => setEditingEmp({ ...emp })}
-                              className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-amber-50 text-amber-600 border border-slate-200 hover:border-amber-200 flex items-center justify-center transition"
+                              className="w-8 h-8 rounded-full bg-slate-100 hover:bg-amber-50 text-amber-600 border border-slate-200 hover:border-amber-200 flex items-center justify-center transition"
                               title="Sửa tên login, họ tên, vai trò"
                             >
                               <Pencil className="w-4 h-4" />
@@ -517,7 +517,7 @@ export const EmployeeListPage = () => {
                             {emp.role !== 'OWNER' && (
                               <button
                                 onClick={() => handleToggleLock(emp.id)}
-                                className={`w-8 h-8 rounded-xl border flex items-center justify-center transition ${
+                                className={`w-8 h-8 rounded-full border flex items-center justify-center transition ${
                                   emp.status === 'ACTIVE'
                                     ? 'bg-slate-100 hover:bg-rose-50 text-rose-600 border-slate-200 hover:border-rose-200'
                                     : 'bg-slate-100 hover:bg-emerald-50 text-emerald-600 border-slate-200 hover:border-emerald-200'
@@ -536,7 +536,7 @@ export const EmployeeListPage = () => {
                             {emp.role !== 'OWNER' && (
                               <button
                                 onClick={() => setDeleteEmp(emp)}
-                                className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-rose-50 text-rose-600 border border-slate-200 hover:border-rose-200 flex items-center justify-center transition"
+                                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-rose-50 text-rose-600 border border-slate-200 hover:border-rose-200 flex items-center justify-center transition"
                                 title="Xóa tài khoản nhân viên"
                               >
                                 <Trash2 className="w-4 h-4" />
@@ -569,7 +569,7 @@ export const EmployeeListPage = () => {
                 localStorage.setItem('rbac_matrix', JSON.stringify(defaultMatrix));
                 alert('Đã khôi phục ma trận phân quyền mặc định!');
               }}
-              className="px-3 py-1.5 bg-white border border-blue-200 text-blue-700 hover:bg-blue-100 rounded-xl font-bold text-xs shrink-0 flex items-center gap-1 shadow-sm transition"
+              className="px-3 py-1.5 bg-white border border-blue-200 text-blue-700 hover:bg-blue-100 rounded-full font-bold text-xs shrink-0 flex items-center gap-1 shadow-sm transition"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               Mặc định

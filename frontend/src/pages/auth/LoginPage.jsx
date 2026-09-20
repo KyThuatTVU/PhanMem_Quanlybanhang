@@ -139,7 +139,7 @@ export const LoginPage = () => {
               type="button"
               onClick={handleGoogleLogin}
               disabled={isLoading}
-              className="w-full py-4 px-6 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-black text-sm rounded-2xl shadow-xl shadow-sky-500/25 transition transform active:scale-[0.98] disabled:opacity-50 cursor-pointer flex items-center justify-center gap-3"
+              className="w-full py-4 px-6 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-black text-sm rounded-full shadow-xl shadow-sky-500/25 transition transform active:scale-[0.98] disabled:opacity-50 cursor-pointer flex items-center justify-center gap-3"
             >
               <div className="w-6 h-6 rounded-lg bg-white p-1 flex items-center justify-center shrink-0 shadow-sm">
                 <svg className="w-4 h-4" viewBox="0 0 24 24">

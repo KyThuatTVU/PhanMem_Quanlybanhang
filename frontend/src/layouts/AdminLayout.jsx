@@ -142,7 +142,7 @@ export const AdminLayout = () => {
         <div className="flex items-center gap-3.5">
           <button
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-            className="p-2.5 text-slate-700 hover:text-sky-600 rounded-2xl bg-white hover:bg-slate-100 active:scale-95 transition shadow-sm border border-slate-200"
+            className="p-2.5 text-slate-700 hover:text-sky-600 rounded-full bg-white hover:bg-slate-100 active:scale-95 transition shadow-sm border border-slate-200"
             title="Đóng / Mở menu"
           >
             <Menu className="w-6 h-6" />
@@ -181,7 +181,7 @@ export const AdminLayout = () => {
 
         {/* Khu vực thông báo & Tài khoản người dùng */}
         <div className="flex items-center gap-3 sm:gap-4">
-          <button className="p-2.5 text-slate-700 hover:text-sky-600 rounded-2xl bg-white hover:bg-slate-100 relative transition border border-slate-200 shadow-sm">
+          <button className="p-2.5 text-slate-700 hover:text-sky-600 rounded-full bg-white hover:bg-slate-100 relative transition border border-slate-200 shadow-sm">
             <Bell className="w-6 h-6" />
             <span className="w-2.5 h-2.5 bg-rose-500 rounded-full absolute top-2.5 right-2.5 ring-2 ring-white" />
           </button>
@@ -191,7 +191,7 @@ export const AdminLayout = () => {
           <div className="flex items-center gap-3">
             <Link
               to="/profile"
-              className="flex items-center gap-3 text-right hover:opacity-90 transition hidden sm:flex bg-slate-50 hover:bg-slate-100 p-2 pr-4 rounded-2xl border border-slate-200 shadow-sm"
+              className="flex items-center gap-3 text-right hover:opacity-90 transition hidden sm:flex bg-slate-50 hover:bg-slate-100 p-2 pr-4 rounded-full border border-slate-200 shadow-sm"
             >
               {user?.avatarUrl || user?.picture ? (
                 <img
@@ -363,7 +363,7 @@ export const AdminLayout = () => {
               <button
                 type="button"
                 onClick={resetTimer}
-                className="w-full py-3.5 px-5 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-extrabold text-xs sm:text-sm rounded-2xl shadow-lg shadow-sky-500/25 transition active:scale-95 cursor-pointer"
+                className="w-full py-3.5 px-5 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-extrabold text-xs sm:text-sm rounded-full shadow-lg shadow-sky-500/25 transition active:scale-95 cursor-pointer"
               >
                 Tôi Vẫn Đang Làm Việc (Ở Lại)
               </button>

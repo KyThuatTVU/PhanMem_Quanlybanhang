@@ -69,10 +69,10 @@ export const SettingPage = () => {
         </div>
 
         {/* Tab Switcher */}
-        <div className="flex p-1 bg-slate-200/80 rounded-xl">
+        <div className="flex p-1 bg-slate-200/80 rounded-full">
           <button
             onClick={() => setActiveTab('STORE')}
-            className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition ${
+            className={`px-3.5 py-1.5 text-xs font-bold rounded-full transition ${
               activeTab === 'STORE' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-600'
             }`}
           >
@@ -80,7 +80,7 @@ export const SettingPage = () => {
           </button>
           <button
             onClick={() => setActiveTab('DEVICES')}
-            className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition ${
+            className={`px-3.5 py-1.5 text-xs font-bold rounded-full transition ${
               activeTab === 'DEVICES' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-600'
             }`}
           >
@@ -88,7 +88,7 @@ export const SettingPage = () => {
           </button>
           <button
             onClick={() => setActiveTab('AUDIT')}
-            className={`px-3.5 py-1.5 text-xs font-bold rounded-lg transition ${
+            className={`px-3.5 py-1.5 text-xs font-bold rounded-full transition ${
               activeTab === 'AUDIT' ? 'bg-white text-blue-600 shadow-sm' : 'text-slate-600'
             }`}
           >

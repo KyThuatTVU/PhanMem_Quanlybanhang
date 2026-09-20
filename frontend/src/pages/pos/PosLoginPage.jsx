@@ -128,7 +128,7 @@ export const PosLoginPage = () => {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full mt-2 py-4 px-6 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white font-black text-sm rounded-2xl shadow-xl shadow-blue-500/25 transition transform active:scale-[0.98] disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
+              className="w-full mt-2 py-4 px-6 bg-gradient-to-r from-blue-600 to-sky-600 hover:from-blue-700 hover:to-sky-700 text-white font-black text-sm rounded-full shadow-xl shadow-blue-500/25 transition transform active:scale-[0.98] disabled:opacity-50 cursor-pointer flex items-center justify-center gap-2"
             >
               {isSubmitting ? (
                 <span>Đang xác thực POS...</span>
