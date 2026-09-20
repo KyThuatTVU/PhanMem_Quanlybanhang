@@ -16,6 +16,12 @@ export const useInactivityLogout = (timeoutMs = 180000, warningMs = 30000) => {
   const timerRef = useRef(null);
   const warningTimerRef = useRef(null);
   const countdownIntervalRef = useRef(null);
+  const showWarningRef = useRef(false);
+
+  // Cập nhật ref để tránh việc re-render effect làm reset timer sai cách
+  useEffect(() => {
+    showWarningRef.current = showWarning;
+  }, [showWarning]);
 
   const clearAllTimers = useCallback(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
@@ -37,8 +43,9 @@ export const useInactivityLogout = (timeoutMs = 180000, warningMs = 30000) => {
     setShowWarning(false);
     setRemainingSeconds(Math.round(warningMs / 1000));
 
-    // 1. Hẹn giờ hiển thị cảnh báo (Sau 2.5 phút = 150,000ms)
     const timeBeforeWarning = Math.max(0, timeoutMs - warningMs);
+
+    // 1. Hẹn giờ hiển thị cảnh báo (Sau 2.5 phút = 150,000ms)
     warningTimerRef.current = setTimeout(() => {
       setShowWarning(true);
       setRemainingSeconds(Math.round(warningMs / 1000));
@@ -55,21 +62,21 @@ export const useInactivityLogout = (timeoutMs = 180000, warningMs = 30000) => {
       }, 1000);
     }, timeBeforeWarning);
 
-    // 2. Hẹn giờ tự động đăng xuất (Sau 3 phút = 180,000ms)
+    // 2. Hẹn giờ tự động đá khỏi hệ thống Admin (Sau 3 phút = 180,000ms)
     timerRef.current = setTimeout(() => {
       handleLogoutDueToInactivity();
     }, timeoutMs);
   }, [isAuthenticated, timeoutMs, warningMs, clearAllTimers, handleLogoutDueToInactivity]);
 
-  // Lắng nghe sự kiện người dùng tương tác
+  // Lắng nghe sự kiện tương tác chủ động (mousedown, keydown, touchstart, click)
+  // Loại bỏ mousemove để tránh nhiễu do di chuyển chuột vô tình
   useEffect(() => {
     if (!isAuthenticated) return;
 
-    const events = ['mousemove', 'mousedown', 'keydown', 'scroll', 'touchstart', 'click'];
-    
-    // Thao tác người dùng reset timer khi chưa hiện cảnh báo
+    const events = ['mousedown', 'keydown', 'touchstart', 'click'];
+
     const handleUserActivity = () => {
-      if (!showWarning) {
+      if (!showWarningRef.current) {
         resetTimer();
       }
     };
@@ -78,10 +85,10 @@ export const useInactivityLogout = (timeoutMs = 180000, warningMs = 30000) => {
       window.addEventListener(event, handleUserActivity, { passive: true });
     });
 
-    // Lần đầu tiên khởi chạy
+    // Khởi chạy đếm ngược lần đầu
     resetTimer();
 
-    // Lắng nghe sự kiện đăng xuất đồng bộ giữa các Tab trình duyệt
+    // Lắng nghe sự kiện đăng xuất giữa các Tab
     const handleStorageChange = (e) => {
       if (e.key === 'access_token' && !e.newValue) {
         clearAllTimers();
@@ -98,7 +105,7 @@ export const useInactivityLogout = (timeoutMs = 180000, warningMs = 30000) => {
       window.removeEventListener('storage', handleStorageChange);
       clearAllTimers();
     };
-  }, [isAuthenticated, resetTimer, showWarning, clearAllTimers, logout, navigate]);
+  }, [isAuthenticated, resetTimer, clearAllTimers, logout, navigate]);
 
   return {
     showWarning,
