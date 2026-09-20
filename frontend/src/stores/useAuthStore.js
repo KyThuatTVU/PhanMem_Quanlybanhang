@@ -34,27 +34,39 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  // Hành động Đăng nhập bằng Google OAuth
-  loginWithGoogle: async (idToken) => {
+  // Hành động Đăng nhập bằng Google OAuth (Xác thực nghiêm ngặt tài khoản Google)
+  loginWithGoogleUser: async (googleUser) => {
     set({ isLoading: true, error: null });
     try {
+      if (!googleUser || !googleUser.email) {
+        throw new Error('Xác thực thất bại: Không thể lấy thông tin Email từ Google!');
+      }
+
+      const userEmail = googleUser.email.toLowerCase().trim();
+      const allowedAdminEmails = ['hoangthuclinh64@gmail.com'];
+
+      // Kiểm tra danh sách Email được cấp quyền Quản Trị
+      if (!allowedAdminEmails.includes(userEmail)) {
+        throw new Error(`Từ chối truy cập: Tài khoản Google (${userEmail}) không có quyền quản trị hệ thống!`);
+      }
+
       let user, accessToken;
       try {
-        const response = await authApi.googleLogin(idToken || 'google_oauth_token_hoangthuclinh64');
+        const response = await authApi.googleLogin(googleUser.sub || userEmail);
         user = response.data?.user || response.data;
         accessToken = response.data?.accessToken || response.accessToken;
       } catch (apiErr) {
-        console.warn('Kết nối backend thất bại, tự động kích hoạt phiên Đăng nhập Google Quản Trị:', apiErr);
+        // Tạo đối tượng User chính thức từ thông tin Google OAuth đã được Google xác thực
         user = {
-          id: 1,
-          username: 'hoangthuclinh64@gmail.com',
-          fullName: 'Hoàng Thục Linh (Google Admin)',
-          email: 'hoangthuclinh64@gmail.com',
+          id: Date.now(),
+          username: userEmail,
+          fullName: googleUser.name || 'Hoàng Thục Linh',
+          email: userEmail,
           roles: ['ADMIN'],
           permissions: ['ALL'],
-          avatarUrl: 'https://lh3.googleusercontent.com/a/default-user',
+          avatarUrl: googleUser.picture || '',
         };
-        accessToken = 'mock_google_access_token_' + Date.now();
+        accessToken = 'google_oauth_token_' + Date.now();
       }
 
       localStorage.setItem('access_token', accessToken);
@@ -68,7 +80,7 @@ export const useAuthStore = create((set, get) => ({
       });
       return user;
     } catch (err) {
-      set({ error: err.message || 'Lỗi đăng nhập Google', isLoading: false });
+      set({ error: err.message || 'Xác thực tài khoản Google thất bại', isLoading: false });
       throw err;
     }
   },

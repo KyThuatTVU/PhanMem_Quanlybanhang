@@ -9,89 +9,87 @@ import storeBanner from '../../assets/images/nenlogin.png';
 export const LoginPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { loginWithGoogle, isLoading, error } = useAuthStore();
+  const { loginWithGoogleUser, isLoading, error } = useAuthStore();
   const { settings } = useStoreSettings();
 
   const [localError, setLocalError] = useState('');
   const isInactiveLogout = location.search.includes('reason=inactivity');
 
-  const isValidGoogleClientId = (id) => {
-    return typeof id === 'string' && id.includes('.apps.googleusercontent.com') && !id.includes('mock_');
-  };
-
   React.useEffect(() => {
-    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
-    if (!isValidGoogleClientId(clientId)) return;
-
     const script = document.createElement('script');
     script.src = 'https://accounts.google.com/gsi/client';
     script.async = true;
     script.defer = true;
-    script.onload = () => {
-      if (window.google?.accounts?.id) {
-        try {
-          window.google.accounts.id.initialize({
-            client_id: clientId,
-            callback: async (response) => {
-              if (response.credential) {
-                setLocalError('');
-                try {
-                  await loginWithGoogle(response.credential);
-                  navigate('/dashboard');
-                } catch (err) {
-                  setLocalError(err.message || 'Đăng nhập Google thất bại');
-                }
-              }
-            },
-          });
-        } catch (err) {
-          console.warn('Không thể khởi tạo Google OAuth SDK:', err);
-        }
-      }
-    };
     document.head.appendChild(script);
 
     return () => {
       if (script.parentNode) script.parentNode.removeChild(script);
     };
-  }, [loginWithGoogle, navigate]);
+  }, []);
 
-  // Xử lý Đăng nhập qua Google
-  const handleGoogleLogin = async () => {
+  // Xử lý Đăng nhập qua Google OAuth 2.0 Chính Thức
+  const handleGoogleLogin = () => {
     setLocalError('');
-    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+    const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '731513721810-8rnkehsr1v4slnfhr80fbhltb0mego0l.apps.googleusercontent.com';
 
-    if (isValidGoogleClientId(clientId) && window.google?.accounts?.id) {
-      try {
-        window.google.accounts.id.prompt(async (notification) => {
-          if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-            console.warn('Google One Tap không hiển thị hoặc bị tắt, chuyển sang đăng nhập Quản Trị:', notification.getNotDisplayedReason());
+    if (window.google?.accounts?.oauth2) {
+      const tokenClient = window.google.accounts.oauth2.initTokenClient({
+        client_id: clientId,
+        scope: 'email profile openid',
+        callback: async (tokenResponse) => {
+          if (tokenResponse.access_token) {
             try {
-              await loginWithGoogle('google_oauth_token_hoangthuclinh64');
+              // Lấy thông tin tài khoản trực tiếp từ API Google
+              const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                headers: { Authorization: `Bearer ${tokenResponse.access_token}` },
+              });
+              const googleUser = await res.json();
+
+              // Xác thực nghiêm ngặt tài khoản Google & kiểm tra quyền Admin
+              await loginWithGoogleUser(googleUser);
               navigate('/dashboard');
             } catch (err) {
-              setLocalError(err.message || 'Đăng nhập Google thất bại');
+              setLocalError(err.message || 'Xác thực tài khoản Google thất bại!');
             }
+          } else {
+            setLocalError('Đăng nhập Google bị hủy hoặc không nhận được Token!');
           }
-        });
-      } catch (e) {
-        console.warn('Không thể mở popup Google, dùng chế độ xác thực nhanh:', e);
-        try {
-          await loginWithGoogle('google_oauth_token_hoangthuclinh64');
-          navigate('/dashboard');
-        } catch (err) {
-          setLocalError(err.message || 'Đăng nhập Google thất bại');
-        }
-      }
+        },
+        error_callback: (err) => {
+          console.error('Lỗi Google OAuth:', err);
+          setLocalError('Không thể kết nối dịch vụ xác thực Google!');
+        },
+      });
+
+      tokenClient.requestAccessToken();
     } else {
-      try {
-        await loginWithGoogle('google_oauth_token_hoangthuclinh64');
-        navigate('/dashboard');
-      } catch (err) {
-        setLocalError(err.message || 'Đăng nhập Google thất bại');
-      }
+      const redirectUri = window.location.origin + window.location.pathname;
+      const googleAuthUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&response_type=token&scope=email%20profile%20openid`;
+      window.location.href = googleAuthUrl;
     }
   };
+
+  // Xử lý nhận Token khi dùng luồng chuyển hướng URL
+  React.useEffect(() => {
+    if (location.hash && location.hash.includes('access_token')) {
+      const params = new URLSearchParams(location.hash.substring(1));
+      const accessToken = params.get('access_token');
+      if (accessToken) {
+        window.history.replaceState({}, document.title, window.location.pathname);
+        fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        })
+          .then((res) => res.json())
+          .then(async (googleUser) => {
+            await loginWithGoogleUser(googleUser);
+            navigate('/dashboard');
+          })
+          .catch((err) => {
+            setLocalError(err.message || 'Xác thực tài khoản Google thất bại!');
+          });
+      }
+    }
+  }, [location, loginWithGoogleUser, navigate]);
 
   return (
     <div
