@@ -47,10 +47,15 @@ const apiLimiter = rateLimit({
 });
 app.use('/api/', apiLimiter);
 
+const tenantGuard = require('./middlewares/tenant.middleware');
+const licenseGuard = require('./middlewares/license.middleware');
+const auditLogger = require('./middlewares/audit.middleware');
+
 // 3. Static Files (Cho phép phục vụ file upload công khai)
 app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 
-// 4. API Routes Router
+// 4. Commercial Security Pipeline (Tenant Guard, License Guard & Audit Logger)
+app.use('/api/v1', tenantGuard, licenseGuard, auditLogger('COMMERCIAL_SEC'));
 app.use('/api/v1', routes);
 
 // 5. Xử lý khi truy cập Route không tồn tại (404 Not Found)
