@@ -35,6 +35,8 @@ import {
 } from 'lucide-react';
 import brandLogo from '../assets/images/logo.png';
 
+import { useDataSync } from '../hooks/useDataSync';
+
 export const AdminLayout = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -45,11 +47,17 @@ export const AdminLayout = () => {
     return typeof window !== 'undefined' ? window.innerWidth >= 768 : true;
   });
 
-  React.useEffect(() => {
+  const fetchStoreSettings = React.useCallback(() => {
     apiClient.get('/settings').then((response) => {
       if (response.data) setSettings(response.data);
     }).catch(() => {});
   }, [setSettings]);
+
+  useDataSync(['settings'], fetchStoreSettings);
+
+  React.useEffect(() => {
+    fetchStoreSettings();
+  }, [fetchStoreSettings]);
 
   React.useEffect(() => {
     const handleResize = () => {

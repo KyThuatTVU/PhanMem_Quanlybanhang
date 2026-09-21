@@ -14,8 +14,15 @@ import {
   X
 } from 'lucide-react';
 
+import { useDataSync } from '../../hooks/useDataSync';
+import { notifyDataChanged } from '../../utils/dataSync';
+
 export const CategoryBrandPage = () => {
   const [activeTab, setActiveTab] = useState('CATEGORIES'); // 'CATEGORIES' | 'BRANDS' | 'UNITS'
+
+  useDataSync(['categories', 'brands', 'units'], () => {
+    fetchMeta();
+  });
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
   const [units, setUnits] = useState([]);
@@ -82,6 +89,7 @@ export const CategoryBrandPage = () => {
 
   const showNotification = (msg) => {
     setFeedbackMsg(msg);
+    notifyDataChanged(['categories', 'brands', 'units']);
     setTimeout(() => setFeedbackMsg(''), 4000);
   };
 

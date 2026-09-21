@@ -6,8 +6,15 @@ import { ImageUpload } from '../../components/ui/ImageUpload';
 import { useStoreSettings } from '../../stores/useStoreSettings';
 import { Settings, Printer, Shield, Save, CheckCircle2 } from 'lucide-react';
 
+import { useDataSync } from '../../hooks/useDataSync';
+import { notifyDataChanged } from '../../utils/dataSync';
+
 export const SettingPage = () => {
   const [activeTab, setActiveTab] = useState('STORE'); // 'STORE' | 'DEVICES' | 'AUDIT'
+
+  useDataSync(['settings'], () => {
+    fetchSettings();
+  });
   const [settings, setSettings] = useState({
     STORE_NAME: '',
     STORE_PHONE: '',
@@ -50,6 +57,7 @@ export const SettingPage = () => {
     try {
       await apiClient.post('/settings', settings);
       setStoreSettings(settings);
+      notifyDataChanged('settings');
       alert('Lưu cấu hình cửa hàng thành công!');
     } catch (err) {
       alert(err.message || 'Lỗi lưu cấu hình');

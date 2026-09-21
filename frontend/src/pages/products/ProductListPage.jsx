@@ -22,8 +22,16 @@ import {
   AlertTriangle
 } from 'lucide-react';
 
+import { useDataSync } from '../../hooks/useDataSync';
+import { notifyDataChanged } from '../../utils/dataSync';
+
 export const ProductListPage = () => {
   const [keyword, setKeyword] = useState('');
+
+  useDataSync(['products', 'categories', 'units'], () => {
+    fetchCategories();
+    fetchUnits();
+  });
   const [selectedCategory, setSelectedCategory] = useState('ALL');
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState(null); // null = tạo mới, object = đang sửa
@@ -209,6 +217,7 @@ export const ProductListPage = () => {
   useEffect(() => {
     try {
       localStorage.setItem('product_catalog', JSON.stringify(products));
+      notifyDataChanged('products');
     } catch (error) {
       console.error('Không thể lưu danh sách sản phẩm:', error);
       showToast('Không thể lưu sản phẩm. Ảnh có thể quá lớn, vui lòng chọn ảnh nhẹ hơn.');

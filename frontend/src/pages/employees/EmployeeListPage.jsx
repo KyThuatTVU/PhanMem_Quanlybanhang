@@ -17,6 +17,9 @@ import {
   AlertCircle
 } from 'lucide-react';
 
+import { useDataSync } from '../../hooks/useDataSync';
+import { notifyDataChanged } from '../../utils/dataSync';
+
 export const EmployeeListPage = () => {
   const [activeTab, setActiveTab] = useState('employees'); // 'employees' hoặc 'matrix'
   const [keyword, setKeyword] = useState('');
@@ -226,6 +229,7 @@ export const EmployeeListPage = () => {
   useEffect(() => {
     try {
       localStorage.setItem('employee_catalog', JSON.stringify(employees));
+      notifyDataChanged('employees');
     } catch (e) {
       console.error('Không thể lưu danh mục nhân viên:', e);
     }

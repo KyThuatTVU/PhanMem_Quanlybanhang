@@ -22,12 +22,18 @@ import {
   Image as ImageIcon
 } from 'lucide-react';
 import brandLogo from '../../assets/images/logo.png';
+import { useDataSync } from '../../hooks/useDataSync';
+import { notifyDataChanged } from '../../utils/dataSync';
 import { QRCodeSVG } from 'qrcode.react';
 
 export const PosPage = () => {
   const { settings } = useStoreSettings();
-  const { user } = useAuthStore();
   const { cashier } = usePosAuthStore();
+
+  useDataSync(['products', 'categories', 'promotions'], () => {
+    fetchProducts();
+    fetchCategories();
+  });
   const [barcodeInput, setBarcodeInput] = useState('');
   const [searchKeyword, setSearchKeyword] = useState('');
   const [cart, setCart] = useState(() => {
@@ -591,6 +597,7 @@ export const PosPage = () => {
       return;
     }
 
+    notifyDataChanged(['orders', 'products', 'cashbook', 'reports']);
     setReceiptStage('PRINT');
     setCart([]);
     setIsProcessing(false);
