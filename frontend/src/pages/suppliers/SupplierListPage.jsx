@@ -3,6 +3,7 @@ import apiClient from '../../api/apiClient';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Truck, Plus, Search, Phone, MapPin, DollarSign, X, Check, Eye } from 'lucide-react';
+import { TableSkeleton } from '../../components/ui/Loading';
 
 export const SupplierListPage = () => {
   const [suppliers, setSuppliers] = useState([]);
@@ -96,7 +97,7 @@ export const SupplierListPage = () => {
             </thead>
             <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
               {loading ? (
-                <tr><td colSpan="7" className="p-4 text-center">Đang tải danh sách...</td></tr>
+                <TableSkeleton rows={5} cols={7} />
               ) : suppliers.length === 0 ? (
                 <tr><td colSpan="7" className="p-4 text-center">Chưa có nhà cung cấp nào</td></tr>
               ) : (

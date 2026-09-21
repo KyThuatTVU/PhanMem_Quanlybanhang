@@ -36,6 +36,8 @@ import {
 import brandLogo from '../assets/images/logo.png';
 
 import { useDataSync } from '../hooks/useDataSync';
+import { OfflineBanner } from '../components/common/OfflineBanner';
+import { NotificationCenter } from '../components/common/NotificationCenter';
 
 export const AdminLayout = () => {
   const location = useLocation();
@@ -189,10 +191,7 @@ export const AdminLayout = () => {
 
         {/* Khu vực thông báo & Tài khoản người dùng */}
         <div className="flex items-center gap-3 sm:gap-4">
-          <button className="p-2.5 text-slate-700 hover:text-sky-600 rounded-full bg-white hover:bg-slate-100 relative transition border border-slate-200 shadow-sm">
-            <Bell className="w-6 h-6" />
-            <span className="w-2.5 h-2.5 bg-rose-500 rounded-full absolute top-2.5 right-2.5 ring-2 ring-white" />
-          </button>
+          <NotificationCenter />
 
           <div className="h-8 w-px bg-slate-200 hidden sm:block" />
 
@@ -379,6 +378,9 @@ export const AdminLayout = () => {
           </div>
         </div>
       )}
+
+      {/* Banner cảnh báo khi mất kết nối Wi-Fi / Internet */}
+      <OfflineBanner isPos={false} />
     </div>
   );
 };

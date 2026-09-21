@@ -3,6 +3,7 @@ import apiClient from '../../api/apiClient';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { CreditCard, ArrowDownRight, ArrowUpRight, Search, DollarSign, X, Check } from 'lucide-react';
+import { TableSkeleton } from '../../components/ui/Loading';
 
 export const DebtListPage = () => {
   const [activeTab, setActiveTab] = useState('CUSTOMERS'); // 'CUSTOMERS' | 'SUPPLIERS'
@@ -138,7 +139,7 @@ export const DebtListPage = () => {
             </thead>
             <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
               {loading ? (
-                <tr><td colSpan="6" className="p-4 text-center">Đang tải sổ nợ...</td></tr>
+                <TableSkeleton rows={5} cols={6} />
               ) : currentList.length === 0 ? (
                 <tr><td colSpan="6" className="p-4 text-center">Không có công nợ nào phát sinh!</td></tr>
               ) : (

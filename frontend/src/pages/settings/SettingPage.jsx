@@ -8,6 +8,7 @@ import { Settings, Printer, Shield, Save, CheckCircle2 } from 'lucide-react';
 
 import { useDataSync } from '../../hooks/useDataSync';
 import { notifyDataChanged } from '../../utils/dataSync';
+import { PageLoader } from '../../components/ui/Loading';
 
 export const SettingPage = () => {
   const [activeTab, setActiveTab] = useState('STORE'); // 'STORE' | 'DEVICES' | 'AUDIT'
@@ -113,7 +114,11 @@ export const SettingPage = () => {
         </div>
       </div>
 
-      {activeTab === 'STORE' && (
+      {loading ? (
+        <PageLoader message="Đang đồng bộ cấu hình cửa hàng..." />
+      ) : (
+        <>
+          {activeTab === 'STORE' && (
         <div className="soft-card max-w-xl space-y-4">
           <h2 className="text-sm font-bold text-slate-900 border-b pb-2">Thông Tin Xuất Hóa Đơn</h2>
           <form onSubmit={handleSaveSettings} className="space-y-3 text-xs">
@@ -310,6 +315,8 @@ export const SettingPage = () => {
             </div>
           </div>
         </div>
+      )}
+      </>
       )}
     </div>
   );

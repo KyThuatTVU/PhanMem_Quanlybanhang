@@ -16,6 +16,7 @@ import {
 
 import { useDataSync } from '../../hooks/useDataSync';
 import { notifyDataChanged } from '../../utils/dataSync';
+import { TableSkeleton } from '../../components/ui/Loading';
 
 export const CategoryBrandPage = () => {
   const [activeTab, setActiveTab] = useState('CATEGORIES'); // 'CATEGORIES' | 'BRANDS' | 'UNITS'
@@ -390,13 +391,7 @@ export const CategoryBrandPage = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
-            {loading && (
-              <tr>
-                <td colSpan="6" className="p-8 text-center text-slate-500 font-bold">
-                  Đang tải dữ liệu danh mục...
-                </td>
-              </tr>
-            )}
+            {loading && <TableSkeleton rows={5} cols={6} />}
 
             {!loading && activeTab === 'CATEGORIES' && (
               filteredCategories.length === 0 ? (

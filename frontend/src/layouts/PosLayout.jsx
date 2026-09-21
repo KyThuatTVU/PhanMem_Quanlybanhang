@@ -14,15 +14,22 @@ import {
   ShieldAlert,
   ArrowUpRight,
   Sparkles,
-  Wifi
+  Wifi,
+  WifiOff
 } from 'lucide-react';
+import { OfflineBanner } from '../components/common/OfflineBanner';
+import { NotificationCenter } from '../components/common/NotificationCenter';
+import { ShiftReportModal } from '../components/modals/ShiftReportModal';
+import { useNetworkStatus } from '../hooks/useNetworkStatus';
 
 export const PosLayout = () => {
   const navigate = useNavigate();
   const { cashier, logoutPos, terminalId } = usePosAuthStore();
   const { settings } = useStoreSettings();
+  const { isOnline } = useNetworkStatus();
   const [currentTime, setCurrentTime] = useState(new Date());
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isShiftModalOpen, setIsShiftModalOpen] = useState(false);
 
   // Cập nhật đồng hồ thời gian thực mỗi giây
   useEffect(() => {
@@ -46,10 +53,12 @@ export const PosLayout = () => {
   };
 
   const handleLogout = () => {
-    if (window.confirm('Bạn có chắc chắn muốn kết thúc ca trực và đăng xuất khỏi máy POS?')) {
-      logoutPos();
-      navigate('/pos/login');
-    }
+    setIsShiftModalOpen(true);
+  };
+
+  const confirmLogout = () => {
+    logoutPos();
+    navigate('/pos/login');
   };
 
   const isManagement = cashier?.role === 'ADMIN' || cashier?.role === 'OWNER' || cashier?.role === 'MANAGER';
@@ -69,9 +78,15 @@ export const PosLayout = () => {
                 <span className="text-xs sm:text-sm font-black text-slate-900 leading-tight">
                   {settings.STORE_NAME || 'Tạp Hóa Vũ An'}
                 </span>
-                <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60">
-                  <Wifi className="w-3 h-3 text-emerald-600 animate-pulse" /> Sẵn sàng
-                </span>
+                {isOnline ? (
+                  <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60">
+                    <Wifi className="w-3 h-3 text-emerald-600 animate-pulse" /> Sẵn sàng
+                  </span>
+                ) : (
+                  <span className="hidden md:inline-flex items-center gap-1 text-[10px] font-black text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200 animate-pulse">
+                    <WifiOff className="w-3 h-3 text-rose-600 animate-ping" /> Mất Wi-Fi (Offline)
+                  </span>
+                )}
               </div>
               <div className="flex items-center gap-1.5 text-[10px] font-bold text-slate-500">
                 <span className="text-blue-600 bg-blue-50 px-1.5 py-0.2 rounded font-black tracking-wide">
@@ -136,6 +151,9 @@ export const PosLayout = () => {
             </div>
           </div>
 
+          {/* Trung tâm thông báo */}
+          <NotificationCenter />
+
           {/* Nút Toàn Màn Hình */}
           <button
             onClick={toggleFullscreen}
@@ -161,6 +179,18 @@ export const PosLayout = () => {
       <main className="flex-1 w-full max-w-full overflow-hidden p-2 sm:p-2.5">
         <Outlet />
       </main>
+
+      {/* Banner thông báo khi mất kết nối Wi-Fi */}
+      <OfflineBanner isPos={true} />
+
+      {/* Modal Báo Cáo Kết Ca & Kiểm Két Tiền */}
+      <ShiftReportModal
+        isOpen={isShiftModalOpen}
+        onClose={() => setIsShiftModalOpen(false)}
+        cashier={cashier}
+        terminalId={terminalId || 'POS-01'}
+        onConfirmLogout={confirmLogout}
+      />
     </div>
   );
 };

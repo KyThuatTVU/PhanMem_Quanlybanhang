@@ -25,6 +25,7 @@ import brandLogo from '../../assets/images/logo.png';
 import { useDataSync } from '../../hooks/useDataSync';
 import { notifyDataChanged } from '../../utils/dataSync';
 import { QRCodeSVG } from 'qrcode.react';
+import { DebtWarningModal } from '../../components/modals/DebtWarningModal';
 
 export const PosPage = () => {
   const { settings } = useStoreSettings();

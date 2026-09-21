@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import apiClient from '../../api/apiClient';
 import { Button } from '../../components/ui/Button';
 import { FileText, Search, Eye, Ban, Printer, X, CheckCircle2, AlertCircle } from 'lucide-react';
+import { TableSkeleton, LoadingSpinner } from '../../components/ui/Loading';
 
 export const OrderListPage = () => {
   const [orders, setOrders] = useState([]);
@@ -99,7 +100,7 @@ export const OrderListPage = () => {
             </thead>
             <tbody className="font-medium text-slate-700">
               {loading ? (
-                <tr><td colSpan="8" className="p-4 text-center">Đang tải danh sách đơn hàng...</td></tr>
+                <TableSkeleton rows={6} cols={8} />
               ) : orders.length === 0 ? (
                 <tr><td colSpan="8" className="p-4 text-center">Chưa có hóa đơn nào</td></tr>
               ) : (

@@ -3,6 +3,7 @@ import apiClient from '../../api/apiClient';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
 import { Percent, Plus, Calendar, Tag, CheckCircle2, Clock, X } from 'lucide-react';
+import { TableSkeleton } from '../../components/ui/Loading';
 
 export const PromotionListPage = () => {
   const [promotions, setPromotions] = useState([]);
@@ -78,7 +79,7 @@ export const PromotionListPage = () => {
             </thead>
             <tbody className="divide-y divide-slate-100 font-medium text-slate-700">
               {loading ? (
-                <tr><td colSpan="7" className="p-4 text-center">Đang tải khuyến mãi...</td></tr>
+                <TableSkeleton rows={5} cols={7} />
               ) : promotions.length === 0 ? (
                 <tr><td colSpan="7" className="p-4 text-center">Chưa có chương trình khuyến mãi nào</td></tr>
               ) : (

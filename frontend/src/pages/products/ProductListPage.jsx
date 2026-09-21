@@ -24,6 +24,7 @@ import {
 
 import { useDataSync } from '../../hooks/useDataSync';
 import { notifyDataChanged } from '../../utils/dataSync';
+import { TableSkeleton } from '../../components/ui/Loading';
 
 export const ProductListPage = () => {
   const [keyword, setKeyword] = useState('');
