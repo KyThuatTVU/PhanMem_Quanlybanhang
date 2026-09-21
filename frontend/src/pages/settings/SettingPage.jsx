@@ -220,6 +220,9 @@ export const SettingPage = () => {
               )}
             </tbody>
           </table>
+        </div>
+      )}
+
       {activeTab === 'LICENSE' && (
         <div className="space-y-4">
           <div className="soft-card bg-emerald-50/80 border-emerald-200 p-5 space-y-4">
